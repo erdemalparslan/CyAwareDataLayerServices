@@ -17,9 +17,6 @@ namespace CyAwareWebApi.Models
         public bool isHourly { get; set; }
         public bool isPerMinute { get; set; }
         public int period { get; set; }
-        public DateTime startDate { get; set; }
-        public DateTime tillDate { get; set; }
-        public int numberOfOccurences { get; set; }
         public int enableStartTime24Format { get; set; }
         public int enableEndTime24Format { get; set; }
 

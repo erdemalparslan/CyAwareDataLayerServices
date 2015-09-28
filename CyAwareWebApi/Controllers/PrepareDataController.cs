@@ -27,12 +27,12 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult GetData()
         {
-            //createModule();
-            //createSubscriber();
-            //createEntities(db.subscribers.Find(1));
+            createModule();
+            createSubscriber();
+            createEntities(db.subscribers.Find(1));
 
-            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "IP scan").FirstOrDefault(), new HashSet<EntityBase> { db.entities.Find(1), db.entities.Find(11), db.entities.Find(61), db.entities.Find(71) });
-            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "IP scan").FirstOrDefault(), new HashSet<EntityBase> { db.entities.Find(21), db.entities.Find(31), db.entities.Find(91) });
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "IP scan").FirstOrDefault(), new HashSet<EntityBase> { db.entities.Find(1), db.entities.Find(7), db.entities.Find(8), db.entities.Find(9) });
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "IP scan").FirstOrDefault(), new HashSet<EntityBase> { db.entities.Find(4), db.entities.Find(8), db.entities.Find(1) });
             return StatusCode(HttpStatusCode.NotAcceptable);
 
         }
@@ -70,21 +70,22 @@ namespace CyAwareWebApi.Controllers
             EIpRange ipRange1 = new EIpRange { entityType = "EIpRange", ip = "10.12.120.0", range = 24, subscriber = subscriber };
             EIpRange ipRange2 = new EIpRange { entityType = "EIpRange", ip = "23.15.0.0", range = 16, subscriber = subscriber };
 
+            ipAddress.subentities = new HashSet<EntityBase> { port1, port2 };
+            ipRange1.subentities = new HashSet<EntityBase> { socNetId1, socNetId2 };
+
             db.entities.Add(ipAddress);
             db.entities.Add(ipAddress2);
             db.entities.Add(ipAddress3);
             db.entities.Add(ipAddress4);
-            db.entities.Add(socNetId1);
-            db.entities.Add(socNetId2);
-            db.entities.Add(port1);
-            db.entities.Add(port2);
+            //db.entities.Add(socNetId1);
+            //db.entities.Add(socNetId2);
+            //db.entities.Add(port1);
+            //db.entities.Add(port2);
             db.entities.Add(ipRange1);
             db.entities.Add(ipRange2);
 
             /*
-            ipAddress.subentities = new HashSet<EntityBase> { port1, port2 };
 
-            ipRange1.subentities = new HashSet<EntityBase> { socNetId1, socNetId2 };
 
             db.entities.Add(ipAddress);
             db.entities.Add(ipAddress2);
@@ -104,7 +105,7 @@ namespace CyAwareWebApi.Controllers
         private int createPolicyTest(Subscriber subscriber, Module module, HashSet<EntityBase> entities)
         {
 
-            Schedule schedule1 = new Schedule { isHourly = true, period = 3, startDate = DateTime.Now, numberOfOccurences = 15 };
+            Schedule schedule1 = new Schedule { isHourly = true, period = 3};
 
             Models.Action action1 = new Models.Action { actionType = 1, destination = "" };
             Models.Action action2 = new Models.Action { actionType = 2, destination = "" };

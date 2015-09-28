@@ -15,7 +15,7 @@ namespace CyAwareWebApi.Models.Entities
 
         // Navigation properties 
         public virtual Subscriber subscriber { get; set; }
-        public virtual HashSet<Policy> policies { get; set; }
+        //public virtual HashSet<Policy> policies { get; set; }
         public virtual HashSet<EntityBase> subentities { get; set; }
     }
 }
