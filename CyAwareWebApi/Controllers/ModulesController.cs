@@ -36,42 +36,63 @@ namespace CyAwareWebApi.Controllers
 
             var result = db.modules
                 .Where(m => m.id == id)
-                .Include(m => m.policies/*.Select(p => p.subscriber)*/)
-                .Select(m => new {
+                .Include(m => m.policies)
+                .Select(m => new
+                {
                     m.id,
                     m.moduleName,
                     m.description,
                     policies = m.policies
                     .Select(p => new
-                                    {
-                                        p.id,
-                                        p.setDate,
-                                        p.isActive,
-                                        p.activationDate,
-                                        subscriber = new
-                                        {
-                                            p.subscriber.id,
-                                            p.subscriber.name,
-                                            p.subscriber.subscriptionId,
-                                        },
-                                        p.entities,
-                                        schedule = new
-                                        {
-                                            p.schedule.id,
-                                            p.schedule.isMonthly,
-                                            p.schedule.isWeekly,
-                                            p.schedule.isDaily,
-                                            p.schedule.isHourly,
-                                            p.schedule.isPerMinute,
-                                            //p.schedule.numberOfOccurences,
-                                            p.schedule.period,
-                                            //p.schedule.startDate,
-                                            //p.schedule.tillDate,
-                                            p.schedule.enableStartTime24Format,
-                                            p.schedule.enableEndTime24Format
-                                        }
-                                    })
-                });
+                    {
+                        p.id,
+                        p.setDate,
+                        p.isActive,
+                        p.activationDate,
+                        subscriber = new
+                        {
+                            p.subscriber.id,
+                            p.subscriber.name,
+                            p.subscriber.subscriptionId,
+                        },
+                        entities = p.entities,
+                        schedule = new
+                        {
+                            p.schedule.id,
+                            p.schedule.isMonthly,
+                            p.schedule.isWeekly,
+                            p.schedule.isDaily,
+                            p.schedule.isHourly,
+                            p.schedule.isPerMinute,
+                            //p.schedule.numberOfOccurences,
+                            p.schedule.period,
+                            //p.schedule.startDate,
+                            //p.schedule.tillDate,
+                            p.schedule.enableStartTime24Format,
+                            p.schedule.enableEndTime24Format
+                        }
+                    })
+
+                }).ToList();
+
+            //var result = (from eb in db.entities
+            //              where eb.Id == eb.entitybaseId && eb.policyid == 1
+            //              select eb).tolist();
+
+
+            //foreach (var mod in result)
+            //{
+            //    var policies = mod.policies;
+            //    foreach (var pol in policies)
+            //    {
+            //        var entities = pol.entities;
+            //        foreach (var ent in entities)
+            //        {
+            //            //ent.subentities = db.entities.Where(e => e.E == id)
+            //        }
+            //    }
+            //}
+
             return result;
         }
 

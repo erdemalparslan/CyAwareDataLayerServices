@@ -22,17 +22,15 @@ namespace CyAwareWebApi.Controllers
             return db.policies;
         }
 
-        // GET: api/Policies/5
+        // GET: back/policies/5
+        [Route("back/policies/{id}")]
+        [HttpGet]
         [ResponseType(typeof(Policy))]
-        public IHttpActionResult GetPolicy(int id)
+        public dynamic GetPolicy(int id)
         {
-            Policy policy = db.policies.Find(id);
-            if (policy == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(policy);
+            return db.policies.Where(p => p.id == id).Include(p => p.entities)
+                .Select(p => new {p.id, p.isActive, p.schedule, p.setDate, p.entities });
+                
         }
 
         // PUT: api/Policies/5

@@ -22,6 +22,7 @@ namespace CyAwareWebApi
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
             var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.Re‌​ferenceLoopHandling = ReferenceLoopHandling.Ignore; ;
             json.SerializerSettings.Converters.Add(new JsonEntitiesConverter());
             json.SerializerSettings.Converters.Add(new JSONResultsConverter());
             json.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

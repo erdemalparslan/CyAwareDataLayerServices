@@ -13,6 +13,7 @@ using CyAwareWebApi.Models.Results;
 using System.Data.Common;
 using Newtonsoft.Json;
 using CyAwareWebApi.Controllers.JSONConverter;
+using System.Data.SqlClient;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -54,7 +55,9 @@ namespace CyAwareWebApi.Controllers
 
             return res;*/
 
-            return db.scans
+            getScanFromDatabase(id);
+
+            var a = db.scans
                 .Where(s => s.id == id)
                 .Include(s => s.results)
                 .Select(s => new
@@ -65,6 +68,40 @@ namespace CyAwareWebApi.Controllers
                     s.results
                 }
                 );
+            return a;
+        }
+
+        private void getScanFromDatabase(int id)
+        {
+            SqlConnection myConnection = new SqlConnection("Data Source=localhost\\SQLEXPRESS; Initial Catalog=cyawaredb;uid=cyaware;pwd=Test12345;MultipleActiveResultSets=true");
+            try
+            {
+                myConnection.Open();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            try
+            {
+                SqlDataReader myReader = null;
+                SqlCommand myCommand = new SqlCommand("SELECT TOP 1000 [id] ,[scanRefId],[scanSuccessCode],[policyId] FROM [cyawaredb].[dbo].[Scans]", myConnection);
+                myReader = myCommand.ExecuteReader();
+                while (myReader.Read())
+                {
+                    Console.WriteLine(myReader["scanRefId"].ToString());
+                    Console.WriteLine(myReader["policyId"].ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+
+
+            //return null;
         }
         
         // PUT: api/Scans/5

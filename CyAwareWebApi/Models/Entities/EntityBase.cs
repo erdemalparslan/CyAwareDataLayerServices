@@ -1,8 +1,6 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using CyAwareWebApi.Models;
+
 
 namespace CyAwareWebApi.Models.Entities
 {
@@ -15,7 +13,7 @@ namespace CyAwareWebApi.Models.Entities
 
         // Navigation properties 
         public virtual Subscriber subscriber { get; set; }
-        //public virtual HashSet<Policy> policies { get; set; }
         public virtual HashSet<EntityBase> subentities { get; set; }
+        public virtual EntityBase mainEntity { get; set; }
     }
 }
