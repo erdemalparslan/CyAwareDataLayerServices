@@ -176,6 +176,8 @@
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\GenericHttpClient.cs" />
     <Compile Include="Controllers\IpController.cs" />
+    <Compile Include="Controllers\JSONConverters\JsonCreationConverter.cs" />
+    <Compile Include="Controllers\JSONConverters\JsonEntitiesConverter.cs" />
     <Compile Include="Controllers\SubscriberController.cs" />
     <Compile Include="Controllers\EntityBaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

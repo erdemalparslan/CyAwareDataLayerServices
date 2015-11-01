@@ -1,4 +1,6 @@
 ﻿using Inspinia_MVC5_SeedProject.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +21,10 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            IEnumerable<EntityBase> list = await httpClient.GetAllAsync();
-            return View(list);
+            //IEnumerable<EntityBase> list = await httpClient.GetAllAsync();
+            string result = await httpClient.GetAllAsyncString();
+            List<EntityBase> assets = JsonConvert.DeserializeObject<List<EntityBase>>(result, new JsonEntitiesConverter());
+            return View(assets);
         }
 
         /*

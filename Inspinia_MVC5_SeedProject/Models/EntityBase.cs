@@ -9,25 +9,8 @@ namespace Inspinia_MVC5_SeedProject.Models
     public class EntityBase
     {
         public int id { get; set; }
-        //public string entityType { get; set; }
-
-        [Display(Name = "Subscriber ID")]
-        public int subscriberId { get; set; }
-
-        [Display(Name = "Name")]
-        public string name { get; set; }
-
-        [Display(Name = "Type")]
         public string entityType { get; set; }
-
-        [Display(Name = "Ip Address")]
-        public string ip { get; set; }
-
-        [Display(Name = "Email Address")]
-        public string emailAddress { get; set; }
-
-        [Display(Name = "Port Number")]
-        public int port { get; set; }
+        public int subscriberId { get; set; }
 
         /*[Display(Name = "Port Type")]
         public int type { get; set; }*/
@@ -35,14 +18,14 @@ namespace Inspinia_MVC5_SeedProject.Models
 
     public class Ip : EntityBase
     {
-        /*[Display(Name = "Ip Address")]
-        public string ipAddress { get; set; }*/
+        [Display(Name = "Ip Address")]
+        public string ip { get; set; }
     }
 
     public class Email : EntityBase
     {
-        /*[Display(Name = "Email Address")]
-        public string emailAddress { get; set; }*/
+        [Display(Name = "Email Address")]
+        public string emailAddress { get; set; }
     }
 
     public class Url : EntityBase
