@@ -22,8 +22,7 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(EntityBase))]
         public IQueryable<EntityBase> GetEntityBase()
         {
-            return db.entities
-                ;
+            return db.entities;
         }
 
         // GET: front/entitybases/5
@@ -32,18 +31,26 @@ namespace CyAwareWebApi.Controllers
         public dynamic GetEntityBase(int id)
         {
             return db.entities
-                .Where(e => e.Id == id)
                 .Include(e => e.subscriber)
-                .Select(e => new
-                {
-                    e.Id,
-                    e.entityType
-                }
-                ).ToList();
+                .FirstOrDefault(e => e.Id == id)
+                //.ToList()
+                ;
         }
 
-        // PUT: api/EntityBases/5
+        // GET: front/entitybases/subscriber/1
+        [Route("front/entitybases/subscriber/{id}")]
+        [ResponseType(typeof(EntityBase))]
+        public dynamic GetEntityBaseBySubscriber(int id)
+        {
+            return db.entities
+                .Include(e => e.subscriber)
+                .Where(e => e.subscriber.id == id)
+                .ToList();
+        }
+
+        // PUT: front/EntityBases/5
         [ResponseType(typeof(void))]
+        [Route("front/entitybases/{id}")]
         public IHttpActionResult PutEntityBase(int id, EntityBase entityBase)
         {
             if (!ModelState.IsValid)
@@ -77,8 +84,9 @@ namespace CyAwareWebApi.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/EntityBases
+        // POST: front/EntityBases
         [ResponseType(typeof(EntityBase))]
+        [Route("front/entitybases")]
         public IHttpActionResult PostEntityBase(EntityBase entityBase)
         {
             if (!ModelState.IsValid)
@@ -89,11 +97,12 @@ namespace CyAwareWebApi.Controllers
             db.entities.Add(entityBase);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = entityBase.Id }, entityBase);
+            return StatusCode(HttpStatusCode.Accepted);
         }
 
-        // DELETE: api/EntityBases/5
+        // DELETE: front/EntityBases/5
         [ResponseType(typeof(EntityBase))]
+        [Route("front/entitybases/{id}")]
         public IHttpActionResult DeleteEntityBase(int id)
         {
             EntityBase entityBase = db.entities.Find(id);

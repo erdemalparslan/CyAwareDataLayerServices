@@ -24,52 +24,90 @@ namespace CyAwareWebApi.Controllers
             db.Configuration.ProxyCreationEnabled = false;
         }
 
-        // GET: api/Subscribers
+        // GET: front/subscribers
+        [ResponseType(typeof(Subscriber))]
+        [Route("front/subscribers/")]
+        [HttpGet]
         public IQueryable<Subscriber> Getsubscribers()
         {
+            //var allRecords = db.subscribers;
+            //var queryString = Request.GetQueryNameValuePairs();
+            //IQueryable<Subscriber> temp = db.subscribers;
+            //foreach (var key in queryString)
+            //{
+            //    if (key.Key.Equals("name"))
+            //       temp = temp.Where(s => s.name == key.Value);
+            //    if (key.Key.Equals("entityid"))
+            //    {
+            //        var entity = db.entities.Find(1);
+            //        temp = temp.Include(s => s.entities).Where(s => s.entities.Contains(entity));
+            //    }
+
+            //}
+            //return temp;
             return db.subscribers;
         }
 
         
         // GET: front/subscribers/5
         [ResponseType(typeof(Subscriber))]
-        [Route("front/subscribers/{id}")]
+        [Route("front/subscribers/{id:int}")]
         [HttpGet]
         public dynamic GetSubscriber(int id)
         {
             return db.subscribers.Include(s => s.entities)
-                .Where(s => s.id == id)
-                .Select(s => new {  s.id,
-                                    s.name,
-                                    s.subscriptionId,
-                                    s.entities,
-                                    });
+                .FirstOrDefault(s => s.id == id)
+                //.Select(s => new {  s.id,
+                //                    s.name,
+                //                    s.subscriptionId,
+                //                    s.entities,
+                //                    })
+                ;
         }
 
-            /*
-        [ResponseType(typeof(SubscriberDTO))]
-        [Route("front/subscribers/{id}")]
+
+        // GET: front/subscribers/aycell
+        [ResponseType(typeof(Subscriber))]
+        [Route("front/subscribers/{name}")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetSubscriber(int id)
+        public dynamic GetSubscriberByName(string name)
         {
-            
-            var retval = await db.subscribers.Include(s => s.entities)
-                .Select(s => new SubscriberDTO {
-                    id = s.id,
-                    name = s.name,
-                    entities = s.entities.Select(e => EntityBaseFactory.getEntityBase(e.entityType))
-                }).SingleOrDefaultAsync(s => s.id == id);
+            return db.subscribers.Include(s => s.entities)
+                .FirstOrDefault(s => s.name == name)
+                //.Select(s => new {
+                //    s.id,
+                //    s.name,
+                //    s.subscriptionId,
+                //    s.entities,
+                //})
+                ;
+        }
 
-            if (retval == null)
-            {
-                return NotFound();
-            }
+        /*
+    [ResponseType(typeof(SubscriberDTO))]
+    [Route("front/subscribers/{id}")]
+    [HttpGet]
+    public async Task<IHttpActionResult> GetSubscriber(int id)
+    {
 
-            return Ok(retval);
-        }*/
+        var retval = await db.subscribers.Include(s => s.entities)
+            .Select(s => new SubscriberDTO {
+                id = s.id,
+                name = s.name,
+                entities = s.entities.Select(e => EntityBaseFactory.getEntityBase(e.entityType))
+            }).SingleOrDefaultAsync(s => s.id == id);
 
-        // PUT: api/Subscribers/5
+        if (retval == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(retval);
+    }*/
+
+        // PUT: front/Subscribers/5
         [ResponseType(typeof(void))]
+        [Route("front/subscribers/{id:int}")]
         public IHttpActionResult PutSubscriber(int id, Subscriber subscriber)
         {
             if (!ModelState.IsValid)
@@ -116,11 +154,12 @@ namespace CyAwareWebApi.Controllers
             db.subscribers.Add(subscriber);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = subscriber.id }, subscriber);
+            return StatusCode(HttpStatusCode.Accepted);
         }
 
-        // DELETE: api/Subscribers/5
+        // DELETE: front/Subscribers/5
         [ResponseType(typeof(Subscriber))]
+        [Route("front/subscribers/{id:int}")]
         public IHttpActionResult DeleteSubscriber(int id)
         {
             Subscriber subscriber = db.subscribers.Find(id);
