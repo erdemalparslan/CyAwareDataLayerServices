@@ -9,6 +9,5 @@ namespace CyAwareWebApi.Models.Entities
     {
         public int port { get; set; }
         public string type { get; set; }
-        //deneme
     }
 }
