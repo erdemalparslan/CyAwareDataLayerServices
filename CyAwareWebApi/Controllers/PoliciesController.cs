@@ -28,8 +28,8 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(Policy))]
         public dynamic GetPolicy(int id)
         {
-            return db.policies.Where(p => p.id == id).Include(p => p.entities)
-                .Select(p => new {p.id, p.isActive, p.schedule, p.setDate, p.entities });
+            return db.policies.Where(p => p.Id == id).Include(p => p.entities)
+                .Select(p => new {p.Id, p.isActive, p.schedule, p.setDate, p.entities });
                 
         }
 
@@ -42,7 +42,7 @@ namespace CyAwareWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != policy.id)
+            if (id != policy.Id)
             {
                 return BadRequest();
             }
@@ -80,7 +80,7 @@ namespace CyAwareWebApi.Controllers
             db.policies.Add(policy);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = policy.id }, policy);
+            return CreatedAtRoute("DefaultApi", new { id = policy.Id }, policy);
         }
 
         // DELETE: api/Policies/5
@@ -110,7 +110,7 @@ namespace CyAwareWebApi.Controllers
 
         private bool PolicyExists(int id)
         {
-            return db.policies.Count(e => e.id == id) > 0;
+            return db.policies.Count(e => e.Id == id) > 0;
         }
     }
 }

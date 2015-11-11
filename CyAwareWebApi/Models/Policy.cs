@@ -8,7 +8,7 @@ namespace CyAwareWebApi.Models
 {
     public class Policy
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public DateTime setDate { get; set; }
         public bool isActive { get; set; }
         public DateTime activationDate { get; set; }

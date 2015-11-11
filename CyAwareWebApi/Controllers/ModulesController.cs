@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
+using CyAwareWebApi.Models.Entities;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -34,7 +35,49 @@ namespace CyAwareWebApi.Controllers
         public dynamic GetModule(int id)
         {
 
-            var result = db.modules
+            var result2 = from m in db.modules.Include("policies.entities.subentities")
+                          where m.id == id
+                          select new
+                          {
+                              moduleName = m.moduleName,
+                              description = m.description,
+                              policies = from p in m.policies
+                                         select new { entities = from e in p.entities
+                                                                 select e 
+                                                                 , p.schedule },
+                              id = m.id
+                          };
+
+            foreach (var m in result2)
+            {
+                foreach(var p in m.policies)
+                {
+                    foreach (EntityBase e in p.entities)
+                    {
+
+                        var subs = from se in db.entities where se.mainEntity == e select se;
+                        var a = subs.AsEnumerable();
+
+                        foreach (var sub in a)
+                        {
+                            e.subentities.Add(sub);
+                        }
+                        //List<EntityBase> mylist = subs.ToList();
+                        //foreach (EntityBase element in mylist)
+                        //    e.subentities.Add(element);
+                    }
+                }
+            }
+
+            //foreach(var m in result2)
+            //{
+            //    foreach (var p in m.policies)
+            //    {
+            //        p.entities = db.entities.Where(e => e.policyId == p.id)
+            //    }
+            //}
+
+            /*var result = db.modules
                 .Where(m => m.id == id)
                 .Include(m => m.policies)
                 .Select(m => new
@@ -73,7 +116,7 @@ namespace CyAwareWebApi.Controllers
                         }
                     })
 
-                }).ToList();
+                }).ToList();*/
 
             //var result = (from eb in db.entities
             //              where eb.Id == eb.entitybaseId && eb.policyid == 1
@@ -93,7 +136,7 @@ namespace CyAwareWebApi.Controllers
             //    }
             //}
 
-            return result;
+            return result2;
         }
 
         // PUT: api/Modules/5

@@ -33,12 +33,14 @@ namespace CyAwareWebApi.Controllers.JSONConverter
                     return new EPort();
                 case "EService":
                     return new EService();
-                case "ESocNetId":
-                    return new ESocNetId();
                 case "ETemplate":
                     return new ETemplate();
                 case "EUrl":
                     return new EUrl();
+                case "ETwitterProfile":
+                    return new ETwitterProfile();
+                case "EInstagramProfile":
+                    return new EInstagramProfile();
                 default: throw new UnknownEntityException("Unknown Entity type: " + typeName);
             }
         }

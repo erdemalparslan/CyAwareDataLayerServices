@@ -19,9 +19,9 @@ namespace CyAwareWebApi.Controllers.JSONConverter
                     return new RModule1();
                 case "RModule2":
                     return new RModule2();
-                /*case "RModule3":
-                    return new RModule1();
-                case "RModule4":
+                case "RModule3":
+                    return new RModule3();
+                /*case "RModule4":
                     return new RModule1();
                 case "RModule5":
                     return new RModule1();

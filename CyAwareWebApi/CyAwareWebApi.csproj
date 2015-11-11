@@ -248,13 +248,14 @@
     <Compile Include="Models\Entities\EDomain.cs" />
     <Compile Include="Models\Entities\EEMailAddress.cs" />
     <Compile Include="Models\Entities\EIdentification.cs" />
+    <Compile Include="Models\Entities\EInstagramProfile.cs" />
     <Compile Include="Models\Entities\EIpAddress.cs" />
     <Compile Include="Models\Entities\EIpRange.cs" />
     <Compile Include="Models\Entities\EntityBase.cs" />
     <Compile Include="Models\Entities\EPort.cs" />
     <Compile Include="Models\Entities\EService.cs" />
-    <Compile Include="Models\Entities\ESocNetId.cs" />
     <Compile Include="Models\Entities\ETemplate.cs" />
+    <Compile Include="Models\Entities\ETwitterProfile.cs" />
     <Compile Include="Models\Entities\EUrl.cs" />
     <Compile Include="Models\EntityBaseFactory.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Models\Results\ResultBase.cs" />
     <Compile Include="Models\Results\RModule1.cs" />
     <Compile Include="Models\Results\RModule2.cs" />
+    <Compile Include="Models\Results\RModule3.cs" />
     <Compile Include="Models\Scan.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Subscriber.cs" />

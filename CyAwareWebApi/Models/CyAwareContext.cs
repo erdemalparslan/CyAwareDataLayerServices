@@ -25,5 +25,6 @@ namespace CyAwareWebApi.Models
         public DbSet<Scan> scans { get; set; }
 
         public DbSet<ResultBase> results { get; set; }
+
     }
 }

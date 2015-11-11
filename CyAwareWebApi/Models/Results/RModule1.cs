@@ -1,4 +1,6 @@
-﻿
+﻿/* 
+This module is about Service and Systems Availability checker module
+*/
 
 namespace CyAwareWebApi.Models.Results
 {
