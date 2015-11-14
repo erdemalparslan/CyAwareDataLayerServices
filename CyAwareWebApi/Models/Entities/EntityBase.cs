@@ -1,6 +1,6 @@
 ﻿
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CyAwareWebApi.Models.Entities
 {
@@ -10,6 +10,7 @@ namespace CyAwareWebApi.Models.Entities
         public string entityType { get; set; }
         // foreign keys
         public int subscriberId { get; set; }
+        public int? mainEntityId { get; set; }
 
         // Navigation properties 
         public virtual Subscriber subscriber { get; set; }

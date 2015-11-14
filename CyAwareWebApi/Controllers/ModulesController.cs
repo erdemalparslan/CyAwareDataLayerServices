@@ -35,36 +35,33 @@ namespace CyAwareWebApi.Controllers
         public dynamic GetModule(int id)
         {
 
-            var result2 = from m in db.modules.Include("policies.entities.subentities")
+            var requestedModules = (from m in db.modules.Include("policies.entities.subentities")
                           where m.id == id
                           select new
                           {
+                              moduleId = m.id,
                               moduleName = m.moduleName,
                               description = m.description,
                               policies = from p in m.policies
-                                         select new { entities = from e in p.entities
+                                         select new { policyId = p.Id, p.schedule
+                                                        ,entities = from e in p.entities
                                                                  select e 
-                                                                 , p.schedule },
-                              id = m.id
-                          };
+                                                                  }
+                          }).ToList();
 
-            foreach (var m in result2)
+            foreach (var m in requestedModules)
             {
                 foreach(var p in m.policies)
                 {
                     foreach (EntityBase e in p.entities)
                     {
 
-                        var subs = from se in db.entities where se.mainEntity == e select se;
-                        var a = subs.AsEnumerable();
+                        var subs = (from se in db.entities where se.mainEntityId == e.Id select se).ToList();
 
-                        foreach (var sub in a)
+                        foreach (var sub in subs)
                         {
                             e.subentities.Add(sub);
                         }
-                        //List<EntityBase> mylist = subs.ToList();
-                        //foreach (EntityBase element in mylist)
-                        //    e.subentities.Add(element);
                     }
                 }
             }
@@ -136,7 +133,7 @@ namespace CyAwareWebApi.Controllers
             //    }
             //}
 
-            return result2;
+            return requestedModules;
         }
 
         // PUT: api/Modules/5

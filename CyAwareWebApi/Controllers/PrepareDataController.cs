@@ -38,6 +38,9 @@ namespace CyAwareWebApi.Controllers
            
             HashSet<EntityBase> policy1Entities = new HashSet<EntityBase>();
             HashSet<EntityBase> policy2Entities = new HashSet<EntityBase>();
+            HashSet<EntityBase> policy3Entities = new HashSet<EntityBase>();
+            HashSet<EntityBase> policy4Entities = new HashSet<EntityBase>();
+
             createModule();
             createSubscriber();
             if(type == 1) // flat entities
@@ -58,6 +61,10 @@ namespace CyAwareWebApi.Controllers
                 Array.ForEach(policy1SetofEntities, x => policy1Entities.Add(db.entities.Find(x)));
                 int[] policy2SetofEntities = new[] { ipAddress4.Id, ipRange1.Id, ipRange2.Id};
                 Array.ForEach(policy2SetofEntities, x => policy2Entities.Add(db.entities.Find(x)));
+                int[] policy3SetofEntities = new[] { twitter1.Id, twitter2.Id };
+                Array.ForEach(policy3SetofEntities, x => policy3Entities.Add(db.entities.Find(x)));
+                int[] policy4SetofEntities = new[] { instagram1.Id, instagram2.Id};
+                Array.ForEach(policy4SetofEntities, x => policy4Entities.Add(db.entities.Find(x)));
 
             }
             else
@@ -67,6 +74,8 @@ namespace CyAwareWebApi.Controllers
 
             createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy1Entities);
             createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy2Entities);
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Twitter activity checker module").FirstOrDefault(), policy3Entities);
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Instagram activity checker module").FirstOrDefault(), policy4Entities);
             return StatusCode(HttpStatusCode.NotAcceptable);
 
         }
@@ -97,23 +106,23 @@ namespace CyAwareWebApi.Controllers
         private int createEntities(Subscriber subscriber, bool isFlatEntities)
         {
 
-            ipAddress = new EIpAddress { entityType = "EIpAddress", ip = "104.209.43.4", subscriber = subscriber };
-            ipAddress2 = new EIpAddress { entityType = "EIpAddress", ip = "52.25.28.149", subscriber = subscriber };
-            ipAddress3 = new EIpAddress { entityType = "EIpAddress", ip = "52.10.180.11", subscriber = subscriber };
-            ipAddress4 = new EIpAddress { entityType = "EIpAddress", ip = "66.6.44.5", subscriber = subscriber };
-            port1 = new EPort { entityType = "EPort", type = "tcp", port = 22, subscriber = subscriber };
-            port2 = new EPort { entityType = "EPort", type = "tcp", port = 80, subscriber = subscriber };
-            port3 = new EPort { entityType = "EPort", type = "udp", port = 53, subscriber = subscriber };
-            ipRange1 = new EIpRange { entityType = "EIpRange", ip = "10.12.120.0", range = 24, subscriber = subscriber };
-            ipRange2 = new EIpRange { entityType = "EIpRange", ip = "23.15.0.0", range = 24, subscriber = subscriber };
-            twitter1 = new ETwitterProfile { entityType = "ETwitterProfile" , idStr = "TCTWIT1", screenName = "TURKCELL TWIT1", dailyMaxTweets = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim", subscriber = subscriber };
-            twitter2 = new ETwitterProfile { entityType = "ETwitterProfile", idStr = "TCTWIT2", screenName = "TURKCELL TWIT2", dailyMaxTweets = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "vodafone,avea,avea", subscriber = subscriber };
-            instagram1 = new EInstagramProfile { entityType = "ETwitterProfile", idStr = "TCINST1", screenName = "TURKCELL INST1", dailyMaxPosts = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim,vodafone,avea", subscriber = subscriber };
-            instagram2 = new EInstagramProfile { entityType = "ETwitterProfile", idStr = "TCINST2", screenName = "TURKCELL INST2", dailyMaxPosts = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim,vodafone,avea", subscriber = subscriber };
+            ipAddress = new EIpAddress { entityType = "EIpAddress", ip = "104.209.43.4", subscriber = subscriber , Id=-1, mainEntityId = null};
+            ipAddress2 = new EIpAddress { entityType = "EIpAddress", ip = "52.25.28.149", subscriber = subscriber, Id=-2, mainEntityId = null };
+            ipAddress3 = new EIpAddress { entityType = "EIpAddress", ip = "52.10.180.11", subscriber = subscriber , Id = -3, mainEntityId = null };
+            ipAddress4 = new EIpAddress { entityType = "EIpAddress", ip = "66.6.44.5", subscriber = subscriber, Id = -4, mainEntityId = null };
+            port1 = new EPort { entityType = "EPort", type = "tcp", port = 22, subscriber = subscriber , mainEntityId=-2, Id = -5 };
+            port2 = new EPort { entityType = "EPort", type = "tcp", port = 80, subscriber = subscriber, mainEntityId = -1, Id = -6 };
+            port3 = new EPort { entityType = "EPort", type = "udp", port = 53, subscriber = subscriber, mainEntityId= -2, Id = -7 };
+            ipRange1 = new EIpRange { entityType = "EIpRange", ip = "10.12.120.0", range = 24, subscriber = subscriber , Id = -8, mainEntityId = null };
+            ipRange2 = new EIpRange { entityType = "EIpRange", ip = "23.15.0.0", range = 24, subscriber = subscriber , Id = -9, mainEntityId = null };
+            twitter1 = new ETwitterProfile { entityType = "ETwitterProfile" , idStr = "TCTWIT1", screenName = "TURKCELL TWIT1", dailyMaxTweets = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim", subscriber = subscriber , Id = -10, mainEntityId = null };
+            twitter2 = new ETwitterProfile { entityType = "ETwitterProfile", idStr = "TCTWIT2", screenName = "TURKCELL TWIT2", dailyMaxTweets = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "vodafone,avea,avea", subscriber = subscriber, Id = -11, mainEntityId = null };
+            instagram1 = new EInstagramProfile { entityType = "ETwitterProfile", idStr = "TCINST1", screenName = "TURKCELL INST1", dailyMaxPosts = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim,vodafone,avea", subscriber = subscriber, Id = -12, mainEntityId = null };
+            instagram2 = new EInstagramProfile { entityType = "ETwitterProfile", idStr = "TCINST2", screenName = "TURKCELL INST2", dailyMaxPosts = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim,vodafone,avea", subscriber = subscriber, Id = -13, mainEntityId = null };
 
             if (!isFlatEntities)
             {
-                ipAddress.subentities = new HashSet<EntityBase> { port1, port2 };
+                ipAddress.subentities = new HashSet<EntityBase> { port2 };
                 ipAddress2.subentities = new HashSet<EntityBase> { port1, port3 };
             }
 
