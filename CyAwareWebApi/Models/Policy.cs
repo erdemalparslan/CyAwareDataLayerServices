@@ -15,7 +15,6 @@ namespace CyAwareWebApi.Models
 
         //foreign keys
         public int subscriberId { get; set; }
-        public int entityId { get; set; }
         public int moduleId { get; set; }
         public int scheduleId { get; set; }
         public int actionId { get; set; }

@@ -33,6 +33,28 @@ namespace CyAwareWebApi.Controllers
                 
         }
 
+        // GET: front/policies/5
+        [Route("front/policies/{id}")]
+        [ResponseType(typeof(Policy))]
+        public dynamic GetEntityBase(int id)
+        {
+            return db.policies
+                .Include(p => p.subscriber)
+                .FirstOrDefault(p => p.Id == id)
+                ;
+        }
+
+        // GET: front/policies/subscriber/1
+        [Route("front/policies/subscriber/{id}")]
+        [ResponseType(typeof(Policy))]
+        public dynamic GetPolicyBySubscriber(int id)
+        {
+            return db.policies
+                .Include(p => p.subscriber)
+                .Where(p => p.subscriber.id == id)
+                .ToList();
+        }
+
         // PUT: api/Policies/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutPolicy(int id, Policy policy)
@@ -68,14 +90,19 @@ namespace CyAwareWebApi.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Policies
+        // POST: front/policies
         [ResponseType(typeof(Policy))]
+        [Route("front/policies")]
         public IHttpActionResult PostPolicy(Policy policy)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            //int subscriberId = 1;
+            //int actionId = 3;
+            //int moduleId = 1;
 
             db.policies.Add(policy);
             db.SaveChanges();

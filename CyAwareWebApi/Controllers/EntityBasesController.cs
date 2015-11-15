@@ -33,7 +33,6 @@ namespace CyAwareWebApi.Controllers
             return db.entities
                 .Include(e => e.subscriber)
                 .FirstOrDefault(e => e.Id == id)
-                //.ToList()
                 ;
         }
 
