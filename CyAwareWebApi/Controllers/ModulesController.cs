@@ -43,10 +43,7 @@ namespace CyAwareWebApi.Controllers
                               moduleName = m.moduleName,
                               description = m.description,
                               policies = from p in m.policies
-                                         select new { policyId = p.Id, p.schedule
-                                                        ,entities = from e in p.entities
-                                                                 select e 
-                                                                  }
+                                         select new { policyId = p.Id, p.schedule ,entities = from e in p.entities select e}
                           }).ToList();
 
             foreach (var m in requestedModules)
