@@ -16,7 +16,7 @@ namespace CyAwareWebApi.Controllers
         Subscriber subscriber;
 
         EIpAddress ipAddress, ipAddress2, ipAddress3, ipAddress4;
-        EPort port1, port2, port3;
+        EPort port1, port2, port3 , port4, port5;
         EIpRange ipRange1, ipRange2;
         ETwitterProfile twitter1, twitter2;
         EInstagramProfile instagram1, instagram2;
@@ -113,6 +113,9 @@ namespace CyAwareWebApi.Controllers
             port1 = new EPort { entityType = "EPort", type = "tcp", port = 22, subscriber = subscriber , mainEntityId=-2, Id = -5 };
             port2 = new EPort { entityType = "EPort", type = "tcp", port = 80, subscriber = subscriber, mainEntityId = -1, Id = -6 };
             port3 = new EPort { entityType = "EPort", type = "udp", port = 53, subscriber = subscriber, mainEntityId= -2, Id = -7 };
+            port4 = new EPort { entityType = "EPort", type = "tcp", port = 80, subscriber = subscriber, mainEntityId = -8, Id = -10 };
+            port5 = new EPort { entityType = "EPort", type = "tcp", port = 80, subscriber = subscriber, mainEntityId = -4, Id = -11 };
+
             ipRange1 = new EIpRange { entityType = "EIpRange", ip = "10.12.120.0", range = 24, subscriber = subscriber , Id = -8, mainEntityId = null };
             ipRange2 = new EIpRange { entityType = "EIpRange", ip = "23.15.0.0", range = 24, subscriber = subscriber , Id = -9, mainEntityId = null };
             twitter1 = new ETwitterProfile { entityType = "ETwitterProfile" , idStr = "TCTWIT1", screenName = "TURKCELL TWIT1", dailyMaxTweets = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim", subscriber = subscriber , Id = -10, mainEntityId = null };
@@ -124,6 +127,8 @@ namespace CyAwareWebApi.Controllers
             {
                 ipAddress.subentities = new HashSet<EntityBase> { port2 };
                 ipAddress2.subentities = new HashSet<EntityBase> { port1, port3 };
+                ipAddress4.subentities = new HashSet<EntityBase> { port5 };
+                ipRange1.subentities = new HashSet<EntityBase> { port4 };
             }
 
             db.entities.Add(ipAddress);
@@ -136,6 +141,8 @@ namespace CyAwareWebApi.Controllers
                 db.entities.Add(port1);
                 db.entities.Add(port2);
                 db.entities.Add(port3);
+                db.entities.Add(port4);
+                db.entities.Add(port5);
             }
 
             db.entities.Add(ipRange1);
