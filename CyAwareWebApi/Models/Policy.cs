@@ -11,7 +11,7 @@ namespace CyAwareWebApi.Models
         public int Id { get; set; }
         public DateTime setDate { get; set; }
         public bool isActive { get; set; }
-        public DateTime activationDate { get; set; }
+        public DateTime ?activationDate { get; set; }
 
         //foreign keys
         public int subscriberId { get; set; }

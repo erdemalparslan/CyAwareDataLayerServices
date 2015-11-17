@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
+using CyAwareWebApi.Models.Entities;
+
 
 namespace CyAwareWebApi.Controllers
 {
@@ -38,10 +40,18 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(Policy))]
         public dynamic GetEntityBase(int id)
         {
-            return db.policies
-                .Include(p => p.subscriber)
-                .FirstOrDefault(p => p.Id == id)
-                ;
+            var policyList = from p in db.policies.Include("entities") where p.Id == id select new
+            {
+                policyId = p.Id,
+                p.isActive,
+                p.setDate,
+                p.activationDate,
+                subscriber = new { subscriberId = p.subscriber.id, p.subscriber.name, },
+                action = new { actionId = p.action.id, p.action.actionType, p.action.destination },
+                entities = from e in p.entities select new { entityId = e.Id, e.entityType},
+                schedule = new { scheduleId = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+            };
+            return policyList.FirstOrDefault();
         }
 
         // GET: front/policies/subscriber/1
@@ -49,10 +59,20 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(Policy))]
         public dynamic GetPolicyBySubscriber(int id)
         {
-            return db.policies
-                .Include(p => p.subscriber)
-                .Where(p => p.subscriber.id == id)
-                .ToList();
+            var policyList = from p in db.policies.Include("entities")
+                             where p.subscriberId == id
+                             select new
+                             {
+                                 policyId = p.Id,
+                                 p.isActive,
+                                 p.setDate,
+                                 p.activationDate,
+                                 subscriber = new { subscriberId = p.subscriber.id, p.subscriber.name, },
+                                 action = new { actionId = p.action.id, p.action.actionType, p.action.destination },
+                                 entities = from e in p.entities select new { entityId = e.Id, e.entityType },
+                                 schedule = new { scheduleId = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                             };
+            return policyList;
         }
 
         // PUT: api/Policies/5
@@ -100,14 +120,26 @@ namespace CyAwareWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            //int subscriberId = 1;
-            //int actionId = 3;
-            //int moduleId = 1;
+            policy.setDate = DateTime.Now;
+            if (policy.isActive)
+                policy.activationDate = DateTime.Now;
+
+            List<int> permenantIds = new List<int>();
+            foreach(var entity in policy.entities)
+                permenantIds.Add(entity.Id);
+
+            policy.entities.Clear();
+
+            foreach(int permenantId in permenantIds)
+            {
+                var actualEntity = (from e in db.entities where e.Id == permenantId select e).FirstOrDefault();
+                policy.entities.Add(actualEntity);
+            }
 
             db.policies.Add(policy);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = policy.Id }, policy);
+            return StatusCode(HttpStatusCode.Accepted);
         }
 
         // DELETE: api/Policies/5
