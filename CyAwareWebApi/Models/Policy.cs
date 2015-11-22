@@ -25,7 +25,7 @@ namespace CyAwareWebApi.Models
         public virtual Module module { get; set; }
         public virtual Schedule schedule { get; set; }
         public virtual Action action { get; set; }
-
         public virtual HashSet<Scan> scans { get; set; }
+
     }
 }

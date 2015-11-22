@@ -26,5 +26,7 @@ namespace CyAwareWebApi.Models
 
         public DbSet<ResultBase> results { get; set; }
 
+        public DbSet<EntityExtraForPolicy> extras { get; set; }
+
     }
 }

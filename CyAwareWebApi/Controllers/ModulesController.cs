@@ -54,11 +54,12 @@ namespace CyAwareWebApi.Controllers
                     {
 
                         var subs = (from se in db.entities where se.mainEntityId == e.Id select se).ToList();
+                        var extras = (from ex in db.extras where ex.entityId == e.Id select ex).ToList();
 
                         foreach (var sub in subs)
-                        {
                             e.subentities.Add(sub);
-                        }
+                        foreach (var ex in extras)
+                            e.extraInfo.Add(ex);
                     }
                 }
             }

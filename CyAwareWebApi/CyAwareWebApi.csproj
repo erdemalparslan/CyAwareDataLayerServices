@@ -252,6 +252,7 @@
     <Compile Include="Models\Entities\EIpAddress.cs" />
     <Compile Include="Models\Entities\EIpRange.cs" />
     <Compile Include="Models\Entities\EntityBase.cs" />
+    <Compile Include="Models\Entities\EntityExtraForPolicy.cs" />
     <Compile Include="Models\Entities\EPort.cs" />
     <Compile Include="Models\Entities\EService.cs" />
     <Compile Include="Models\Entities\ETemplate.cs" />
