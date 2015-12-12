@@ -11,8 +11,8 @@ namespace CyAwareWebApi.Models.Results
         public string actualScreenName { get; set; }
         public int actualPosts { get; set; }
         public int actualCAPITALLETTERRatio { get; set; }
-        public int actualFollowerChangeRatio { get; set; }
-        public int actualFalloweeChangeRatio { get; set; }
+        public int actualFollowerNumber { get; set; }
+        public int actualFalloweeNumber { get; set; }
         public string unusualContentFound { get; set; }
     }
 }

@@ -1,0 +1,50 @@
+﻿@model CyAwareWebApi.Models.SysLog
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>SysLog</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.severity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.severity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.apiMethod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.apiMethod)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.source)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.source)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.message)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.message)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

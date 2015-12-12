@@ -232,12 +232,14 @@
     <Compile Include="Controllers\PrepareDataController.cs" />
     <Compile Include="Controllers\ScansController.cs" />
     <Compile Include="Controllers\SubscribersController.cs" />
+    <Compile Include="Controllers\SysLogsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Exceptions\UnknownEntityException.cs" />
     <Compile Include="Exceptions\UnknownResultException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logger\ExceptionTracer.cs" />
     <Compile Include="ModelsDTO\SubscriberDTO.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -269,6 +271,7 @@
     <Compile Include="Models\Scan.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Subscriber.cs" />
+    <Compile Include="Models\SysLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -333,9 +336,15 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="StaticData\defaultports.json" />
+    <Content Include="Views\SysLogs\Create.cshtml" />
+    <Content Include="Views\SysLogs\Delete.cshtml" />
+    <Content Include="Views\SysLogs\Details.cshtml" />
+    <Content Include="Views\SysLogs\Edit.cshtml" />
+    <Content Include="Views\SysLogs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Logs\" />
     <Folder Include="ModelsDTO\Entities\" />
     <Folder Include="ModelsDTO\Results\" />
   </ItemGroup>
@@ -364,7 +373,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59090</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

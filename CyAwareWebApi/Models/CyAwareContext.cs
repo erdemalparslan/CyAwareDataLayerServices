@@ -28,5 +28,6 @@ namespace CyAwareWebApi.Models
 
         public DbSet<EntityExtraForPolicy> extras { get; set; }
 
+        public DbSet<SysLog> SysLogs { get; set; }
     }
 }

@@ -29,6 +29,9 @@ namespace CyAwareWebApi
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
+            config.Services.Replace(typeof(System.Web.Http.Tracing.ITraceWriter), new ExceptionTracer());
+
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 

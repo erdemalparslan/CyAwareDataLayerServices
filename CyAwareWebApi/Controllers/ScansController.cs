@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
-using CyAwareWebApi.Models.Results;
-using System.Data.Common;
-using Newtonsoft.Json;
-using CyAwareWebApi.Controllers.JSONConverter;
 using System.Data.SqlClient;
+using System.Web.Http.Tracing;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -27,48 +22,57 @@ namespace CyAwareWebApi.Controllers
             db.Configuration.ProxyCreationEnabled = false;
         }
 
-        // GET: api/Scans
-        public IQueryable<Scan> Getscans()
+        // GET: front/Scans
+        [Route("front/scans")]
+        [ResponseType(typeof(Scan))]
+        public dynamic Getscans()
         {
-            return db.scans;
+            var scans = db.scans;
+            if (scans != null)
+            {
+                return scans;
+            }
+            else
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/scans", "No any scan found!");
+                return StatusCode(HttpStatusCode.NotFound);
+            }
         }
 
         // GET: back/Scans/5
         [Route("back/scans/{id}")]
         [ResponseType(typeof(Scan))]
-        public dynamic GetScan(int id)
+        public dynamic GetBackScan(int id)
         {
-            /*var res = db.scans
-                .Where(s => s.id == id)
-                .Include(s => s.policy)
-                .Select(s => new
+            //getScanFromDatabase(id);
+
+            try
+            {
+                var scan = (db.scans
+                        .Where(s => s.id == id)
+                        .Include(s => s.results)
+                        .Select(s => new
+                        {
+                            s.id,
+                            s.scanRefId,
+                            s.scanSuccessCode,
+                            s.results
+                        })).ToList();
+                if (scan != null)
                 {
-                    s.id,
-                    s.scanRefId,
-                    policy = new
-                    {
-                        s.policy.id,
-                        s.policy.entities
-                    }
+                    return scan;
                 }
-                );
-
-            return res;*/
-
-            getScanFromDatabase(id);
-
-            var a = db.scans
-                .Where(s => s.id == id)
-                .Include(s => s.results)
-                .Select(s => new
+                else
                 {
-                    s.id,
-                    s.scanRefId,
-                    s.scanSuccessCode,
-                    s.results
+                    Configuration.Services.GetTraceWriter().Error(Request, "GET: front/scans/{id}", "No any scan found!");
+                    return StatusCode(HttpStatusCode.NotFound);
                 }
-                );
-            return a;
+            }
+            catch (Exception e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: back/scans/{id}", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         private void getScanFromDatabase(int id)
@@ -104,40 +108,40 @@ namespace CyAwareWebApi.Controllers
             //return null;
         }
         
-        // PUT: api/Scans/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutScan(int id, Scan scan)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// PUT: api/Scans/5
+        //[ResponseType(typeof(void))]
+        //public IHttpActionResult PutScan(int id, Scan scan)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (id != scan.id)
-            {
-                return BadRequest();
-            }
+        //    if (id != scan.id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            db.Entry(scan).State = EntityState.Modified;
+        //    db.Entry(scan).State = EntityState.Modified;
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ScanExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ScanExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
+        //    return StatusCode(HttpStatusCode.NoContent);
+        //}
 
         // POST: back/Scans
         [Route("back/scans")]
@@ -146,32 +150,39 @@ namespace CyAwareWebApi.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Configuration.Services.GetTraceWriter().Error(Request, "POST: back/scans", "Model is not valid!");
                 return BadRequest(ModelState);
             }
-            Policy policy = db.policies.Find(scan.policyId);
-            scan.policy = policy;
-            db.scans.Add(scan);
-            db.SaveChanges();
-
-
+            try
+            {
+                Policy policy = db.policies.Find(scan.policyId);
+                scan.policy = policy;
+                db.scans.Add(scan);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "POST: back/scans", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
             return StatusCode(HttpStatusCode.Accepted);
         }
 
-        // DELETE: api/Scans/5
-        [ResponseType(typeof(Scan))]
-        public IHttpActionResult DeleteScan(int id)
-        {
-            Scan scan = db.scans.Find(id);
-            if (scan == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/Scans/5
+        //[ResponseType(typeof(Scan))]
+        //public IHttpActionResult DeleteScan(int id)
+        //{
+        //    Scan scan = db.scans.Find(id);
+        //    if (scan == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            db.scans.Remove(scan);
-            db.SaveChanges();
+        //    db.scans.Remove(scan);
+        //    db.SaveChanges();
 
-            return Ok(scan);
-        }
+        //    return Ok(scan);
+        //}
 
         protected override void Dispose(bool disposing)
         {
