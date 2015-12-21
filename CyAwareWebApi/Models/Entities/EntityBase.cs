@@ -17,5 +17,6 @@ namespace CyAwareWebApi.Models.Entities
         public virtual HashSet<EntityBase> subentities { get; set; }
         public virtual EntityBase mainEntity { get; set; }
         public virtual HashSet<EntityExtraForPolicy> extraInfo { get; set; }
+        public virtual HashSet<Policy> policies { get; set; }
     }
 }

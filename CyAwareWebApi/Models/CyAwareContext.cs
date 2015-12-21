@@ -5,6 +5,7 @@ using System.Web;
 using System.Data.Entity;
 using CyAwareWebApi.Models.Entities;
 using CyAwareWebApi.Models.Results;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace CyAwareWebApi.Models
 {
@@ -29,5 +30,13 @@ namespace CyAwareWebApi.Models
         public DbSet<EntityExtraForPolicy> extras { get; set; }
 
         public DbSet<SysLog> SysLogs { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+
+        }
+
     }
 }
