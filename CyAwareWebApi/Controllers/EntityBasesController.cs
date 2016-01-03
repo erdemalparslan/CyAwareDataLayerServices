@@ -8,8 +8,10 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using CyAwareWebApi.Models.Entities;
+using CyAwareWebApi.Models.EntitiesDTO;
 using System.Web.Http.Tracing;
 using System.Collections.Generic;
+using CyAwareWebApi.Exceptions;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -19,84 +21,81 @@ namespace CyAwareWebApi.Controllers
 
         // GET: front/entitybases
         [Route("front/entitybases")]
-        [ResponseType(typeof(EntityBase))]
+        [ResponseType(typeof(EntityBaseDTO))]
         public dynamic GetEntityBase()
         {
-            var entities = db.entities;
-            if (entities != null)
-            { 
-                return entities;
-            }
-            else
+            try
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases", "No any entity found!");
-                return StatusCode(HttpStatusCode.NotFound);
+                List<EntityBaseDTO> dtos = new List<EntityBaseDTO>();
+                var entities = (from e in db.entities select e).ToList();
+
+                foreach (EntityBase entity in entities)
+                    dtos.Add((EntityBaseDTO)entity);
+
+                return dtos;
             }
-            
+            catch (UnknownEntityException e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            catch (Exception e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         // GET: front/entitybases/5
         [Route("front/entitybases/{id}")]
-        [ResponseType(typeof(EntityBase))]
+        [ResponseType(typeof(EntityBaseDTO))]
         public dynamic GetEntityBase(int id)
         {
             var entity = db.entities.Include(e => e.subscriber).FirstOrDefault(e => e.Id == id);
 
-            if (entity != null)
+            try
             {
-                return entity;
+                if (entity != null)
+                {
+                    return (EntityBaseDTO)entity;
+                }
+                else
+                {
+                    Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}", "Entity with Id: " + id + " not found!");
+                    return StatusCode(HttpStatusCode.NotFound);
+                }
             }
-            else
+            catch (UnknownEntityException e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}", "Entity with Id: "+id+" not found!");
-                return StatusCode(HttpStatusCode.NotFound);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
+            }
+            catch (Exception e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
 
         // GET: front/entitybases/subscriber/1
         [Route("front/entitybases/subscriber/{id}")]
-        [ResponseType(typeof(EntityBase))]
+        [ResponseType(typeof(EntityBaseDTO))]
         public dynamic GetEntityBaseBySubscriber(int id)
         {
             try
             {
-                //var entities = db.entities
-                //    .Include(e => e.subscriber)
-                //    .Where(e => e.subscriber.id == id)
-                //    .ToList();
+                List<EntityBaseDTO> dtos =  new List<EntityBaseDTO>();
                 var entities = (from e in db.entities where e.subscriberId == id select e).ToList();
 
-                List<EntityBase> prunnedList = new List<EntityBase>();
+                foreach (EntityBase entity in entities)
+                    dtos.Add((EntityBaseDTO)entity);
 
-                if (entities != null && entities.Count > 0)
-                {
-                    foreach (EntityBase entity in entities)
-                    {
-                        entity.subscriber = null;
-                        if (entity.mainEntity != null)
-                        {
-                            entity.mainEntity.subscriber = null;
-                        }
-                        if (entity.subentities.Count() > 0)
-                        {
-                            foreach (EntityBase subentity in entity.subentities)
-                            {
-                                subentity.subscriber = null; 
-                            }
-                        }
-                        foreach (EntityExtraForPolicy extra in entity.extraInfo)
-                            extra.policy = null;
-
-                        prunnedList.Add(entity);
-                    }
-                    return prunnedList;
-                    //TODO Prunned list prun olmuyor, full liste geliyor
-                }
-                else
-                {
-                    Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/subscriber/{id}", "No any entity found FOR SUBSCRIBER ID : " + id + "!");
-                    return StatusCode(HttpStatusCode.NotFound);
-                }
+                return dtos;
+            }
+            catch (UnknownEntityException e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/subscriber/{id}", e.Message);
+                return StatusCode(HttpStatusCode.InternalServerError);
             }
             catch (Exception e)
             {

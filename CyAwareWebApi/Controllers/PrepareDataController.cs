@@ -19,8 +19,8 @@ namespace CyAwareWebApi.Controllers
         EIpRange ipRange1, ipRange2;
         ETwitterProfile twitter1, twitter2;
         EInstagramProfile instagram1, instagram2;
-        EDomain domain1, domain2;
-        EHostname hostname1, hostname2, hostname3, hostname4, hostname5;
+        EDomain domain1, domain2, domain3;
+        EHostname hostname1, hostname2, hostname3, hostname4, hostname5, hostname6, hostname7;
 
         private CyAwareContext db;
 
@@ -43,10 +43,10 @@ namespace CyAwareWebApi.Controllers
             HashSet<EntityBase> policy4Entities = new HashSet<EntityBase>(); // policy4 for module3 (instagram)
             HashSet<EntityBase> policy5Entities = new HashSet<EntityBase>(); // policy5 for module4 (dns records discovery)
             HashSet<EntityBase> policy6Entities = new HashSet<EntityBase>(); // policy6 for module5 (domain expire checker)
-            HashSet<EntityBase> policy7Entities = new HashSet<EntityBase>(); // policy7 for module6 (domain expire checker)
-            HashSet<EntityBase> policy8Entities = new HashSet<EntityBase>(); // policy8 for module6 (domain expire checker)
-            HashSet<EntityBase> policy9Entities = new HashSet<EntityBase>(); // policy9 for module7 (ssl expire checker)
-            HashSet<EntityBase> policy10Entities = new HashSet<EntityBase>(); // policy10 for module7 (ssl expire checker)
+            HashSet<EntityBase> policy7Entities = new HashSet<EntityBase>(); // policy7 for module6 (SSL expire checker)
+            HashSet<EntityBase> policy8Entities = new HashSet<EntityBase>(); // policy8 for module6 (SSL expire checker)
+            HashSet<EntityBase> policy9Entities = new HashSet<EntityBase>(); // policy9 for module7 (ssl certificate details)
+            HashSet<EntityBase> policy10Entities = new HashSet<EntityBase>(); // policy10 for module7 (ssl certificate details)
             HashSet<EntityBase> policy11Entities = new HashSet<EntityBase>(); // policy11 for module8 (search engine discovery)
             HashSet<EntityBase> policy12Entities = new HashSet<EntityBase>(); // policy12 for module8 (search engine discovery)
 
@@ -79,13 +79,13 @@ namespace CyAwareWebApi.Controllers
                 int[] policy4SetofEntities = new[] { instagram1.Id, instagram2.Id};
                 Array.ForEach(policy4SetofEntities, x => policy4Entities.Add(db.entities.Find(x)));
 
-                int[] policy5SetofEntities = new[] { domain1.Id, domain2.Id };
+                int[] policy5SetofEntities = new[] { domain1.Id, domain2.Id , domain3.Id};
                 Array.ForEach(policy5SetofEntities, x => policy5Entities.Add(db.entities.Find(x)));
 
                 int[] policy6SetofEntities = new[] { domain1.Id, domain2.Id };
                 Array.ForEach(policy6SetofEntities, x => policy6Entities.Add(db.entities.Find(x)));
 
-                int[] policy7SetofEntities = new[] { domain2.Id };
+                int[] policy7SetofEntities = new[] { domain2.Id, domain3.Id };
                 Array.ForEach(policy7SetofEntities, x => policy7Entities.Add(db.entities.Find(x)));
 
                 int[] policy8SetofEntities = new[] { ipAddress1.Id, domain1.Id };
@@ -130,6 +130,7 @@ namespace CyAwareWebApi.Controllers
 
             id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL expire checker module").FirstOrDefault(), policy7Entities);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain2, policyId = id });
+            db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain3, policyId = id });
 
             id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL expire checker module").FirstOrDefault(), policy8Entities);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain1, policyId = id });
@@ -204,14 +205,19 @@ namespace CyAwareWebApi.Controllers
             instagram1 = new EInstagramProfile { entityType = "EInstagramProfile", idStr = "2255540131", screenName = "TURKCELL INST1", dailyMaxPosts = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim,vodafone,avea", subscriber = subscriber, Id = -12, mainEntityId = null };
             instagram2 = new EInstagramProfile { entityType = "EInstagramProfile", idStr = "505129896", screenName = "TURKCELL INST2", dailyMaxPosts = 150, dailyMaxCAPITALLETTERRatio = 20, dailyMaxFalloweeChangeRatio = 10, dailyMaxFollowerChangeRatio = 10, searchStringForUnusualContent = "hacked,anonymous,telsim,vodafone,avea", subscriber = subscriber, Id = -13, mainEntityId = null };
 
-            domain1 = new EDomain { entityType = "EDomain", domainName = "turkcell.com.tr", subscriber = subscriber, Id = -14, mainEntityId = null };
+            domain1 = new EDomain { entityType = "EDomain", domainName = "google.com", subscriber = subscriber, Id = -14, mainEntityId = null };
             domain2 = new EDomain { entityType = "EDomain", domainName = "monaware.com" , subscriber = subscriber, Id = -15, mainEntityId = null };
+            domain3 = new EDomain { entityType = "EDomain", domainName = "yandex.com", subscriber = subscriber, Id = -21, mainEntityId = null };
 
-            hostname1 = new EHostname { entityType = "EHostname", hostname = "www.turkcell.com.tr", subscriber = subscriber, Id = -16, mainEntityId = -14 };
-            hostname2 = new EHostname { entityType = "EHostname", hostname = "forum.turkcell.com.tr", subscriber = subscriber, Id = -17, mainEntityId = -14 };
+
+            hostname1 = new EHostname { entityType = "EHostname", hostname = "www.google.com", subscriber = subscriber, Id = -16, mainEntityId = -14 };
+            hostname2 = new EHostname { entityType = "EHostname", hostname = "docs.google.com", subscriber = subscriber, Id = -17, mainEntityId = -14 };
             hostname3 = new EHostname { entityType = "EHostname", hostname = "api.monaware.com", subscriber = subscriber, Id = -18, mainEntityId = -15 };
             hostname4 = new EHostname { entityType = "EHostname", hostname = "db.monaware.com", subscriber = subscriber, Id = -19, mainEntityId = -15 };
             hostname5 = new EHostname { entityType = "EHostname", hostname = "forum.monaware.com", subscriber = subscriber, Id = -20, mainEntityId = -15 };
+            hostname6 = new EHostname { entityType = "EHostname", hostname = "maps.yandex.com", subscriber = subscriber, Id = -22, mainEntityId = -21 };
+            hostname7 = new EHostname { entityType = "EHostname", hostname = "translate.yandex.com", subscriber = subscriber, Id = -23, mainEntityId = -21 };
+
 
             if (!isFlatEntities)
             {
@@ -238,12 +244,15 @@ namespace CyAwareWebApi.Controllers
 
             db.entities.Add(domain1);
             db.entities.Add(domain2);
+            db.entities.Add(domain3);
 
             db.entities.Add(hostname1);
             db.entities.Add(hostname2);
             db.entities.Add(hostname3);
             db.entities.Add(hostname4);
             db.entities.Add(hostname5);
+            db.entities.Add(hostname6);
+            db.entities.Add(hostname7);
 
             db.SaveChanges();
             return 0;

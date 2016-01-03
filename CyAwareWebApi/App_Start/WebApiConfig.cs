@@ -25,6 +25,8 @@ namespace CyAwareWebApi
             json.SerializerSettings.Re‌​ferenceLoopHandling = ReferenceLoopHandling.Ignore; ;
             json.SerializerSettings.Converters.Add(new JsonEntitiesConverter());
             json.SerializerSettings.Converters.Add(new JSONResultsConverter());
+            //json.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+
             json.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);

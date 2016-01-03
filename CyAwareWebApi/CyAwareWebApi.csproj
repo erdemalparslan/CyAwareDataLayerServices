@@ -254,6 +254,14 @@
     <Compile Include="Models\Entities\EInstagramProfile.cs" />
     <Compile Include="Models\Entities\EIpAddress.cs" />
     <Compile Include="Models\Entities\EIpRange.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EDomainDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EHostnameDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EInstagramProfileDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EIpAddressDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EIpRangeDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EntityBaseDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\ETwitterProfileDTO.cs" />
+    <Compile Include="Models\Entities\EntitiesDTO\EUrlDTO.cs" />
     <Compile Include="Models\Entities\EntityBase.cs" />
     <Compile Include="Models\Entities\EntityExtraForPolicy.cs" />
     <Compile Include="Models\Entities\EService.cs" />
