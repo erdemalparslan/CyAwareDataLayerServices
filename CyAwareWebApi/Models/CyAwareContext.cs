@@ -38,5 +38,6 @@ namespace CyAwareWebApi.Models
 
         }
 
+        public System.Data.Entity.DbSet<CyAwareWebApi.Models.Alert> Alerts { get; set; }
     }
 }

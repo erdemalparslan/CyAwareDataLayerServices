@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using CyAwareWebApi.Models.Entities;
+using CyAwareWebApi.Models.Results;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -36,7 +37,7 @@ namespace CyAwareWebApi.Controllers
         [HttpGet]
         public IHttpActionResult GetDataByType(int type)
         {
-           
+
             HashSet<EntityBase> policy1Entities = new HashSet<EntityBase>(); // policy1 for module1 (ip-port discovery)
             HashSet<EntityBase> policy2Entities = new HashSet<EntityBase>(); // policy2 for module1 (ip-port discovery)
             HashSet<EntityBase> policy3Entities = new HashSet<EntityBase>(); // policy3 for module2 (twitter)
@@ -53,13 +54,13 @@ namespace CyAwareWebApi.Controllers
 
             createModule();
             createSubscriber();
-            if(type == 1) // flat entities
+            if (type == 1) // flat entities
             {
-                createEntities(db.subscribers.Find(1),true);
+                createEntities(db.subscribers.Find(1), true);
 
                 int[] policy1SetofEntities = new[] { ipAddress1.Id, ipAddress2.Id, ipAddress3.Id };
                 Array.ForEach(policy1SetofEntities, x => policy1Entities.Add(db.entities.Find(x)));
-                int[] policy2SetofEntities = new[] { ipAddress4.Id, ipRange1.Id, ipRange2.Id};
+                int[] policy2SetofEntities = new[] { ipAddress4.Id, ipRange1.Id, ipRange2.Id };
                 Array.ForEach(policy2SetofEntities, x => policy2Entities.Add(db.entities.Find(x)));
 
             }
@@ -70,16 +71,16 @@ namespace CyAwareWebApi.Controllers
                 int[] policy1SetofEntities = new[] { ipAddress1.Id, ipAddress2.Id, ipAddress3.Id };
                 Array.ForEach(policy1SetofEntities, x => policy1Entities.Add(db.entities.Find(x)));
 
-                int[] policy2SetofEntities = new[] { ipAddress4.Id, ipRange1.Id, ipRange2.Id};
+                int[] policy2SetofEntities = new[] { ipAddress4.Id, ipRange1.Id, ipRange2.Id };
                 Array.ForEach(policy2SetofEntities, x => policy2Entities.Add(db.entities.Find(x)));
 
                 int[] policy3SetofEntities = new[] { twitter1.Id, twitter2.Id };
                 Array.ForEach(policy3SetofEntities, x => policy3Entities.Add(db.entities.Find(x)));
 
-                int[] policy4SetofEntities = new[] { instagram1.Id, instagram2.Id};
+                int[] policy4SetofEntities = new[] { instagram1.Id, instagram2.Id };
                 Array.ForEach(policy4SetofEntities, x => policy4Entities.Add(db.entities.Find(x)));
 
-                int[] policy5SetofEntities = new[] { domain1.Id, domain2.Id , domain3.Id};
+                int[] policy5SetofEntities = new[] { domain1.Id, domain2.Id, domain3.Id };
                 Array.ForEach(policy5SetofEntities, x => policy5Entities.Add(db.entities.Find(x)));
 
                 int[] policy6SetofEntities = new[] { domain1.Id, domain2.Id };
@@ -110,7 +111,7 @@ namespace CyAwareWebApi.Controllers
 
             int id = 0;
             id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy1Entities);
-            db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,8080", entity = ipAddress1 ,policyId = id});
+            db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,8080", entity = ipAddress1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,22,8080,21,445,23", entity = ipAddress2, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress2, policyId = id });
 
@@ -153,9 +154,10 @@ namespace CyAwareWebApi.Controllers
 
             db.SaveChanges();
 
+            createScan();
+
             return StatusCode(HttpStatusCode.NotAcceptable);
         }
-
 
         
         private int createModule()
@@ -285,6 +287,16 @@ namespace CyAwareWebApi.Controllers
             db.SaveChanges();
 
             return policy1.Id;
+        }
+
+        private int createScan()
+        {
+            RModule1 result1 = new RModule1 { ipAddress = "192.145.13.21", tcpPortNumbers = "80,443", resultType = "RModule1", policyId = 1 };
+            RModule1 result2 = new RModule1 { ipAddress = "192.145.13.21", udpPortNumbers = "2323,254", resultType = "RModule1", policyId = 1 };
+            Scan scan1 = new Scan { policyId = 1, scanRefId = "A1231542", scanSuccessCode = 1, results = new HashSet<ResultBase> { result1, result2 } };
+            db.scans.Add(scan1);
+            db.SaveChanges();
+            return 0;
         }
     }
 }

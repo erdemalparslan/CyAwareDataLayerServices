@@ -127,6 +127,7 @@ namespace CyAwareWebApi.Controllers
             try
             {
                 db.SaveChanges();
+                return StatusCode(HttpStatusCode.Accepted);
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -186,10 +187,9 @@ namespace CyAwareWebApi.Controllers
 
             try
             {
-                db.entities.Add(entityBase);
+                db.entities.Remove(entityBase);
                 db.SaveChanges();
-
-                return Ok(entityBase);
+                return StatusCode(HttpStatusCode.Accepted);
             }
             catch (Exception e)
             {

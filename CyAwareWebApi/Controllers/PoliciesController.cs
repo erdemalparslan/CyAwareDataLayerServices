@@ -26,8 +26,20 @@ namespace CyAwareWebApi.Controllers
         {
             try
             {
-                var policies = db.policies.ToList();
-                if (policies != null && policies.Count > 0)
+                var policies = (from p in db.policies.Include("entities")
+                              select new
+                              {
+                                  Id = p.Id,
+                                  p.isActive,
+                                  p.setDate,
+                                  p.moduleId,
+                                  p.activationDate,
+                                  subscriber = new { Id = p.subscriber.id, p.subscriber.name, },
+                                  action = new { Id = p.action.id, p.action.actionType, p.action.destination },
+                                  entities = from e in p.entities select new { Id = e.Id, e.entityType },
+                                  schedule = new { Id = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                              });
+                if (policies != null)
                 {
                     return policies;
                 }
@@ -53,7 +65,7 @@ namespace CyAwareWebApi.Controllers
             try
             {
                 var policy = (db.policies.Where(p => p.Id == id).Include(p => p.entities)
-                        .Select(p => new { p.Id, p.isActive, p.schedule, p.setDate, p.entities })).FirstOrDefault();
+                        .Select(p => new { p.Id, p.isActive, p.schedule, p.setDate, p.entities, p.moduleId })).FirstOrDefault();
                 if (policy != null)
                 {
                     return policy;
@@ -82,14 +94,15 @@ namespace CyAwareWebApi.Controllers
                                   where p.Id == id
                                   select new
                                   {
-                                      policyId = p.Id,
+                                      Id = p.Id,
                                       p.isActive,
                                       p.setDate,
+                                      p.moduleId,
                                       p.activationDate,
-                                      subscriber = new { subscriberId = p.subscriber.id, p.subscriber.name, },
-                                      action = new { actionId = p.action.id, p.action.actionType, p.action.destination },
-                                      entities = from e in p.entities select new { entityId = e.Id, e.entityType },
-                                      schedule = new { scheduleId = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                                      subscriber = new { Id = p.subscriber.id, p.subscriber.name, },
+                                      action = new { Id = p.action.id, p.action.actionType, p.action.destination },
+                                      entities = from e in p.entities select new { Id = e.Id, e.entityType },
+                                      schedule = new { Id = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
                                   }).FirstOrDefault();
                 if (policy != null)
                 {
@@ -119,14 +132,15 @@ namespace CyAwareWebApi.Controllers
                                   where p.subscriberId == id
                                   select new
                                   {
-                                      policyId = p.Id,
+                                      Id = p.Id,
                                       p.isActive,
                                       p.setDate,
+                                      p.moduleId,
                                       p.activationDate,
-                                      subscriber = new { subscriberId = p.subscriber.id, p.subscriber.name, },
-                                      action = new { actionId = p.action.id, p.action.actionType, p.action.destination },
-                                      entities = from e in p.entities select new { entityId = e.Id, e.entityType },
-                                      schedule = new { scheduleId = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                                      subscriber = new {Id = p.subscriber.id, p.subscriber.name, },
+                                      action = new { Id = p.action.id, p.action.actionType, p.action.destination },
+                                      entities = from e in p.entities select new { Id = e.Id, e.entityType },
+                                      schedule = new { Id = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
                                   }).ToList();
                 if (policyList != null && policyList.Count > 0)
                 {
@@ -242,7 +256,7 @@ namespace CyAwareWebApi.Controllers
             {
                 db.policies.Remove(policy);
                 db.SaveChanges();
-                return Ok(policy);
+                return StatusCode(HttpStatusCode.Accepted);
             }
             catch (Exception e)
             {

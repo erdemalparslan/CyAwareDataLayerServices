@@ -39,6 +39,31 @@ namespace CyAwareWebApi.Controllers
             }
         }
 
+        // GET: front/Scans?s=1&m=1
+        [Route("front/scans/subscriber/{subscriberId}/module/{moduleId}")]
+        [ResponseType(typeof(Scan))]
+        public dynamic GetFrontScan(int subscriberId, int moduleId)
+        {
+            var scans = db.scans.Where(s => (s.policy.subscriberId == subscriberId) && (s.policy.moduleId == moduleId))
+                                               .Select(s => new
+                                               {
+                                                   s.id,
+                                                   s.scanRefId,
+                                                   s.scanSuccessCode,
+                                                   s.results
+                                               }).ToList();
+
+            if (scans != null)
+            {
+                return scans;
+            }
+            else
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/scans", "No any scan found!");
+                return StatusCode(HttpStatusCode.NotFound);
+            }
+        }
+
         // GET: back/Scans/5
         [Route("back/scans/{id}")]
         [ResponseType(typeof(Scan))]
