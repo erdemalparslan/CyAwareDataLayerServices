@@ -25,9 +25,16 @@ namespace CyAwareWebApi
             json.SerializerSettings.Re‌​ferenceLoopHandling = ReferenceLoopHandling.Ignore; ;
             json.SerializerSettings.Converters.Add(new JsonEntitiesConverter());
             json.SerializerSettings.Converters.Add(new JSONResultsConverter());
+            //json.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+
             json.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            config.Formatters.JsonFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+
+            config.Services.Replace(typeof(System.Web.Http.Tracing.ITraceWriter), new ExceptionTracer());
+
 
             // Web API routes
             config.MapHttpAttributeRoutes();

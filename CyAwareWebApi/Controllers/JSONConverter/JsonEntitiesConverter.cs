@@ -21,6 +21,8 @@ namespace CyAwareWebApi.Controllers.JSONConverter
                     return new EDictionary();
                 case "EDomain":
                     return new EDomain();
+                case "EHostname":
+                    return new EHostname();
                 case "EEMailAddress":
                     return new EEMailAddress();
                 case "EIdentification":
@@ -29,8 +31,6 @@ namespace CyAwareWebApi.Controllers.JSONConverter
                     return new EIpAddress();
                 case "EIpRange":
                     return new EIpRange();
-                case "EPort":
-                    return new EPort();
                 case "EService":
                     return new EService();
                 case "ETemplate":
