@@ -81,6 +81,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RouteDebugger, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -168,17 +172,32 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_LocalResources\Resource.ar.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.ar.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_LocalResources\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_LocalResources\Resource.tr-TR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.tr-TR.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\MockDB.cs" />
+    <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\GenericHttpClient.cs" />
-    <Compile Include="Controllers\IpController.cs" />
     <Compile Include="Controllers\JSONConverters\JsonCreationConverter.cs" />
     <Compile Include="Controllers\JSONConverters\JsonEntitiesConverter.cs" />
-    <Compile Include="Controllers\SubscriberController.cs" />
     <Compile Include="Controllers\EntityBaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -187,10 +206,14 @@
     <Compile Include="Helpers\HMTLHelperExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EntityBase.cs" />
+    <Compile Include="Models\EntityBaseViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Module.cs" />
+    <Compile Include="Models\Policy.cs" />
     <Compile Include="Models\Subscriber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utility\CultureHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\animate.css" />
@@ -206,6 +229,7 @@
     <Content Include="Content\patterns\otis_redding.png" />
     <Content Include="Content\patterns\shattered.png" />
     <Content Include="Content\patterns\triangular.png" />
+    <Content Include="Content\plugins\steps\jquery.steps.css" />
     <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\font-awesome\css\font-awesome.css" />
@@ -292,48 +316,68 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_Navigation.cshtml" />
     <Content Include="Views\Shared\_TopNavbar.cshtml" />
-    <Content Include="Views\Asset\Create.cshtml" />
-    <Content Include="Views\Asset\Delete.cshtml" />
-    <Content Include="Views\Asset\Details.cshtml" />
-    <Content Include="Views\Asset\Edit.cshtml" />
-    <Content Include="Views\Asset\Index.cshtml" />
-    <Content Include="Views\Email\Create.cshtml" />
-    <Content Include="Views\Email\Delete.cshtml" />
-    <Content Include="Views\Email\Details.cshtml" />
-    <Content Include="Views\Email\Edit.cshtml" />
-    <Content Include="Views\Url\Create.cshtml" />
-    <Content Include="Views\Url\Delete.cshtml" />
-    <Content Include="Views\Url\Details.cshtml" />
-    <Content Include="Views\Url\Edit.cshtml" />
-    <Content Include="Views\Url\Index.cshtml" />
-    <Content Include="Views\Asset\CreateButtonView.cshtml" />
-    <Content Include="Views\EntityBase\Create.cshtml" />
-    <Content Include="Views\EntityBase\Delete.cshtml" />
-    <Content Include="Views\EntityBase\Details.cshtml" />
-    <Content Include="Views\EntityBase\Edit.cshtml" />
-    <Content Include="Views\EntityBase\Index_tablo.cshtml" />
-    <Content Include="Views\Subscriber\Create.cshtml" />
-    <Content Include="Views\Subscriber\Delete.cshtml" />
-    <Content Include="Views\Subscriber\Details.cshtml" />
-    <Content Include="Views\Subscriber\Edit.cshtml" />
-    <Content Include="Views\Subscriber\Index.cshtml" />
-    <Content Include="Views\Ip\Create.cshtml" />
-    <Content Include="Views\Ip\Delete.cshtml" />
-    <Content Include="Views\Ip\Details.cshtml" />
-    <Content Include="Views\Ip\Edit.cshtml" />
     <Content Include="Views\EntityBase\Index.cshtml" />
-    <Content Include="Views\EntityBase\Index - discr.cshtml" />
-    <Content Include="Views\EntityBase\CreatePartial.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\Main.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\Ip.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\Email.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\Port.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\IpRange.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\Twitter.cshtml" />
+    <Content Include="Views\EntityBase\IndexPV\Email.cshtml" />
+    <Content Include="Views\EntityBase\IndexPV\Instagram.cshtml" />
+    <Content Include="Views\EntityBase\IndexPV\Ip.cshtml" />
+    <Content Include="Views\EntityBase\IndexPV\IpRange.cshtml" />
+    <Content Include="Views\EntityBase\IndexPV\Port.cshtml" />
+    <Content Include="Views\EntityBase\EditPV\Ip.cshtml" />
+    <Content Include="Views\EntityBase\EditPV\Email.cshtml" />
+    <Content Include="Views\EntityBase\EditPV\IpRange.cshtml" />
+    <Content Include="Views\EntityBase\EditPV\Twitter.cshtml" />
+    <Content Include="Views\EntityBase\EditPV\Port.cshtml" />
+    <Content Include="Views\EntityBase\DeletePV\Email.cshtml" />
+    <Content Include="Views\EntityBase\DeletePV\Ip.cshtml" />
+    <Content Include="Views\EntityBase\DeletePV\IpRange.cshtml" />
+    <Content Include="Views\EntityBase\DeletePV\Port.cshtml" />
+    <Content Include="Views\EntityBase\DeletePV\Twitter.cshtml" />
+    <Content Include="Views\Policy\Index.cshtml" />
+    <Content Include="Views\EntityBase\IndexPV\Twitter.cshtml" />
+    <Content Include="Views\EntityBase\CreatePV\Instagram.cshtml" />
+    <Content Include="Views\EntityBase\DeletePV\Instagram.cshtml" />
+    <Content Include="Views\EntityBase\EditPV\Instagram.cshtml" />
+    <Content Include="Views\Policy\EditorTemplates\EntityBase.cshtml" />
+    <Content Include="Views\Policy\Create.cshtml" />
+    <Content Include="Views\Policy\CreateWizard.cshtml" />
+    <Content Include="Views\Policy\Edit.cshtml" />
+    <Content Include="Views\Policy\EditWizard.cshtml" />
+    <Content Include="Views\Policy\Delete.cshtml" />
+    <Content Include="Views\Home\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Generic\" />
+    <Folder Include="Content\plugins\iCheck\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-2.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\Resource.tr-TR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.tr-TR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_LocalResources\Resource.ar.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.ar.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

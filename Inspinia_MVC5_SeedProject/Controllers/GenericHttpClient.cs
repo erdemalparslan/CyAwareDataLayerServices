@@ -60,6 +60,14 @@ namespace Inspinia_MVC5_SeedProject.Controllers
             return model;
         }
 
+        public async Task<String> GetByIdAsyncString(TResourceIdentifier identifier)
+        {
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            HttpResponseMessage responseMessage = await httpClient.GetAsync(addressSuffix + identifier.ToString());
+            responseMessage.EnsureSuccessStatusCode();
+            return responseMessage.Content.ReadAsStringAsync().Result;
+        }
+
         public async Task<T> PostAsync(T model)
         {
             HttpResponseMessage responseMessage = await httpClient.PostAsJsonAsync(addressSuffix, model);

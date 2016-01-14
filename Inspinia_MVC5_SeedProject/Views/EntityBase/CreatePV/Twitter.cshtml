@@ -1,0 +1,17 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.TwitterProfile
+
+<div class="form-group">
+    @Html.LabelFor(model => model.idStr, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.idStr)
+        @Html.ValidationMessageFor(model => model.idStr)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.searchStringForUnusualContent, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.searchStringForUnusualContent)
+    </div>
+</div>
+@Html.HiddenFor(model => model.entityType, new { Value = "ETwitterProfile" })

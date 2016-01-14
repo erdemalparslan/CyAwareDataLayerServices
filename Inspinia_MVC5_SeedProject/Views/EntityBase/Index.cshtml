@@ -1,237 +1,46 @@
-﻿@model IEnumerable<Inspinia_MVC5_SeedProject.Models.EntityBase>
+﻿@using Inspinia_MVC5_SeedProject.Models;
+@using Inspinia_MVC5_SeedProject.App_LocalResources
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = Resource.EntityBaseTitle;
 }
-
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-sm-4">
-        <h2>Index</h2>
-        <ol class="breadcrumb">
-            <li class="active">
-                <strong>Entities</strong>
-            </li>
-        </ol>
-    </div>
-</div>
-
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <div class="col-lg-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>Ip Addresses</h5>
-                    
-                    <div class="ibox-tools">
-                        <!--<button data-target="#createIpModal2" data-toggle="modal" class="btn btn-primary btn-xs" type="button">
-                            Create New
-                        </button>-->
-                        @Html.ActionLink("Create New", "Create", null, new { data_modal = "", id = "btnCreate", @class = "btn btn-primary btn-xs" })
-
-                        <div id='dialogDiv' class='modal hide fade in'>
-                            <div id='dialogContent'></div>
-                        </div>
-
-                    </div>
-                    
-                </div>
-                
-                <div class="ibox-content">
-
-                    <table class="table table-striped">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.subscriberId)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ip)
-                            </th>
-                            <th>
-                                Actions
-                            </th>
-                        </tr>
-
-                        @foreach (var item in Model)
-                        {
-                            if (item.entityType == "EIpAddress")
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.subscriberId)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ip)
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("Edit/Ip", new { id = item.id })"><i class="fa fa-edit"></i></a>
-                                        <a href="@Url.Action("Delete/Ip", new { id = item.id })"><i class="fa fa-remove"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-
-                    </table>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>Email Addresses</h5>
-                    <div class="ibox-tools">
-                        @Html.ActionLink("Create New", "Create/Email", null, new { @class = "btn btn-primary btn-xs" })
-                    </div>
-                </div>
-                <div class="ibox-content">
-
-                    <table class="table table-striped">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.subscriberId)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.emailAddress)
-                            </th>
-                            <th></th>
-                        </tr>
-
-                        @foreach (var item in Model)
-                        {
-                            if (item.entityType == "EEMailAddress")
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.subscriberId)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.emailAddress)
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("Edit/Ip", new { id = item.id })"><i class="fa fa-edit"></i></a>
-                                        <a href="@Url.Action("Delete/Ip", new { id = item.id })"><i class="fa fa-remove"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-
-                    </table>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>Port Numbers</h5>
-                    <div class="ibox-tools">
-                        @Html.ActionLink("Create New", "Create/Port", null, new { @class = "btn btn-primary btn-xs" })
-                    </div>
-                </div>
-                <div class="ibox-content">
-
-                    <table class="table table-striped">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.subscriberId)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.port)
-                            </th>
-                            <th></th>
-                        </tr>
-
-                        @foreach (var item in Model)
-                        {
-                            if (item.entityType == "EPort")
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.subscriberId)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.port)
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("Edit/Ip", new { id = item.id })"><i class="fa fa-edit"></i></a>
-                                        <a href="@Url.Action("Delete/Ip", new { id = item.id })"><i class="fa fa-remove"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-
-                    </table>
-
-                </div>
-            </div>
-        </div>
-
+        @Html.Partial("IndexPV/Ip")
+        @Html.Partial("IndexPV/Twitter")
+        @Html.Partial("IndexPV/IpRange")
+        @Html.Partial("IndexPV/Instagram")
     </div>
 </div>
 
-
-
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
+    
     <script type="text/javascript">
-    $(function () {
-
-        //Optional: turn the chache off
-        $.ajaxSetup({ cache: false });
-
-        $('#btnCreate').click(function () {
-            $('#dialogContent').load(this.href, function () {
-                $('#dialogDiv').modal({
-                    backdrop: 'static',
-                    keyboard: true
-                }, 'show');
-                bindForm(this);
+        $(function () {
+            $('a.createBtn, a.editBtn, a.deleteBtn').on('click', function (e) {
+                $('#modalContent').load(this.href, function () {
+                    $('#myModal').modal('show');
+                    $('form', this).submit(function () {
+                        event.preventDefault();
+                        $.ajax({
+                            url: this.action,
+                            type: this.method,
+                            data: $(this).serialize(),
+                            }).done(function() {
+                                $('#myModal').modal('hide');
+                            });
+                    });
+                });
+                return false;
             });
-            return false;
         });
-    });
-
-    function bindForm(dialog) {
-        $('form', dialog).submit(function () {
-            $.ajax({
-                url: this.action,
-                type: this.method,
-                data: $(this).serialize(),
-                success: function (result) {
-                    if (result.success) {
-                        $('#dialogDiv').modal('hide');
-                        // Refresh:
-                        // location.reload();
-                    } else {
-                        $('#dialogContent').html(result);
-                        bindForm();
-                    }
-                }
-            });
-            return false;
-        });
-    }
-
     </script>
 }

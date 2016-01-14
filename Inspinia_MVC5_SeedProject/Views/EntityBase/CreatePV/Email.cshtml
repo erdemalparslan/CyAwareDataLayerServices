@@ -1,0 +1,9 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.Email
+
+<div class="form-group">
+    @Html.LabelFor(model => model.address, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.address)
+    </div>
+</div>
+@Html.HiddenFor(model => model.entityType, new { Value = "EEMailAddress" })
