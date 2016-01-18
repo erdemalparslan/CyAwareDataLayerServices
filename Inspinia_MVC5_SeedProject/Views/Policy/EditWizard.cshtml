@@ -1,0 +1,151 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.EditPolicyViewModel
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+@helper printEntity(int id)
+{
+    foreach (var item in Model.policy.entities)
+    {
+        if (item.id == id)
+        {
+            <input type="checkbox" name="policy.selectedObjects" checked="checked" value="@id">
+            return;
+        }
+    }
+    <input type="checkbox" name="policy.selectedObjects" value="@id">
+}
+
+@Html.HiddenFor(model => model.policy.id)
+@Html.HiddenFor(model => model.policy.actionId)
+@Html.HiddenFor(model => model.policy.isActive)
+
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <p id="info">
+            @Resource.PolicyStepFollow
+        </p>
+        <div id="wizard">
+            <h1>@Resource.PolicyStep1</h1>
+            <div class="step-content">
+                <div id="module_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectModuleInfo
+                    </h3>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="1" id="1" name="policy.module.id" @(Model.policy.module.id == 1 ? "checked" : "disabled")> @Resource.ModuleName1
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="2" id="2" name="policy.module.id" @(Model.policy.module.id == 2 ? "checked" : "disabled")> @Resource.ModuleName2
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="3" id="3" name="policy.module.id" @(Model.policy.module.id == 3 ? "checked" : "disabled")> @Resource.ModuleName3
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <h1>@Resource.PolicyStep2</h1>
+            <div class="step-content">
+                <div id="ip_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectIpInfo
+                    </h3>
+
+                    <div class="col-sm-6">
+                        <p style='text-decoration: underline'>
+                            @Resource.PolicySelectIpCol
+                        </p>
+                        @foreach (var item in Model.ipList)
+                        {
+                            <h5>
+                                @printEntity(item.id)@item.ip
+                            </h5>
+                        }
+                    </div>
+                    <div class="col-sm-6">
+                        <p style='text-decoration: underline'>
+                            @Resource.PolicySelectIpRangeCol
+                        </p>
+                        @foreach (var item in Model.ipRangeList)
+                        {
+                            <h5>
+                                @printEntity(item.id)@(item.ip + " / " + item.range)
+                            </h5>
+                        }
+                    </div>
+                </div>
+                <div id="twitter_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectTwitterInfo
+                    </h3>
+
+                    @foreach (var item in Model.twitterList)
+                    {
+                        @printEntity(item.id)@item.idStr
+                    }
+
+                </div>
+                <div id="instagram_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectInstagramInfo
+                    </h3>
+                    @foreach (var item in Model.instagramList)
+                    {
+                        @printEntity(item.id)@item.idStr
+                    }
+                </div>
+            </div>
+
+            <h1>@Resource.PolicyStep3</h1>
+            <div class="step-content">
+                <div id="schedule_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicyDefineScheduleInfo
+                    </h3>
+                    <div class="col-sm-6">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="1" id="1" name="policy.scheduleType" @(Model.policy.scheduleType == 1 ? "checked" : "true")> @Resource.PolicyScheduleMonthInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="2" id="2" name="policy.scheduleType" @(Model.policy.scheduleType == 2 ? "checked" : "true")> @Resource.PolicyScheduleWeekInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="3" id="3" name="policy.scheduleType" @(Model.policy.scheduleType == 3 ? "checked" : "true")> @Resource.PolicyScheduleDayInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="4" id="4" name="policy.scheduleType" @(Model.policy.scheduleType == 4 ? "checked" : "true")> @Resource.PolicyScheduleHourInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="5" id="5" name="policy.scheduleType" @(Model.policy.scheduleType == 5 ? "checked" : "true")> @Resource.PolicyScheduleMinuteInfo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        @Resource.PolicySchedulePeriod:
+                        <input type="text" name="policy.schedule.period" value="@Model.policy.s_period">
+                        <br>
+                        @Resource.PolicyScheduleStartAt:
+                        <input type="text" name="policy.schedule.enableStartTime24Format" value="@Model.policy.s_enableStartTime24Format">
+                        <br>
+                        @Resource.PolicyScheduleFinishAt:
+                        <input type="text" name="policy.schedule.enableEndTime24Format" value="@Model.policy.s_enableEndTime24Format">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</div>
+</div>

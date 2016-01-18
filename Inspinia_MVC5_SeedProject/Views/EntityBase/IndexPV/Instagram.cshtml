@@ -1,0 +1,44 @@
+﻿@using Inspinia_MVC5_SeedProject.Models;
+@using Inspinia_MVC5_SeedProject.App_LocalResources;
+
+<div class="col-lg-6">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@Resource.IndexHeaderInstProf</h5>
+            <div class="ibox-tools">
+                @Html.ActionLink(Resource.IndexTablePropCreateNew, "Create/Instagram", null, new { id = "btnInstagram", @class = "btn btn-primary btn-xs createBtn" })
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Resource.ProfileId
+                    </th>
+                    <th>
+                        @Resource.SocNetSearchStr
+                    </th>
+                    <th>
+                        @Resource.IndexTablePropAction
+                    </th>
+                </tr>
+
+                @foreach (InstagramProfile item in ViewBag.InstagramProfiles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.idStr)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.searchStringForUnusualContent)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit/Instagram", new { id = item.id })" class="editBtn"><i class="fa fa-edit fa-lg"></i></a>
+                            <a href="@Url.Action("Delete/Instagram", new { id = item.id })" class="deleteBtn"><i class="fa fa-remove fa-lg"></i></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

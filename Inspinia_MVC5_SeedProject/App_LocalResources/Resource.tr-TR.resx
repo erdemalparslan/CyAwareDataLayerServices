@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="IpAddress" xml:space="preserve">
+    <value>Ip Adresi</value>
+  </data>
+	<data name="IpRequired" xml:space="preserve">
+    <value>Ip adresi gereklidir</value>
+  </data>
+	<data name="ActivationDateColHeader" xml:space="preserve">
+    <value>Aktivasyon Tarihi</value>
+  </data>
+	<data name="CancelBtn" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+	<data name="CreateHeaderInstProf" xml:space="preserve">
+    <value>Instagram Profili Oluştur</value>
+  </data>
+	<data name="CreateHeaderIpAddr" xml:space="preserve">
+    <value>Ip Adresi Oluştur</value>
+  </data>
+	<data name="CreateHeaderIpRange" xml:space="preserve">
+    <value>Ip Aralığı Oluştur</value>
+  </data>
+	<data name="CreateHeaderTwitProf" xml:space="preserve">
+    <value>Twitter Profili Oluştur</value>
+  </data>
+	<data name="DeleteBtn" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+	<data name="DeleteHeaderInstProf" xml:space="preserve">
+    <value>Instagram Profili Silme Onayı</value>
+  </data>
+	<data name="DeleteHeaderIpAddr" xml:space="preserve">
+    <value>Ip Adresi Silme Onayı</value>
+  </data>
+	<data name="DeleteHeaderIpRange" xml:space="preserve">
+    <value>Ip Aralığı Silme Onayı</value>
+  </data>
+	<data name="DeleteHeaderTwitProf" xml:space="preserve">
+    <value>Twitter Profili Silme Onayı</value>
+  </data>
+	<data name="IP" xml:space="preserve">
+		<value>IP</value>
+	</data>
+	<data name="Schedule1" xml:space="preserve">
+		<value>&lt;b&gt;{0}&lt;/b&gt; bir</value>
+	</data>
+	<data name="Schedule1Between" xml:space="preserve">
+		<value>&lt;b&gt;{0}&lt;/b&gt; bir, saat &lt;b&gt;{1}&lt;/b&gt; ile &lt;b&gt;{2}&lt;/b&gt; arasında</value>
+	</data>
+	<data name="ScheduleColumnHeader" xml:space="preserve">
+		<value>Çalışma Zamanı</value>
+	</data>
+	<data name="ScheduleDay" xml:space="preserve">
+		<value>Günde</value>
+	</data>
+	<data name="ScheduleHour" xml:space="preserve">
+		<value>Saatte</value>
+	</data>
+	<data name="ScheduleMinute" xml:space="preserve">
+		<value>Dakikada</value>
+	</data>
+	<data name="ScheduleMonth" xml:space="preserve">
+		<value>Ayda</value>
+	</data>
+	<data name="ScheduleMore" xml:space="preserve">
+		<value>&lt;b&gt;{0} {1}&lt;/b&gt; bir</value>
+	</data>
+	<data name="ScheduleMoreBetween" xml:space="preserve">
+		<value>&lt;b&gt;{0} {1}&lt;/b&gt; bir, saat &lt;b&gt;{2}&lt;/b&gt; ile &lt;b&gt;{3}&lt;/b&gt; arasında</value>
+	</data>
+	<data name="ScheduleWeek" xml:space="preserve">
+		<value>Haftada</value>
+	</data>
+	<data name="SettingsChooseYourLanguage" xml:space="preserve">
+		<value>Dil Seçimi Yapınız</value>
+	</data>
+	<data name="EditHeaderInstProf" xml:space="preserve">
+		<value>Instagram Profili Güncelle</value>
+	</data>
+	<data name="EditHeaderIpAddr" xml:space="preserve">
+		<value>Ip Adresi Güncelle</value>
+	</data>
+	<data name="EditHeaderIpRange" xml:space="preserve">
+		<value>Ip Aralığı Güncelle</value>
+	</data>
+	<data name="EditHeaderTwitProf" xml:space="preserve">
+		<value>Twitter Profili Güncelle</value>
+	</data>
+	<data name="EntityBaseTitle" xml:space="preserve">
+		<value>Kaynaklar</value>
+	</data>
+	<data name="IndexHeaderInstProf" xml:space="preserve">
+		<value>Instagram Profilleri</value>
+	</data>
+	<data name="IndexHeaderIpAddr" xml:space="preserve">
+		<value>Ip Adresleri</value>
+	</data>
+	<data name="IndexHeaderIpRange" xml:space="preserve">
+		<value>Ip Aralıkları</value>
+	</data>
+	<data name="IndexHeaderTwitProf" xml:space="preserve">
+		<value>Twitter Profilleri</value>
+	</data>
+	<data name="IndexTablePropAction" xml:space="preserve">
+		<value>İşlemler</value>
+	</data>
+	<data name="IndexTablePropCreateNew" xml:space="preserve">
+		<value>Yeni Oluştur</value>
+	</data>
+	<data name="InstagramProfile" xml:space="preserve">
+		<value>Instagram Profili</value>
+	</data>
+	<data name="IpLengthCheck" xml:space="preserve">
+		<value>Lütfen geçerli bir ip adresi giriniz (örn. 123.32.45.56)</value>
+	</data>
+	<data name="IpRange" xml:space="preserve">
+		<value>Ip Aralığı</value>
+	</data>
+	<data name="IpRangeLengthCheck" xml:space="preserve">
+		<value>Lütfen geçerli bir ip aralığı giriniz (0-32 arasında)</value>
+	</data>
+	<data name="IpRangeRequired" xml:space="preserve">
+		<value>Ip aralığı gereklidir</value>
+	</data>
+	<data name="ModuleColumnHeader" xml:space="preserve">
+		<value>Modül</value>
+	</data>
+	<data name="PolicyTableTitle" xml:space="preserve">
+		<value>Politikalar</value>
+	</data>
+	<data name="PolicyTitle" xml:space="preserve">
+		<value>Politikalar</value>
+	</data>
+	<data name="ProfileId" xml:space="preserve">
+		<value>Profil Id</value>
+	</data>
+	<data name="ProfileIdRequired" xml:space="preserve">
+		<value>Profil id gereklidir</value>
+	</data>
+	<data name="SaveBtn" xml:space="preserve">
+		<value>Kaydet</value>
+	</data>
+	<data name="SocNetSearchStr" xml:space="preserve">
+		<value>Aranacak İfadeler</value>
+	</data>
+	<data name="SocNetSearchStrRequired" xml:space="preserve">
+		<value>Aranacak ifadeler gereklidir</value>
+	</data>
+	<data name="StatusColHeader" xml:space="preserve">
+		<value>Durum</value>
+	</data>
+	<data name="TwitterProfile" xml:space="preserve">
+		<value>Twitter Profili</value>
+	</data>
+	<data name="UpdateBtn" xml:space="preserve">
+		<value>Güncelle</value>
+	</data>
+	<data name="ModuleName1" xml:space="preserve">
+		<value>Servis ve sistem erişim kontrol modülü</value>
+	</data>
+	<data name="ModuleName2" xml:space="preserve">
+		<value>Twitter aktivitesi kontrol modülü</value>
+	</data>
+	<data name="ModuleName3" xml:space="preserve">
+		<value>Instagram aktivitesi kontrol modülü</value>
+	</data>
+	<data name="PolicyCreateTitle" xml:space="preserve">
+		<value>Politika Oluştur</value>
+	</data>
+	<data name="PolicyEditTitle" xml:space="preserve">
+		<value>Politika Güncelle</value>
+	</data>
+	<data name="PolicyDeleteTitle" xml:space="preserve">
+		<value>Politika Silme Onayı</value>
+	</data>
+	<data name="PolicyStatusActive" xml:space="preserve">
+		<value>Aktif</value>
+	</data>
+	<data name="PolicyStatusInactive" xml:space="preserve">
+		<value>Pasif</value>
+	</data>
+	<data name="PolicyStep1" xml:space="preserve">
+		<value>Birinci Adım</value>
+	</data>
+	<data name="PolicyStep2" xml:space="preserve">
+		<value>İkinci Adım</value>
+	</data>
+	<data name="PolicyStep3" xml:space="preserve">
+		<value>Üçüncü Adım</value>
+	</data>
+	<data name="PolicyStepFollow" xml:space="preserve">
+		<value>Lütfen adımları takip edin...</value>
+	</data>
+	<data name="PolicySelectModuleInfo" xml:space="preserve">
+		<value>Politika için bir modül seçiniz</value>
+	</data>
+	<data name="PolicySelectIpInfo" xml:space="preserve">
+		<value>Politka için ip / ip aralığı seçiniz</value>
+	</data>
+	<data name="PolicySelectTwitterInfo" xml:space="preserve">
+		<value>Politika için twitter profil(ler)i seçiniz</value>
+	</data>
+	<data name="PolicySelectInstagramInfo" xml:space="preserve">
+		<value>Politika için instagram profil(ler)i seçiniz</value>
+	</data>
+	<data name="PolicySelectIpCol" xml:space="preserve">
+		<value>Ip adresi kaynakları</value>
+	</data>
+	<data name="PolicySelectIpRangeCol" xml:space="preserve">
+		<value>Ip aralığı kaynakları</value>
+	</data>
+	<data name="PolicyDefineScheduleInfo" xml:space="preserve">
+		<value>Çalışma düzeni tanımlayınız</value>
+	</data>
+	<data name="PolicyScheduleDayInfo" xml:space="preserve">
+		<value>Gün</value>
+	</data>
+	<data name="PolicyScheduleHourInfo" xml:space="preserve">
+		<value>Saat</value>
+	</data>
+	<data name="PolicyScheduleMonthInfo" xml:space="preserve">
+		<value>Ay</value>
+	</data>
+	<data name="PolicyScheduleWeekInfo" xml:space="preserve">
+		<value>Hafta</value>
+	</data>
+	<data name="PolicyScheduleMinuteInfo" xml:space="preserve">
+		<value>Dakika</value>
+	</data>
+	<data name="PolicySchedulePeriod" xml:space="preserve">
+		<value>Periyot</value>
+	</data>
+	<data name="PolicyScheduleStartAt" xml:space="preserve">
+		<value>Başlangıç</value>
+	</data>
+	<data name="PolicyScheduleFinishAt" xml:space="preserve">
+		<value>Bitiş</value>
+	</data>
+	<data name="PolicySelectEntityInfo" xml:space="preserve">
+		<value>En az bir kaynak seçiniz</value>
+	</data>
+	<data name="PolicyFillAllFields" xml:space="preserve">
+		<value>Tüm gerekli alanları doldurunuz</value>
+	</data>
+	<data name="SettingsTitle" xml:space="preserve">
+		<value>Ayarlar</value>
+	</data>
+	<data name="Search" xml:space="preserve">
+		<value>Ara</value>
+	</data>
+	<data name="Register" xml:space="preserve">
+		<value>Kayıt Ol</value>
+	</data>
+	<data name="Login" xml:space="preserve">
+		<value>Giriş Yap</value>
+	</data>
+</root>

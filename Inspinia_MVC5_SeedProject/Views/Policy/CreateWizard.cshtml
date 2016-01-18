@@ -1,0 +1,134 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.EntityBaseViewModel
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <p id="info">
+            @Resource.PolicyStepFollow
+        </p>
+        <div id="wizard">
+            <h1>@Resource.PolicyStep1</h1>
+            <div class="step-content">
+                <div id="module_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectModuleInfo
+                    </h3>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="1" id="1" name="module.id"> @Resource.ModuleName1
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="2" id="2" name="module.id"> @Resource.ModuleName2
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="3" id="3" name="module.id"> @Resource.ModuleName3
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <h1>@Resource.PolicyStep2</h1>
+            <div class="step-content">
+                <div id="ip_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectIpInfo
+                    </h3>
+
+                    <div class="col-sm-6">
+                        <p style='text-decoration: underline'>
+                            @Resource.PolicySelectIpCol
+                        </p>
+                        @foreach (var item in Model.ipList)
+                        {
+                            <h5>
+                                <input type="checkbox" name="selectedObjects" value="@item.id">@item.ip
+                            </h5>
+                        }
+                    </div>
+                    <div class="col-sm-6">
+                        <p style='text-decoration: underline'>
+                            @Resource.PolicySelectIpRangeCol
+                        </p>
+                        @foreach (var item in Model.ipRangeList)
+                        {
+                            <h5>
+                                <input type="checkbox" name="selectedObjects" value="@item.id">@(item.ip + " / " + item.range)
+                            </h5>
+                        }
+                    </div>
+                </div>
+                <div id="twitter_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectTwitterInfo
+                    </h3>
+
+                    @foreach (var item in Model.twitterList)
+                    {
+                        <input type="checkbox" name="selectedObjects" value="@item.id">@item.idStr
+                    }
+
+                </div>
+                <div id="instagram_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicySelectInstagramInfo
+                    </h3>
+                    @foreach (var item in Model.instagramList)
+                    {
+                        <input type="checkbox" name="selectedObjects" value="@item.id">@item.idStr
+                    }
+                </div>
+            </div>
+
+            <h1>@Resource.PolicyStep3</h1>
+            <div class="step-content">
+                <div id="schedule_div" class="m-t-md">
+                    <h3>
+                        @Resource.PolicyDefineScheduleInfo
+                    </h3>
+                    <div class="col-sm-6">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="1" id="1" name="scheduleType"> @Resource.PolicyScheduleMonthInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="2" id="2" name="scheduleType"> @Resource.PolicyScheduleWeekInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="3" id="3" name="scheduleType"> @Resource.PolicyScheduleDayInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="4" id="4" name="scheduleType"> @Resource.PolicyScheduleHourInfo
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="5" id="5" name="scheduleType"> @Resource.PolicyScheduleMinuteInfo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        @Resource.PolicySchedulePeriod:
+                        <input type="text" name="s_period">
+                        <br>
+                        @Resource.PolicyScheduleStartAt:
+                        <input type="text" name="s_enableStartTime24Format">
+                        <br>
+                        @Resource.PolicyScheduleFinishAt:
+                        <input type="text" name="s_enableEndTime24Format">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

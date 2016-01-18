@@ -1,0 +1,25 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.EditPolicyViewModel
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">@Resource.PolicyEditTitle</h4>
+</div>
+
+<div class="modal-body">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            
+
+            @Html.Partial("EditWizard", Model)
+           
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@Resource.CancelBtn</button>
+            <button id="editPolicyBtn" type="submit" class="btn btn-primary">@Resource.UpdateBtn</button>
+        </div>
+    }
+</div>

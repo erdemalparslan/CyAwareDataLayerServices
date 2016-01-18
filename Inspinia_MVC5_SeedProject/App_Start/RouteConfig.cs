@@ -12,10 +12,10 @@ namespace Inspinia_MVC5_SeedProject
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            
             routes.MapRoute(
                 name: "EntityBaseRoute",
-                url: "{controller}/{action}/{type}/{id}",
+                url: "EntityBase/{action}/{type}/{id}",
                 defaults: new { controller = "EntityBase", action = "Index", type = UrlParameter.Optional, id = UrlParameter.Optional }
             );
 

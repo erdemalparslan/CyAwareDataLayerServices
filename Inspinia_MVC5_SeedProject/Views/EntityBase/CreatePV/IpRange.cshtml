@@ -1,0 +1,18 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.IpRange
+
+<div class="form-group">
+    @Html.LabelFor(model => model.ip, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.ip)
+        @Html.ValidationMessageFor(model => model.ip)
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.range, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.range)
+        @Html.ValidationMessageFor(model => model.range)
+    </div>
+</div>
+@Html.HiddenFor(model => model.entityType, new { Value = "EIpRange" })

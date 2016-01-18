@@ -1,0 +1,33 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.EntityBase
+@using Inspinia_MVC5_SeedProject.Models
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+@{ 
+    string entityType = Model.entityType;
+    string key = Model.id.ToString();
+    string print = "";
+}
+
+<p>
+    @if (entityType == "EIpAddress")
+    {
+        Ip ipAdr = (Ip)ViewData[key];
+        print = "<b>" + Resource.IP + "</b> : " + ipAdr.ip;
+    }
+    else if (entityType == "EIpRange")
+    {
+        IpRange ipRng = (IpRange)ViewData[key];
+        print = "<b>" + Resource.IpRange + "</b> : " + ipRng.ip + " / " + ipRng.range.ToString();
+    }
+    else if (entityType == "EInstagramProfile")
+    {
+        InstagramProfile insPro = (InstagramProfile)ViewData[key];
+        print = "<b>" + Resource.InstagramProfile + "</b> :" + insPro.screenName;
+    }
+    else if (entityType == "ETwitterProfile")
+    {
+        TwitterProfile twtPro = (TwitterProfile)ViewData[key];
+        print = "<b>" + Resource.TwitterProfile + "</b> :" + twtPro.screenName;
+    }
+    @Html.Raw(print)
+</p>

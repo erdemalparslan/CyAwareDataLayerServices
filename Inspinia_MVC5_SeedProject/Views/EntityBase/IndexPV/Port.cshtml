@@ -1,0 +1,49 @@
+﻿@using Inspinia_MVC5_SeedProject.Models;
+
+<div class="col-lg-6">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>Port Numbers</h5>
+            <div class="ibox-tools">
+                @Html.ActionLink("Create New", "Create/Port", null, new { @class = "btn btn-primary btn-xs createBtn" })
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        Subscriber Id
+                    </th>
+                    <th>
+                        Port Numbers
+                    </th>
+                    <th>
+                        Port Types
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+
+                @foreach (Port item in ViewBag.PortNumbers)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.subscriberId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.port)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.type)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit/Port", new { id = item.id })" class="editBtn"><i class="fa fa-edit fa-lg"></i></a>
+                            <a href="@Url.Action("Delete/Port", new { id = item.id })" class="deleteBtn"><i class="fa fa-remove fa-lg"></i></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

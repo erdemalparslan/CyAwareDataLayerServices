@@ -1,0 +1,37 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.Email
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Confirmation to Delete Email Address Entity</h4>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("Delete", "EntityBase"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.subscriberId)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.subscriberId)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.address)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.address)
+                    </dd>
+                </dl>
+
+                @Html.HiddenFor(model => model.id)
+                @Html.HiddenFor(model => model.entityType)
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Delete</button>
+        </div>
+    }
+</div>

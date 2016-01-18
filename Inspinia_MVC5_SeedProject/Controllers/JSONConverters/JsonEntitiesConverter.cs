@@ -14,14 +14,34 @@ namespace Inspinia_MVC5_SeedProject.Controllers
             var typeName = jsonObject["entityType"].ToString();
             switch (typeName)
             {
+                case "EApplication":
+                    return new Application();
+                case "EDictionary":
+                    return new Dictionary();
+                case "EDomain":
+                    return new Domain();
                 case "EEMailAddress":
                     return new Email();
+                case "EIdentification":
+                    return new Identificaiton();
+                case "EInstagramProfile":
+                    return new InstagramProfile();
                 case "EIpAddress":
                     return new Ip();
+                case "EIpRange":
+                    return new IpRange();
+                case "EPort":
+                    return new Port();
+                case "EService":
+                    return new Service();
+                case "ETemplate":
+                    return new Template();
+                case "ETwitterProfile":
+                    return new TwitterProfile();
                 case "EUrl":
                     return new Url();
                 default:
-                    return new Ip();
+                    return new EntityBase();
             }
         }
     }

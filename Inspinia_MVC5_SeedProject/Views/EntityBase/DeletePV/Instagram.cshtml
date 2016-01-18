@@ -1,0 +1,38 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.InstagramProfile
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">@Resource.DeleteHeaderInstProf</h4>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("Delete", "EntityBase"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.idStr)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.idStr)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.searchStringForUnusualContent)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.searchStringForUnusualContent)
+                </dd>
+            </dl>
+
+            @Html.HiddenFor(model => model.id)
+            @Html.HiddenFor(model => model.entityType)
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@Resource.CancelBtn</button>
+            <button type="submit" class="btn btn-primary">@Resource.DeleteBtn</button>
+        </div>
+    }
+</div>

@@ -1,4 +1,19 @@
-﻿<nav class="navbar-default navbar-static-side" role="navigation">
+﻿@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+@{ 
+    String control = Session["mock"] as String;
+    string name = "";
+    if (control != "true")
+    {
+        name = "Mock";
+    }
+    else
+    {
+        name = "Unmock";
+    }
+}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav" id="side-menu">
             <li class="nav-header">
@@ -6,8 +21,8 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <span class="clear">
                             <span class="block m-t-xs">
-                                <strong class="font-bold">Example user</strong>
-                            </span> <span class="text-muted text-xs block">Example menu <b class="caret"></b></span>
+                                <strong class="font-bold">Company Name</strong>
+                            </span> <span class="text-muted text-xs block">Company menu <b class="caret"></b></span>
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
@@ -19,19 +34,16 @@
                 </div>
             </li>
             <li class="@Html.IsSelected(action: "Index")">
-                <a href="@Url.Action("Index", "Home")"><i class="fa fa-laptop"></i> <span class="nav-label">Reports</span> </a>
+                <a href="@Url.Action("Settings", "Home")"><i class="fa fa-laptop"></i> <span class="nav-label">@Resource.SettingsTitle</span> </a>
             </li>
-            <li class="@Html.IsSelected(action: "Minor")">
-                <a href="@Url.Action("Minor", "Home")"><i class="fa fa-desktop"></i> <span class="nav-label">Policy</span></a>
-            </li>
-            <li class="@Html.IsSelected(action: "Minor")">
-                <a href="@Url.Action("Index", "Subscriber")"><i class="fa fa-desktop"></i> <span class="nav-label">Subscribers</span></a>
+            <li class="@Html.IsSelected(action: "Policy")">
+                <a href="@Url.Action("Index", "Policy")"><i class="fa fa-desktop"></i> <span class="nav-label">@Resource.PolicyTitle</span></a>
             </li>
             <li class="@Html.IsSelected(action: "EntityBase")">
-                <a href="@Url.Action("Index", "EntityBase")"><i class="fa fa-edit"></i> <span class="nav-label">Assets</span></a>
+                <a href="@Url.Action("Index", "EntityBase")"><i class="fa fa-edit"></i> <span class="nav-label">@Resource.EntityBaseTitle</span></a>
             </li>
-            <li class="@Html.IsSelected(action: "Minor")">
-                <a href="@Url.Action("Minor", "Home")"><i class="fa fa-desktop"></i> <span class="nav-label">User Management</span></a>
+            <li>
+                <a href="@Url.Action(name, "EntityBase")"><i class="fa fa-edit"></i> <span class="nav-label">@name</span></a>
             </li>
         </ul>
     </div>

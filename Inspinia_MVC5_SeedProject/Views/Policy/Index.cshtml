@@ -1,0 +1,337 @@
+﻿@model IEnumerable<Inspinia_MVC5_SeedProject.Models.Policy>
+@using Inspinia_MVC5_SeedProject.Models
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+@section css{
+    @Styles.Render("~/Content/iCheck")    
+    @Styles.Render("~/Content/steps")
+}
+
+@{
+    ViewBag.Title = Resource.PolicyTitle;
+}
+
+@helper DisplaySchedule(Policy p) { 
+
+int period = p.s_period;
+string periodElement = "";
+int start = p.s_enableStartTime24Format;
+int end = p.s_enableEndTime24Format;
+
+if (p.s_isDaily)
+{
+    periodElement = Resource.ScheduleDay;
+}
+else if (p.s_isHourly)
+{
+    periodElement = Resource.ScheduleHour;
+}
+else if (p.s_isMonthly)
+{
+    periodElement = Resource.ScheduleMonth;
+}
+else if (p.s_isPerMinute)
+{
+    periodElement = Resource.ScheduleMinute;
+}
+else if (p.s_isWeekly)
+{
+    periodElement = Resource.ScheduleWeek;
+}
+
+// per {0}     --per month
+// per {0} {1}  -- per 3 months
+// per {1} between {2} and {3}   --per hour between 2 and 3
+// per {0} {1} between {2} and {3}   --per 3 hours between 2 and 3
+
+string print = "";
+
+if (start != 0 || end != 0)
+{
+    if (period == 1)
+    {
+        print = string.Format(Resource.Schedule1Between, periodElement, start, end);
+    }
+    else
+    {
+        print = string.Format(Resource.ScheduleMoreBetween, period, periodElement, start, end);
+    }
+}
+else
+{
+    if (period == 1)
+    {
+        print = string.Format(Resource.Schedule1, periodElement);
+    }
+    else
+    {
+        print = string.Format(Resource.ScheduleMore, period, periodElement);
+    }
+}
+
+@Html.Raw(print)
+}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>@Resource.PolicyTableTitle</h5>
+                    <div class="ibox-tools">
+                        @Html.ActionLink(Resource.IndexTablePropCreateNew, "Create", null, new { id = "btnPolicy", @class = "btn btn-primary btn-xs createBtn" })
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.isActive)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.activationDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.module)
+                            </th>
+                            <th>
+                                @Resource.ScheduleColumnHeader
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.actionId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.entities)
+                            </th>
+                            <th>
+                                @Resource.IndexTablePropAction
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    
+                                    @if (item.isActive)
+                                    {
+
+                                        <div class="radio i-checks"><label> <input type="radio" checked="" value="@item.id" name="@item.id"> <i></i></label></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="radio i-checks"><label> <input type="radio" value="@item.id" name="@item.id"> <i></i></label></div>
+                                    }
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.activationDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.module.moduleName)
+                                </td>
+                                <td>
+                                    @DisplaySchedule(item)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.actionId)
+                                </td>
+                                <td>
+                                    @Html.EditorFor(modelItem => item.entities)
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Edit", new { id = item.id })" class="editBtn"><i class="fa fa-edit fa-lg"></i></a>
+                                    <a href="@Url.Action("Delete", new { id = item.id })" class="deleteBtn"><i class="fa fa-remove fa-lg"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        var step_one_radio_selected;
+        var step_two_checkbox_selected;
+        var step_three_radio_selected;
+        $(function () {
+            $('a.createBtn').on('click', function (e) {
+                $('#modalContent').load(this.href, function () {
+                   $('#myModal').modal('show');
+                   $('#wizard').steps({
+                       enableFinishButton: false,
+                       enableCancelButton: false,
+                       onStepChanging: function (event, currentIndex, newIndex) {
+                           
+                           $("#info").text(@Resource.PolicyStepFollow);
+                           $("#info").css('color', 'black');
+
+                           if (currentIndex > newIndex) {
+                               return true;
+                           }
+
+                           if (newIndex > currentIndex) {
+                               if (newIndex == 1) {
+                                   step_one_radio_selected = $("input[type='radio']:checked", '#module_div').attr("value");
+                                   if (!step_one_radio_selected) {
+                                       $("#info").text(@Resource.PolicySelectModuleInfo);
+                                       $("#info").css('color', 'red');
+                                       return false;
+                                   }
+                               } else if (newIndex == 2) {
+                                   if (step_one_radio_selected == 1) {
+                                       step_two_checkbox_selected = $("input[type='checkbox']:checked", '#ip_div').val();
+                                   } else if (step_one_radio_selected == 2) {
+                                       step_two_checkbox_selected = $("input[type='checkbox']:checked", '#twitter_div').val();
+                                   } else if (step_one_radio_selected == 3) {
+                                       step_two_checkbox_selected = $("input[type='checkbox']:checked", '#instagram_div').val();
+                                   }
+                                   if (!step_two_checkbox_selected) {
+                                       $("#info").text(@Resource.PolicySelectEntityInfo);
+                                       $("#info").css('color', 'red');
+                                       return false;
+                                   }
+                               }
+                           }
+                           
+                           return true;
+                       },
+                       onStepChanged: function (event, currentIndex, priorIndex) {
+                           if (currentIndex == 1) {
+                               if (step_one_radio_selected == 1) {
+                                   $('#ip_div').show();
+                                   $('#twitter_div').hide();
+                                   $('#instagram_div').hide();
+                               } else if (step_one_radio_selected == 2) {
+                                   $('#twitter_div').show();
+                                   $('#ip_div').hide();
+                                   $('#instagram_div').hide();
+                               } else if (step_one_radio_selected == 3) {
+                                   $('#instagram_div').show();
+                                   $('#ip_div').hide();
+                                   $('#twitter_div').hide();
+                               }
+                           } 
+                       }
+                   });
+                });
+                return false;
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('a.editBtn').on('click', function (e) {
+                $('#modalContent').load(this.href, function () {
+                    $('#myModal').modal('show');
+                    $('#wizard').steps({
+                        enableFinishButton: false,
+                        enableCancelButton: false,
+                        onStepChanging: function (event, currentIndex, newIndex) {
+
+                            $("#info").text(@Resource.PolicyStepFollow);
+                            $("#info").css('color', 'black');
+
+                            if (currentIndex > newIndex) {
+                                return true;
+                            }
+
+                            if (newIndex > currentIndex) {
+                                if (newIndex == 2) {
+                                    step_one_radio_selected = $("input[type='radio']:checked", '#module_div').attr("value");
+                                    if (step_one_radio_selected == 1) {
+                                        step_two_checkbox_selected = $("input[type='checkbox']:checked", '#ip_div').val();
+                                    } else if (step_one_radio_selected == 2) {
+                                        step_two_checkbox_selected = $("input[type='checkbox']:checked", '#twitter_div').val();
+                                    } else if (step_one_radio_selected == 3) {
+                                        step_two_checkbox_selected = $("input[type='checkbox']:checked", '#instagram_div').val();
+                                    }
+                                    if (!step_two_checkbox_selected) {
+                                        $("#info").text(@Resource.PolicySelectEntityInfo);
+                                        $("#info").css('color', 'red');
+                                        return false;
+                                    }
+                                }
+                            }
+
+                            return true;
+                        },
+                        onStepChanged: function (event, currentIndex, priorIndex) {
+                            if (currentIndex == 1) {
+                                step_one_radio_selected = $("input[type='radio']:checked", '#module_div').attr("value");
+                                if (step_one_radio_selected == 1) {
+                                    $('#ip_div').show();
+                                    $('#twitter_div').hide();
+                                    $('#instagram_div').hide();
+                                } else if (step_one_radio_selected == 2) {
+                                    $('#twitter_div').show();
+                                    $('#ip_div').hide();
+                                    $('#instagram_div').hide();
+                                } else if (step_one_radio_selected == 3) {
+                                    $('#instagram_div').show();
+                                    $('#ip_div').hide();
+                                    $('#twitter_div').hide();
+                                }
+                            }
+                        }
+                    });
+                });
+                return false;
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('a.deleteBtn').on('click', function (e) {
+                $('#modalContent').load(this.href, function () {
+                    $('#myModal').modal('show');
+                });
+                return false;
+            });
+        });
+    </script>
+    
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+            $('#myModal').submit(function () {
+                deleteControl = $("button[type='submit']").attr('id');
+                if (deleteControl == 'deletePolicyBtn')
+                    return true;
+
+                step_two_checkbox_selected = $("input[type='checkbox']:checked").val();
+                if (!step_two_checkbox_selected) {
+                    $("#info").text(@Resource.PolicySelectEntityInfo);
+                    $("#info").css('color', 'red');
+                    return false;
+                }
+
+                step_three_radio_selected = $("input[type='radio']:checked", '#schedule_div').val();
+                if (!step_three_radio_selected) {
+                    $("#info").text(@Resource.PolicyFillAllFields);
+                    $("#info").css('color', 'red');
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/steps")
+}

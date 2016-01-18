@@ -1,0 +1,44 @@
+﻿@using Inspinia_MVC5_SeedProject.Models;
+@using Inspinia_MVC5_SeedProject.App_LocalResources;
+
+<div class="col-lg-6">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@Resource.IndexHeaderIpRange</h5>
+            <div class="ibox-tools">
+                @Html.ActionLink(Resource.IndexTablePropCreateNew, "Create/IpRange", null, new { id = "btnIpRange", @class = "btn btn-primary btn-xs createBtn" })
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Resource.IpAddress
+                    </th>
+                    <th>
+                        @Resource.IpRange
+                    </th>
+                    <th>
+                        @Resource.IndexTablePropAction
+                    </th>
+                </tr>
+
+                @foreach (IpRange item in ViewBag.IpRanges)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ip)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.range)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit/IpRange", new { id = item.id })" class="editBtn"><i class="fa fa-edit fa-lg"></i></a>
+                            <a href="@Url.Action("Delete/IpRange", new { id = item.id })" class="deleteBtn"><i class="fa fa-remove fa-lg"></i></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

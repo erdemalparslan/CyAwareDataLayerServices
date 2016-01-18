@@ -1,0 +1,163 @@
+﻿@model Inspinia_MVC5_SeedProject.Models.Policy
+@using Inspinia_MVC5_SeedProject.Models
+@using Inspinia_MVC5_SeedProject.App_LocalResources
+
+@helper DisplaySchedule(Policy p)
+{
+
+int period = p.s_period;
+string periodElement = "";
+int start = p.s_enableStartTime24Format;
+int end = p.s_enableEndTime24Format;
+
+if (p.s_isDaily)
+{
+    periodElement = Resource.ScheduleDay;
+}
+else if (p.s_isHourly)
+{
+    periodElement = Resource.ScheduleHour;
+}
+else if (p.s_isMonthly)
+{
+    periodElement = Resource.ScheduleMonth;
+}
+else if (p.s_isPerMinute)
+{
+    periodElement = Resource.ScheduleMinute;
+}
+else if (p.s_isWeekly)
+{
+    periodElement = Resource.ScheduleWeek;
+}
+
+// per {0}     --per month
+// per {0} {1}  -- per 3 months
+// per {1} between {2} and {3}   --per hour between 2 and 3
+// per {0} {1} between {2} and {3}   --per 3 hours between 2 and 3
+
+string print = "";
+
+if (start != 0 || end != 0)
+{
+    if (period == 1)
+    {
+        print = string.Format(Resource.Schedule1Between, periodElement, start, end);
+    }
+    else
+    {
+        print = string.Format(Resource.ScheduleMoreBetween, period, periodElement, start, end);
+    }
+}
+else
+{
+    if (period == 1)
+    {
+        print = string.Format(Resource.Schedule1, periodElement);
+    }
+    else
+    {
+        print = string.Format(Resource.ScheduleMore, period, periodElement);
+    }
+}
+
+    @Html.Raw(print)
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">@Resource.PolicyDeleteTitle</h4>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.module.moduleName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.module.moduleName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.isActive)
+                </dt>
+                <dd>
+                    @(Model.isActive ? "Active" : "Inactive")
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.actionId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.actionId)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.entities)
+                </dt>
+                @foreach (var item in Model.entities)
+                {
+                    if (Model.module.id == 1)
+                    {
+                        if (item.entityType == "EIpAddress")
+                        {
+                            Ip tmp_ip = (Ip)item;
+                            <dd>
+                                @Html.DisplayFor(model => tmp_ip.ip)
+                            </dd>
+                        }
+                        else if (item.entityType == "EIpRange")
+                        {
+                            IpRange tmp_ip_range = (IpRange)item;
+                            <dd>
+                                @Html.DisplayFor(model => tmp_ip_range.ip) -
+                                @Html.DisplayFor(model => tmp_ip_range.range)
+                            </dd>
+                        }
+                    }
+                    else if (Model.module.id == 2)
+                    {
+                        if (item.entityType == "ETwitterProfile")
+                        {
+                            TwitterProfile tmp_tp = (TwitterProfile)item;
+                            <dd>
+                                @Html.DisplayFor(model => tmp_tp.screenName)
+                            </dd>
+                        }
+                    }
+                    else if (Model.module.id == 3)
+                    {
+                        if (item.entityType == "EInstagramProfile")
+                        {
+                            InstagramProfile tmp_ip = (InstagramProfile)item;
+                            <dd>
+                                @Html.DisplayFor(model => tmp_ip.screenName)
+                            </dd>
+                        }
+                    }
+
+                }
+
+                <dt>
+                    @Resource.ScheduleColumnHeader
+                </dt>
+                
+                <dd>
+                    @DisplaySchedule(Model)
+                </dd>
+            </dl>
+
+            @Html.HiddenFor(model => model.id)
+            @Html.HiddenFor(model => model.isActive)
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@Resource.CancelBtn</button>
+            <button id="deletePolicyBtn" type="submit" class="btn btn-primary">@Resource.SaveBtn</button>
+        </div>
+    }
+</div>
+
