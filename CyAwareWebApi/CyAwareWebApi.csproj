@@ -279,7 +279,6 @@
     <Compile Include="Models\Entities\ETemplate.cs" />
     <Compile Include="Models\Entities\ETwitterProfile.cs" />
     <Compile Include="Models\Entities\EUrl.cs" />
-    <Compile Include="Models\EntityBaseFactory.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Module.cs" />
     <Compile Include="Models\Policy.cs" />
@@ -294,7 +293,6 @@
     <Compile Include="Models\Results\RModule7.cs" />
     <Compile Include="Models\Results\RModule8.cs" />
     <Compile Include="Models\Scan.cs" />
-    <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Subscriber.cs" />
     <Compile Include="Models\SysLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

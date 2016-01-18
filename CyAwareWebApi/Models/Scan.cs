@@ -10,8 +10,11 @@ namespace CyAwareWebApi.Models
     {
         public int id { get; set; }
         public string scanRefId { get; set; }
-        public int scanSuccessCode { get; set; } 
-        
+        public int scanSuccessCode { get; set; }
+        public bool isDeleted { get; set; }
+        public DateTime scanDate { get; set; }
+
+
         // foreign key
         public int policyId { get; set; }
 

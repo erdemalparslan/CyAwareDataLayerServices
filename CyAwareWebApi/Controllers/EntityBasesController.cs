@@ -36,12 +36,12 @@ namespace CyAwareWebApi.Controllers
             }
             catch (UnknownEntityException e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -67,12 +67,12 @@ namespace CyAwareWebApi.Controllers
             }
             catch (UnknownEntityException e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -94,12 +94,12 @@ namespace CyAwareWebApi.Controllers
             }
             catch (UnknownEntityException e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/subscriber/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/subscriber/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/subscriber/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/entitybases/subscriber/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
 
@@ -138,7 +138,7 @@ namespace CyAwareWebApi.Controllers
                 }
                 else
                 {
-                    Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/entitybases/{id}", e.Message);
+                    Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/entitybases/{id}",e.Message  + e.InnerException);
                     throw;
                 }
             }
@@ -166,7 +166,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "POST: front/entitybases", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "POST: front/entitybases",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
 
@@ -193,7 +193,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "DELETE: front/entitybases/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "DELETE: front/entitybases/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }

@@ -23,6 +23,8 @@ namespace CyAwareWebApi.Controllers
         EDomain domain1, domain2, domain3;
         EHostname hostname1, hostname2, hostname3, hostname4, hostname5, hostname6, hostname7;
 
+        CyAwareWebApi.Models.Action action1, action2;
+
         private CyAwareContext db;
 
         DataController()
@@ -37,6 +39,11 @@ namespace CyAwareWebApi.Controllers
         [HttpGet]
         public IHttpActionResult GetDataByType(int type)
         {
+
+            createActions();
+            HashSet<Models.Action> actions = new HashSet<Models.Action>();
+            actions.Add(db.actions.Find(action1.id));
+            actions.Add(db.actions.Find(action2.id));
 
             HashSet<EntityBase> policy1Entities = new HashSet<EntityBase>(); // policy1 for module1 (ip-port discovery)
             HashSet<EntityBase> policy2Entities = new HashSet<EntityBase>(); // policy2 for module1 (ip-port discovery)
@@ -110,44 +117,44 @@ namespace CyAwareWebApi.Controllers
             }
 
             int id = 0;
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy1Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy1Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,8080", entity = ipAddress1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,22,8080,21,445,23", entity = ipAddress2, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress2, policyId = id });
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy2Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy2Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "8080,80,21,445,23,443", entity = ipAddress4, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress4, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipRange1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443,21,80,8080,445,23", entity = ipRange2, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipRange2, policyId = id });
 
-            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Twitter activity checker module").FirstOrDefault(), policy3Entities);
-            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Instagram activity checker module").FirstOrDefault(), policy4Entities);
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Twitter activity checker module").FirstOrDefault(), policy3Entities, actions);
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Instagram activity checker module").FirstOrDefault(), policy4Entities, actions);
 
-            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "DNS records discovery module").FirstOrDefault(), policy5Entities);
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "DNS records discovery module").FirstOrDefault(), policy5Entities, actions);
 
-            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Domain expire checker module").FirstOrDefault(), policy6Entities);
+            createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Domain expire checker module").FirstOrDefault(), policy6Entities, actions);
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL expire checker module").FirstOrDefault(), policy7Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL expire checker module").FirstOrDefault(), policy7Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain2, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain3, policyId = id });
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL expire checker module").FirstOrDefault(), policy8Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL expire checker module").FirstOrDefault(), policy8Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = ipAddress1, policyId = id });
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL certificate details module").FirstOrDefault(), policy9Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL certificate details module").FirstOrDefault(), policy9Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain2, policyId = id });
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL certificate details module").FirstOrDefault(), policy10Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "SSL certificate details module").FirstOrDefault(), policy10Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = domain1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443", entity = ipAddress1, policyId = id });
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Search engines discovery module").FirstOrDefault(), policy11Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Search engines discovery module").FirstOrDefault(), policy11Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "searchStrings", value = "point,result,set", entity = domain2, policyId = id });
 
-            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Search engines discovery module").FirstOrDefault(), policy12Entities);
+            id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Search engines discovery module").FirstOrDefault(), policy12Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "searchStrings", value = "iletisim,servis,3G,fatura", entity = domain1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "searchStrings", value = "module,dashboard", entity = ipAddress1, policyId = id });
             //db.extras.Add(new EntityExtraForPolicy() { key = "searchStrings", value = "point,result,set", entity = domain2, policyId = id });
@@ -260,29 +267,32 @@ namespace CyAwareWebApi.Controllers
             return 0;
         }
 
-        private int createPolicyTest(Subscriber subscriber, Module module, HashSet<EntityBase> entities)
+        private int createActions()
+        {
+            action1 = new Models.Action { actionType = 1, destination = "" };
+            action2 = new Models.Action { actionType = 2, destination = "" };
+            db.actions.Add(action1);
+            db.actions.Add(action2);
+            db.SaveChanges();
+            return 0;
+        }
+
+        private int createPolicyTest(Subscriber subscriber, Module module, HashSet<EntityBase> entities, HashSet<Models.Action> actions)
         {
 
-            Schedule schedule1 = new Schedule { isHourly = true, period = 3};
-
-            Models.Action action1 = new Models.Action { actionType = 1, destination = "" };
-            Models.Action action2 = new Models.Action { actionType = 2, destination = "" };
-            
             Policy policy1 = new Policy
             {
-                action = action1,
+                actions = actions,
                 module = module,
                 subscriber = subscriber,
-                schedule = schedule1,
+                s_isHourly = true,
+                s_period = 3,
                 activationDate = DateTime.Now,
                 isActive = true,
                 setDate = DateTime.Now,
                 entities = entities
             };
 
-            db.schedules.Add(schedule1);
-            db.actions.Add(action1);
-            db.actions.Add(action2);
             db.policies.Add(policy1);
             db.SaveChanges();
 
@@ -293,8 +303,15 @@ namespace CyAwareWebApi.Controllers
         {
             RModule1 result1 = new RModule1 { ipAddress = "192.145.13.21", tcpPortNumbers = "80,443", resultType = "RModule1", policyId = 1 };
             RModule1 result2 = new RModule1 { ipAddress = "192.145.13.21", udpPortNumbers = "2323,254", resultType = "RModule1", policyId = 1 };
-            Scan scan1 = new Scan { policyId = 1, scanRefId = "A1231542", scanSuccessCode = 1, results = new HashSet<ResultBase> { result1, result2 } };
+            Scan scan1 = new Scan { policyId = 1, scanRefId = "A1231542",scanDate = DateTime.Now, scanSuccessCode = 1, results = new HashSet<ResultBase> { result1, result2 } };
+
+            RModule1 result3 = new RModule1 { ipAddress = "192.145.13.22", tcpPortNumbers = "443", resultType = "RModule1", policyId = 1 };
+            RModule1 result4 = new RModule1 { ipAddress = "192.145.13.23", udpPortNumbers = "65,23", resultType = "RModule1", policyId = 1 };
+            RModule1 result5 = new RModule1 { ipAddress = "192.145.13.24", udpPortNumbers = "31", resultType = "RModule1", policyId = 1 };
+            Scan scan2 = new Scan { policyId = 1, scanRefId = "A1231542", scanDate = DateTime.Now, scanSuccessCode = 1, results = new HashSet<ResultBase> { result3, result4, result5 } };
+
             db.scans.Add(scan1);
+            db.scans.Add(scan2);
             db.SaveChanges();
             return 0;
         }

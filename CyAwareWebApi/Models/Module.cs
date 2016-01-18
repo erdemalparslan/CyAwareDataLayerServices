@@ -10,6 +10,8 @@ namespace CyAwareWebApi.Models
         public int id { get; set; }
         public string moduleName { get; set; }
         public string description { get; set; }
+        public bool isDeleted { get; set; }
+
 
         //navigation property
         public virtual HashSet<Policy> policies { get; set; }

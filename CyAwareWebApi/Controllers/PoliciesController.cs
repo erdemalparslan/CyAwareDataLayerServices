@@ -11,7 +11,7 @@ using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using CyAwareWebApi.Models.Entities;
 using System.Web.Http.Tracing;
-
+using CyAwareWebApi.Models.EntitiesDTO;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -26,7 +26,8 @@ namespace CyAwareWebApi.Controllers
         {
             try
             {
-                var policies = (from p in db.policies.Include("entities")
+                List<EntityBaseDTO> dtos = new List<EntityBaseDTO>();
+                var policies = (from p in db.policies.Where(p => p.isDeleted == false).Include("entities")
                               select new
                               {
                                   Id = p.Id,
@@ -35,10 +36,19 @@ namespace CyAwareWebApi.Controllers
                                   p.moduleId,
                                   p.activationDate,
                                   subscriber = new { Id = p.subscriber.id, p.subscriber.name, },
-                                  action = new { Id = p.action.id, p.action.actionType, p.action.destination },
+                                  action = from a in p.actions select new { Id = a.id, a.actionType, a.destination },
                                   entities = from e in p.entities select new { Id = e.Id, e.entityType },
-                                  schedule = new { Id = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                                  p.s_isMonthly,
+                                  p.s_isWeekly,
+                                  p.s_isDaily,
+                                  p.s_isHourly,
+                                  p.s_isPerMinute,
+                                  p.s_period,
+                                  p.s_enableStartTime24Format,
+                                  p.s_enableEndTime24Format
                               });
+
+
                 if (policies != null)
                 {
                     return policies;
@@ -51,7 +61,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -64,8 +74,17 @@ namespace CyAwareWebApi.Controllers
         {
             try
             {
-                var policy = (db.policies.Where(p => p.Id == id).Include(p => p.entities)
-                        .Select(p => new { p.Id, p.isActive, p.schedule, p.setDate, p.entities, p.moduleId })).FirstOrDefault();
+                var policy = (db.policies.Where(p => (p.Id == id && p.isDeleted==false)).Include(p => p.entities)
+                        .Select(p => new { p.Id, p.isActive, p.setDate, p.entities, p.moduleId,
+                            p.s_isMonthly,
+                            p.s_isWeekly,
+                            p.s_isDaily,
+                            p.s_isHourly,
+                            p.s_isPerMinute,
+                            p.s_period,
+                            p.s_enableStartTime24Format,
+                            p.s_enableEndTime24Format
+                        })).FirstOrDefault();
                 if (policy != null)
                 {
                     return policy;
@@ -78,7 +97,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: back/policies/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: back/policies/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -91,7 +110,7 @@ namespace CyAwareWebApi.Controllers
             try
             {
                 var policy = (from p in db.policies.Include("entities")
-                                  where p.Id == id
+                                  where (p.Id == id && p.isDeleted == false)
                                   select new
                                   {
                                       Id = p.Id,
@@ -100,9 +119,16 @@ namespace CyAwareWebApi.Controllers
                                       p.moduleId,
                                       p.activationDate,
                                       subscriber = new { Id = p.subscriber.id, p.subscriber.name, },
-                                      action = new { Id = p.action.id, p.action.actionType, p.action.destination },
+                                      action = from a in p.actions select new { Id = a.id, a.actionType, a.destination },
                                       entities = from e in p.entities select new { Id = e.Id, e.entityType },
-                                      schedule = new { Id = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                                      p.s_isMonthly,
+                                      p.s_isWeekly,
+                                      p.s_isDaily,
+                                      p.s_isHourly,
+                                      p.s_isPerMinute,
+                                      p.s_period,
+                                      p.s_enableStartTime24Format,
+                                      p.s_enableEndTime24Format
                                   }).FirstOrDefault();
                 if (policy != null)
                 {
@@ -116,7 +142,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -129,7 +155,7 @@ namespace CyAwareWebApi.Controllers
             try
             {
                 var policyList = (from p in db.policies.Include("entities")
-                                  where p.subscriberId == id
+                                  where p.subscriberId == id && p.isDeleted == false
                                   select new
                                   {
                                       Id = p.Id,
@@ -138,9 +164,9 @@ namespace CyAwareWebApi.Controllers
                                       p.moduleId,
                                       p.activationDate,
                                       subscriber = new {Id = p.subscriber.id, p.subscriber.name, },
-                                      action = new { Id = p.action.id, p.action.actionType, p.action.destination },
+                                      action = from a in p.actions select new { Id = a.id, a.actionType, a.destination },
                                       entities = from e in p.entities select new { Id = e.Id, e.entityType },
-                                      schedule = new { Id = p.schedule.id, p.schedule.isDaily, p.schedule.isMonthly, p.schedule.isHourly, p.schedule.isPerMinute, p.schedule.period, p.schedule.enableStartTime24Format, p.schedule.enableEndTime24Format }
+                                      p.s_isMonthly, p.s_isWeekly, p.s_isDaily, p.s_isHourly, p.s_isPerMinute, p.s_period, p.s_enableStartTime24Format,p.s_enableEndTime24Format
                                   }).ToList();
                 if (policyList != null && policyList.Count > 0)
                 {
@@ -154,7 +180,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies/subscriber/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies/subscriber/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -175,11 +201,25 @@ namespace CyAwareWebApi.Controllers
                 Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/policies/{id}", "No policy with this Id!");
                 return BadRequest();
             }
-
-            db.Entry(policy).State = EntityState.Modified;
-
+            
             try
             {
+                //db.Entry(policy).State = EntityState.Modified;
+                var policyInDb = db.policies.Include(p => p.entities).Single(p => p.Id == policy.Id);
+                db.Entry(policyInDb).CurrentValues.SetValues(policy);
+                // Remove types
+                foreach (var typeInDb in policyInDb.entities.ToList())
+                    if (!policy.entities.Any(t => t.Id == typeInDb.Id))
+                        policyInDb.entities.Remove(typeInDb);
+
+                // Add new types
+                foreach (var type in policy.entities)
+                    if (!policyInDb.entities.Any(t => t.Id == type.Id))
+                    {
+                        db.entities.Attach(type);
+                        policyInDb.entities.Add(type);
+                    }
+
                 db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException e)
@@ -191,9 +231,14 @@ namespace CyAwareWebApi.Controllers
                 }
                 else
                 {
-                    Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/Modules/{id}", e.Message);
+                    Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/Modules/{id}", e.Message + e.InnerException);
                     return StatusCode(HttpStatusCode.InternalServerError);
                 }
+            }
+            catch (Exception e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/policies/{id}", e.Message + e.InnerException);
+                return BadRequest();
             }
 
             return StatusCode(HttpStatusCode.Accepted);
@@ -233,7 +278,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "POST: front/policies", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "POST: front/policies",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
 
@@ -254,13 +299,13 @@ namespace CyAwareWebApi.Controllers
 
             try
             {
-                db.policies.Remove(policy);
+                policy.isDeleted = true;
                 db.SaveChanges();
                 return StatusCode(HttpStatusCode.Accepted);
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "DELETE: front/policies/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "DELETE: front/policies/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }

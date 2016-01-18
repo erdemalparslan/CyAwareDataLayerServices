@@ -19,8 +19,6 @@ namespace CyAwareWebApi.Models
 
         public DbSet<Policy> policies { get; set; }
 
-        public DbSet<Schedule> schedules { get; set; }
-
         public DbSet<Action> actions { get; set; }
 
         public DbSet<Scan> scans { get; set; }

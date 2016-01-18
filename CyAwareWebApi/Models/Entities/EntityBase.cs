@@ -8,6 +8,8 @@ namespace CyAwareWebApi.Models.Entities
     {
         public int Id { get; set; }
         public string entityType { get; set; }
+        public bool isDeleted { get; set; }
+
         // foreign keys
         public int subscriberId { get; set; }
         public int? mainEntityId { get; set; }

@@ -57,7 +57,16 @@ namespace CyAwareWebApi.Controllers
                                             moduleName = m.moduleName,
                                             description = m.description,
                                             policies = from p in m.policies
-                                                       select new { policyId = p.Id, p.schedule, entities = from e in p.entities select e }
+                                                       select new { policyId = p.Id,
+                                                           p.s_isMonthly,
+                                                           p.s_isWeekly,
+                                                           p.s_isDaily,
+                                                           p.s_isHourly,
+                                                           p.s_isPerMinute,
+                                                           p.s_period,
+                                                           p.s_enableStartTime24Format,
+                                                           p.s_enableEndTime24Format,
+                                                           entities = from e in p.entities select e }
                                         }).ToList();
 
                 foreach (var m in requestedModules)
@@ -91,7 +100,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "GET: back/modules/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "GET: back/modules/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
 
@@ -130,7 +139,7 @@ namespace CyAwareWebApi.Controllers
                 }
                 else
                 {
-                    Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/Modules/{id}", e.Message);
+                    Configuration.Services.GetTraceWriter().Error(Request, "PUT: front/Modules/{id}",e.Message  + e.InnerException);
                     throw;
                 }
             }
@@ -157,7 +166,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "POST: front/modules", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "POST: front/modules",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
             return StatusCode(HttpStatusCode.Accepted);
@@ -183,7 +192,7 @@ namespace CyAwareWebApi.Controllers
             }
             catch (Exception e)
             {
-                Configuration.Services.GetTraceWriter().Error(Request, "DELETE: front/modules/{id}", e.Message);
+                Configuration.Services.GetTraceWriter().Error(Request, "DELETE: front/modules/{id}",e.Message  + e.InnerException);
                 return StatusCode(HttpStatusCode.InternalServerError);
             }
         }
