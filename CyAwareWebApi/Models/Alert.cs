@@ -11,22 +11,36 @@ namespace CyAwareWebApi.Models
     public class Alert
     {
         public int Id { get; set; }
-        //public int scanId { get; set; }
-        //public int resultbaseId { get; set; }
-        //public DateTime occuringDate { get; set; }
-        //public DateTime dismissDate { get; set; }
-        //public int incidentEntityId { get; set; }
+        public int scanid { get; set; }
+        public int ?resultbaseid { get; set; }
+        public DateTime occuringdate { get; set; }
+        public DateTime ?dismissdate { get; set; }
+        public int incidententityid { get; set; }
 
-        //[DefaultValue(false)]
-        //public bool isThrown { get; set; }
+        [DefaultValue(false)]
+        public bool isthrown { get; set; }
 
-        //[DefaultValue(ApplicationConstants.DEFAULT_SEVERITY_FOR_INCIDENT)]
-        //public int severityLevel { get; set; }
+        [DefaultValue(ApplicationConstants.DEFAULT_SEVERITY_FOR_INCIDENT)]
+        public int severitylevel { get; set; }
 
-        //public string incident { get; set; }
+        public string incident { get; set; }
 
-        //// navigation properties
-        //public virtual Scan scan { get; set; }
-        //public virtual ResultBase resultbase { get; set; }
+        // navigation properties
+        public virtual Scan scan { get; set; }
+        public virtual ResultBase resultbase { get; set; }
+
+        //public Alert(DateTime _occuringdate, DateTime _dismissdate, int _incidententityid, int _severitylevel, string _incident, Scan _scan, int _scanid, ResultBase _resultbase, int _resultbaseid)
+        //{
+        //    occuringdate = _occuringdate;
+        //    dismissdate = _dismissdate;
+        //    incidententityid = _incidententityid;
+        //    severitylevel = _severitylevel;
+        //    incident = _incident;
+        //    scanid = _scanid;
+        //    scan = _scan;
+        //    resultbaseid = _resultbaseid;
+        //    resultbase = _resultbase;
+        //}
+
     }
 }

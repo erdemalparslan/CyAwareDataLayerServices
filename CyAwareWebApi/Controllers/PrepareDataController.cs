@@ -303,15 +303,12 @@ namespace CyAwareWebApi.Controllers
         {
             RModule1 result1 = new RModule1 { ipAddress = "192.145.13.21", tcpPortNumbers = "80,443", resultType = "RModule1", policyId = 1 };
             RModule1 result2 = new RModule1 { ipAddress = "192.145.13.21", udpPortNumbers = "2323,254", resultType = "RModule1", policyId = 1 };
-            Scan scan1 = new Scan { policyId = 1, scanRefId = "A1231542",scanDate = DateTime.Now, scanSuccessCode = 1, results = new HashSet<ResultBase> { result1, result2 } };
-
             RModule1 result3 = new RModule1 { ipAddress = "192.145.13.22", tcpPortNumbers = "443", resultType = "RModule1", policyId = 1 };
             RModule1 result4 = new RModule1 { ipAddress = "192.145.13.23", udpPortNumbers = "65,23", resultType = "RModule1", policyId = 1 };
             RModule1 result5 = new RModule1 { ipAddress = "192.145.13.24", udpPortNumbers = "31", resultType = "RModule1", policyId = 1 };
-            Scan scan2 = new Scan { policyId = 1, scanRefId = "A1231542", scanDate = DateTime.Now, scanSuccessCode = 1, results = new HashSet<ResultBase> { result3, result4, result5 } };
+            Scan scan1 = new Scan { policyId = 1, scanRefId = "A1231542", scanDate = DateTime.Now, scanSuccessCode = 1, results = new HashSet<ResultBase> { result1, result2, result3, result4, result5 } };
 
             db.scans.Add(scan1);
-            db.scans.Add(scan2);
             db.SaveChanges();
             return 0;
         }

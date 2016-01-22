@@ -208,10 +208,10 @@ namespace CyAwareWebApi.Controllers
             }
             try
             {
-                Policy policy = db.policies.Find(scan.policyId);
-                scan.policy = policy;
                 db.scans.Add(scan);
                 db.SaveChanges();
+                AlertsController alerter = new AlertsController();
+                alerter.runFilters(scan);
             }
             catch (Exception e)
             {

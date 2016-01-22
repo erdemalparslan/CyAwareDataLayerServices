@@ -33,6 +33,7 @@ namespace CyAwareWebApi.Models
         {
 
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
         }
 

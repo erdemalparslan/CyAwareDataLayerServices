@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
+using CyAwareWebApi.Models.Entities;
+using CyAwareWebApi.Models.Results;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -17,10 +19,22 @@ namespace CyAwareWebApi.Controllers
     {
         private CyAwareContext db = new CyAwareContext();
 
-        // GET: api/Alerts
-        public IQueryable<Alert> GetAlerts()
+        // GET: front/Alerts
+        [Route("front/alerts")]
+        public dynamic GetAlerts()
         {
-            return db.Alerts;
+            var alerts = from a in db.Alerts
+                         select new
+                         {
+                             a.Id,
+                             a.occuringdate,
+                             a.dismissdate,
+                             a.severitylevel,
+                             a.incident,
+                             a.scanid
+                         };
+
+            return alerts;
         }
 
         // GET: api/Alerts/5
@@ -114,6 +128,99 @@ namespace CyAwareWebApi.Controllers
         private bool AlertExists(int id)
         {
             return db.Alerts.Count(e => e.Id == id) > 0;
+        }
+
+        public void runFilters(Scan scan)
+        {
+            int moduleId = db.scans.Find(scan.id).policy.moduleId;
+
+            switch(moduleId)
+            {
+                case 1:
+                    checkModule1(scan);
+                    break;
+                
+            }
+
+
+        }
+        private void checkModule1(Scan actualScan) 
+        {
+            Alert alert;
+            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).First();
+
+            try
+            {
+                if (previousScan != null)
+                {
+                    List<KeyValuePair<string, string>> previousIpTcpPorts = new List<KeyValuePair<string, string>>();
+                    List<KeyValuePair<string, string>> previousIpUdpPorts = new List<KeyValuePair<string, string>>();
+                    List<KeyValuePair<string, string>> actualIpTcpPorts = new List<KeyValuePair<string, string>>();
+                    List<KeyValuePair<string, string>> actualIpUdpPorts = new List<KeyValuePair<string, string>>();
+
+                    foreach (RModule1 r in previousScan.results)
+                    {
+                        if (r.tcpPortNumbers != null) foreach (string tcpPort in r.tcpPortNumbers.Split(',')) previousIpTcpPorts.Add(new KeyValuePair<string, string>(r.ipAddress, tcpPort));
+                        if (r.udpPortNumbers != null) foreach (string udpPort in r.udpPortNumbers.Split(',')) previousIpUdpPorts.Add(new KeyValuePair<string, string>(r.ipAddress, udpPort));
+                    }
+
+                    foreach (RModule1 r in actualScan.results)
+                    {
+                        if(r.tcpPortNumbers != null) foreach (string tcpPort in r.tcpPortNumbers.Split(',')) actualIpTcpPorts.Add(new KeyValuePair<string, string>(r.ipAddress, tcpPort));
+                        if (r.udpPortNumbers != null) foreach (string udpPort in r.udpPortNumbers.Split(',')) actualIpUdpPorts.Add(new KeyValuePair<string, string>(r.ipAddress, udpPort));
+                    }
+
+                    var newIpTcpPorts = actualIpTcpPorts.Except(previousIpTcpPorts);
+                    var newIpUdpPorts = actualIpUdpPorts.Except(previousIpUdpPorts);
+                    var oldIpTcpPorts = previousIpTcpPorts.Except(actualIpTcpPorts);
+                    var oldIpUdpPorts = previousIpUdpPorts.Except(actualIpUdpPorts);
+
+                    foreach (KeyValuePair<string, string> item in newIpTcpPorts)
+                    {
+                        alert = new Alert();
+                        alert.occuringdate = DateTime.Now;
+                        alert.severitylevel = 3;
+                        alert.scanid = actualScan.id;
+                        alert.incident = "NEWIP-TCP;ip:" + item.Key + ";port:" + item.Value;
+                        db.Alerts.Add(alert);
+                    }
+
+                    foreach (KeyValuePair<string, string> item in newIpUdpPorts)
+                    {
+                        alert = new Alert();
+                        alert.occuringdate = DateTime.Now;
+                        alert.severitylevel = 2;
+                        alert.scanid = actualScan.id;
+                        alert.incident = "NEWIP-UDP;ip:" + item.Key + ";port:" + item.Value;
+                        db.Alerts.Add(alert);
+                    }
+
+                    foreach (KeyValuePair<string, string> item in oldIpTcpPorts)
+                    {
+                        alert = new Alert();
+                        alert.occuringdate = DateTime.Now;
+                        alert.severitylevel = 1;
+                        alert.scanid = actualScan.id;
+                        alert.incident = "OLDIP-TCP;ip:" + item.Key + ";port:" + item.Value;
+                        db.Alerts.Add(alert);
+                    }
+
+                    foreach (KeyValuePair<string, string> item in oldIpUdpPorts)
+                    {
+                        alert = new Alert();
+                        alert.occuringdate = DateTime.Now;
+                        alert.severitylevel = 1;
+                        alert.scanid = actualScan.id;
+                        alert.incident = "OLDIP-UDP;ip:" + item.Key + ";port:" + item.Value;
+                        db.Alerts.Add(alert);
+                    }
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
