@@ -10,4 +10,10 @@ namespace CyAwareWebApi.Models.Entities
         public string ip { get; set; }
         public int range { get; set; }
     }
+
+    public class EIpRangeDTO : EntityBaseDTO
+    {
+        public string ip { get; set; }
+        public int range { get; set; }
+    }
 }

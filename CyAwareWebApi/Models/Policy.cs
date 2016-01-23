@@ -36,4 +36,35 @@ namespace CyAwareWebApi.Models
         public virtual HashSet<Scan> scans { get; set; }
 
     }
+
+    public class PolicyDTO
+    {
+        public int Id { get; set; }
+        public DateTime setDate { get; set; }
+        public bool isActive { get; set; }
+        public DateTime? activationDate { get; set; }
+        public bool isDeleted { get; set; }
+
+        public bool s_isMonthly { get; set; }
+        public bool s_isWeekly { get; set; }
+        public bool s_isDaily { get; set; }
+        public bool s_isHourly { get; set; }
+        public bool s_isPerMinute { get; set; }
+        public int s_period { get; set; }
+        public int s_enableStartTime24Format { get; set; }
+        public int s_enableEndTime24Format { get; set; }
+
+        public int subscriberId { get; set; }
+        public int moduleId { get; set; }
+        public int scheduleId { get; set; }
+    }
+
+    public class PolicyDTOEnriched : PolicyDTO
+    {
+        public SubscriberDTO subscriber { get; set; }
+        public IEnumerable<EntityBaseDTO> entities { get; set; }
+        //public virtual Module module { get; set; }
+        public IEnumerable<ActionDTO> actions { get; set; }
+        //public virtual HashSet<Scan> scans { get; set; }
+    }
 }

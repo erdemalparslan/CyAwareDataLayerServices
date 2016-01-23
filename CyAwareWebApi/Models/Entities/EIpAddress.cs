@@ -10,4 +10,9 @@ namespace CyAwareWebApi.Models.Entities
         public string ip { get; set; }
 
     }
+
+    public partial class EIpAddressDTO : EntityBaseDTO
+    {
+        public string ip { get; set; }
+    }
 }

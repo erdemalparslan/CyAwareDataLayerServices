@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using CyAwareWebApi.Models.Results;
 using CyAwareWebApi.Controllers.JSONConverter;
+using System.Web.Http;
+using System.Web.OData.Builder;
+using System.Web.OData.Extensions;
+using System.Web.Http.Tracing;
 
 namespace CyAwareWebApi
 {
@@ -33,8 +36,10 @@ namespace CyAwareWebApi
 
             config.Formatters.JsonFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
+            SystemDiagnosticsTraceWriter traceWriter = config.EnableSystemDiagnosticsTracing();
+            traceWriter.IsVerbose = true;
+            traceWriter.MinimumLevel = TraceLevel.Debug;
             config.Services.Replace(typeof(System.Web.Http.Tracing.ITraceWriter), new ExceptionTracer());
-
 
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -44,6 +49,15 @@ namespace CyAwareWebApi
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            ////// New code:
+            //ODataModelBuilder builder = new ODataConventionModelBuilder();
+            //builder.EntitySet<AlertDTO>("Alerts");
+            //config.MapODataServiceRoute(
+            //    routeName: "ODataRoute",
+            //    routePrefix: null,
+            //    model: builder.GetEdmModel());
+
         }
     }
 }

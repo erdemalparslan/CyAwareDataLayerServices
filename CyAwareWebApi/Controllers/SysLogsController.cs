@@ -46,7 +46,7 @@ namespace CyAwareWebApi.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,severity,apiMethod,source,message")] SysLog sysLog)
+        public ActionResult Create([Bind(Include = "id,date,severity,apiMethod,source,message")] SysLog sysLog)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace CyAwareWebApi.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,severity,apiMethod,source,message")] SysLog sysLog)
+        public ActionResult Edit([Bind(Include = "id,date,severity,apiMethod,source,message")] SysLog sysLog)
         {
             if (ModelState.IsValid)
             {

@@ -43,4 +43,23 @@ namespace CyAwareWebApi.Models
         //}
 
     }
+
+    public class AlertDTO
+    {
+        public int Id { get; set; }
+        public int scanid { get; set; }
+        public int? resultbaseid { get; set; }
+        public DateTime occuringdate { get; set; }
+        public DateTime? dismissdate { get; set; }
+        public int incidententityid { get; set; }
+        public bool isthrown { get; set; }
+        public int severitylevel { get; set; }
+        public string incident { get; set; }
+    }
+
+    public class AlertDTOEnriched : AlertDTO
+    {
+        public ScanDTO scan { get; set; }
+        public ResultBaseDTO resultbase { get; set; }
+    }
 }

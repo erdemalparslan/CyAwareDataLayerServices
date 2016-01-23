@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
-using CyAwareWebApi.Models.Entities;
 using CyAwareWebApi.Models.Results;
+using System.Web.Http.Tracing;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Query;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -19,22 +21,58 @@ namespace CyAwareWebApi.Controllers
     {
         private CyAwareContext db = new CyAwareContext();
 
-        // GET: front/Alerts
-        [Route("front/alerts")]
-        public dynamic GetAlerts()
+        // GET: front/alerts/subscriberId/1/moduleId/1      
+        [Route("front/alerts/subscriberId/{subscriberId}/moduleId/{moduleId}")]
+        [EnableQuery(PageSize = 10)]
+        public IQueryable<AlertDTO> GetAlerts(int subscriberId, int moduleId)
         {
-            var alerts = from a in db.Alerts
-                         select new
+            IQueryable<AlertDTO> alerts = from a in db.Alerts where (a.scan.policy.subscriberId == subscriberId && a.scan.policy.moduleId == moduleId)
+                         select new AlertDTO
                          {
-                             a.Id,
-                             a.occuringdate,
-                             a.dismissdate,
-                             a.severitylevel,
-                             a.incident,
-                             a.scanid
+                             Id = a.Id,
+                             occuringdate = a.occuringdate,
+                             dismissdate = a.dismissdate,
+                             severitylevel = a.severitylevel,
+                             incident = a.incident,
+                             scanid = a.scanid,
+                             isthrown = a.isthrown,
+                             incidententityid = a.incidententityid,
+                             resultbaseid = a.resultbaseid
                          };
 
             return alerts;
+        }
+
+        // GET: front/alerts/1/subscriberId/1/moduleId/1      
+        [Route("front/alerts/{lastAlert}/subscriberId/{subscriberId}/moduleId/{moduleId}/odata")]
+        //[EnableQuery(PageSize = 3)]
+        public PageResult<AlertDTO> GetAlertsOdata(int lastAlert, int subscriberId, int moduleId, ODataQueryOptions<AlertDTO> options)
+        {
+            ODataQuerySettings settings = new ODataQuerySettings()
+            {
+                PageSize = 5
+            };
+            IQueryable<AlertDTO> alerts = from a in db.Alerts
+                                          where (a.Id > lastAlert && a.scan.policy.subscriberId == subscriberId && a.scan.policy.moduleId == moduleId)
+                                          select new AlertDTO
+                                          {
+                                              Id = a.Id,
+                                              occuringdate = a.occuringdate,
+                                              dismissdate = a.dismissdate,
+                                              severitylevel = a.severitylevel,
+                                              incident = a.incident,
+                                              scanid = a.scanid,
+                                              isthrown = a.isthrown,
+                                              incidententityid = a.incidententityid,
+                                              resultbaseid = a.resultbaseid
+                                          };
+
+            IQueryable results = options.ApplyTo(alerts.AsQueryable(),settings);
+
+            return new PageResult<AlertDTO>(
+                    results as IEnumerable<AlertDTO>,
+                    Request.GetNextPageLink(),
+                    Request.GetInlineCount());
         }
 
         // GET: api/Alerts/5
@@ -134,16 +172,21 @@ namespace CyAwareWebApi.Controllers
         {
             int moduleId = db.scans.Find(scan.id).policy.moduleId;
 
-            switch(moduleId)
+            try
             {
-                case 1:
-                    checkModule1(scan);
-                    break;
-                
+                switch (moduleId)
+                {
+                    case 1:
+                        checkModule1(scan);
+                        break;
+                }
             }
-
-
+            catch (Exception e)
+            {
+                Configuration.Services.GetTraceWriter().Error(Request, "Filter running for alerts is failed!", e.Message + e.InnerException);
+            }
         }
+
         private void checkModule1(Scan actualScan) 
         {
             Alert alert;

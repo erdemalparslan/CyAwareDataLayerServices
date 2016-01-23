@@ -8,7 +8,6 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using CyAwareWebApi.Models.Entities;
-using CyAwareWebApi.Models.EntitiesDTO;
 using System.Web.Http.Tracing;
 using System.Collections.Generic;
 using CyAwareWebApi.Exceptions;

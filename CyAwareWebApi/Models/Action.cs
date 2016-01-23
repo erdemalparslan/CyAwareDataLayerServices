@@ -14,4 +14,17 @@ namespace CyAwareWebApi.Models
         //navigation property
         public virtual HashSet<Policy> policies { get; set; }
     }
+
+    public class ActionDTO
+    {
+        public int id { get; set; }
+        public int actionType { get; set; }
+        public string destination { get; set; }
+    }
+
+    public class ActionDTOEnriched : ActionDTO
+    {
+        public IEnumerable<PolicyDTO> policies { get; set; }
+
+    }
 }
