@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using CyAwareWebApi.Models.Entities;
 using System.Threading.Tasks;
+using System.Web.Http.OData;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -28,6 +29,7 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(Subscriber))]
         [Route("front/subscribers/")]
         [HttpGet]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public IQueryable<Subscriber> Getsubscribers()
         {
             //var allRecords = db.subscribers;
@@ -53,6 +55,7 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(Subscriber))]
         [Route("front/subscribers/{id:int}")]
         [HttpGet]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetSubscriber(int id)
         {
             return db.subscribers.Include(s => s.entities)
@@ -70,6 +73,7 @@ namespace CyAwareWebApi.Controllers
         [ResponseType(typeof(Subscriber))]
         [Route("front/subscribers/{name}")]
         [HttpGet]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetSubscriberByName(string name)
         {
             return db.subscribers.Include(s => s.entities)

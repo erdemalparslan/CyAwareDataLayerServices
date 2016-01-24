@@ -20,6 +20,15 @@ namespace CyAwareWebApi.Models
         public int id { get; set; }
         public int actionType { get; set; }
         public string destination { get; set; }
+
+        public static explicit operator ActionDTO(Action v)
+        {
+            ActionDTO a = new ActionDTO();
+            a.id = v.id;
+            a.actionType = v.actionType;
+            a.destination = v.destination;
+            return a;
+        }
     }
 
     public class ActionDTOEnriched : ActionDTO

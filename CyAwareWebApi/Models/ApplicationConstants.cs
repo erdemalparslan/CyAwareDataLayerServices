@@ -9,6 +9,6 @@ namespace CyAwareWebApi.Models
     {
 
         public const int DEFAULT_SEVERITY_FOR_INCIDENT = 1; // 1, 2, 3
-
+        public const int DEFAULT_PAGING_SIZE = 10;
     }
 }

@@ -11,5 +11,9 @@ namespace CyAwareWebApi.Utils
         {
             return new HashSet<T>(source);
         }
+        public static IEnumerable<T> ToIEnumerable<T>(this HashSet<T> source)
+        {
+            return new List<T>(source);
+        }
     }
 }

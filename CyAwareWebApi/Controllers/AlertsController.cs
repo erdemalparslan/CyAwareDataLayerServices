@@ -23,7 +23,7 @@ namespace CyAwareWebApi.Controllers
 
         // GET: front/alerts/subscriberId/1/moduleId/1      
         [Route("front/alerts/subscriberId/{subscriberId}/moduleId/{moduleId}")]
-        [EnableQuery(PageSize = 10)]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public IQueryable<AlertDTO> GetAlerts(int subscriberId, int moduleId)
         {
             IQueryable<AlertDTO> alerts = from a in db.Alerts where (a.scan.policy.subscriberId == subscriberId && a.scan.policy.moduleId == moduleId)

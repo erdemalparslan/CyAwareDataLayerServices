@@ -28,5 +28,16 @@ namespace CyAwareWebApi.Models
     public class ModuleDTOEnriched : ModuleDTO
     {
         public IEnumerable<PolicyDTO> policies { get; set; }
+
+        public static explicit operator ModuleDTOEnriched(Module v)
+        {
+            ModuleDTOEnriched e = new ModuleDTOEnriched();
+            e.id = v.id;
+            e.moduleName = v.moduleName;
+            e.description = v.description;
+            e.isDeleted = v.isDeleted;
+            e.policies = from p in v.policies select (PolicyDTOEnriched)p;
+            return e;
+        }
     }
 }

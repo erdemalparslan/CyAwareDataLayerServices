@@ -23,7 +23,7 @@ namespace CyAwareWebApi.Controllers
         // GET: front/policies
         [Route("front/policies")]
         [ResponseType(typeof(PolicyDTOEnriched))]
-        [EnableQuery(PageSize = 10)]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic Getpolicies()
         {
             try
@@ -159,7 +159,7 @@ namespace CyAwareWebApi.Controllers
         // GET: front/policies/subscriber/1
         [Route("front/policies/subscriber/{id}")]
         [ResponseType(typeof(PolicyDTOEnriched))]
-        [EnableQuery(PageSize = 10)]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetPolicyBySubscriber(int id)
         {
             try

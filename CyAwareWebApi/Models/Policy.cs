@@ -26,7 +26,6 @@ namespace CyAwareWebApi.Models
         //foreign keys
         public int subscriberId { get; set; }
         public int moduleId { get; set; }
-        public int scheduleId { get; set; }
 
         //navigation properties
         public virtual Subscriber subscriber { get; set; }
@@ -56,15 +55,35 @@ namespace CyAwareWebApi.Models
 
         public int subscriberId { get; set; }
         public int moduleId { get; set; }
-        public int scheduleId { get; set; }
     }
 
     public class PolicyDTOEnriched : PolicyDTO
     {
         public SubscriberDTO subscriber { get; set; }
         public IEnumerable<EntityBaseDTO> entities { get; set; }
-        //public virtual Module module { get; set; }
         public IEnumerable<ActionDTO> actions { get; set; }
-        //public virtual HashSet<Scan> scans { get; set; }
+
+        public static explicit operator PolicyDTOEnriched(Policy v)
+        {
+            PolicyDTOEnriched e = new PolicyDTOEnriched();
+            e.Id = v.Id;
+            e.setDate = v.setDate;
+            e.isActive = v.isActive;
+            e.activationDate = v.activationDate;
+            e.isDeleted = v.isDeleted;
+            e.s_isMonthly = v.s_isMonthly;
+            e.s_isWeekly = v.s_isWeekly;
+            e.s_isDaily = v.s_isDaily;
+            e.s_isHourly = v.s_isHourly;
+            e.s_isPerMinute = v.s_isPerMinute;
+            e.s_period = v.s_period;
+            e.s_enableStartTime24Format = v.s_enableStartTime24Format;
+            e.s_enableEndTime24Format = v.s_enableEndTime24Format;
+            e.subscriberId = v.subscriberId;
+            e.moduleId = v.moduleId;
+            e.entities = from n in v.entities select (EntityBaseDTO)n;
+            //e.actions = from a in v.actions select (ActionDTO)a;
+            return e;
+        }
     }
 }

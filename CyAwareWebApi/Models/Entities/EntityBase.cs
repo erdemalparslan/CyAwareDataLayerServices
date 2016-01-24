@@ -25,6 +25,7 @@ namespace CyAwareWebApi.Models.Entities
     {
         public int Id { get; set; }
         public string entityType { get; set; }
+        public bool isDeleted { get; set; }
         public int subscriberId { get; set; }
         public int? mainEntityId { get; set; }
 
@@ -90,6 +91,7 @@ namespace CyAwareWebApi.Models.Entities
             dto.Id = v.Id;
             dto.mainEntityId = v.mainEntityId;
             dto.subscriberId = v.subscriberId;
+            dto.isDeleted = v.isDeleted;
             return dto;
         }
     }
