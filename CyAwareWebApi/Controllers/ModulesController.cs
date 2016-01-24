@@ -29,6 +29,7 @@ namespace CyAwareWebApi.Controllers
         [Route("front/modules")]
         [ResponseType(typeof(Module))]
         [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
+        [Authorize]
         public dynamic Getmodules()
         {
             var modules = db.modules;
@@ -48,12 +49,21 @@ namespace CyAwareWebApi.Controllers
         [HttpGet]
         [ResponseType(typeof(ModuleDTOEnriched))]
         [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
-        public dynamic GetModule(int id)
+        public dynamic GetModule(int id, HttpRequestMessage request)
         {
 
             try
             {
-               var requestedModules = (from m in db.modules.Include("policies.entities.subentities")
+                //SAMPLE Token verification for backend
+                IEnumerable<string> values;
+                if (!request.Headers.TryGetValues("backendToken", out values) || values.First() != ApplicationConstants.DEFAULT_BACKEND_TOKEN)
+                {
+                    Configuration.Services.GetTraceWriter().Error(Request, "GET: back/modules/{id}", "None or bad token!");
+                    return StatusCode(HttpStatusCode.Unauthorized);
+                }
+
+
+                var requestedModules = (from m in db.modules.Include("policies.entities.subentities")
                                         where m.id == id
                                         select m).ToList();
 
