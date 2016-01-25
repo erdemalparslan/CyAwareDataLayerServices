@@ -9,6 +9,7 @@ using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using System.Data.SqlClient;
 using System.Web.Http.Tracing;
+using System.Web.Http.OData;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -25,6 +26,7 @@ namespace CyAwareWebApi.Controllers
         // GET: front/Scans
         [Route("front/scans")]
         [ResponseType(typeof(Scan))]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic Getscans()
         {
             var scans = db.scans;
@@ -42,6 +44,7 @@ namespace CyAwareWebApi.Controllers
         // GET: front/Scans/subscriber/1/module/1
         [Route("front/scans/subscriber/{subscriberId}/module/{moduleId}")]
         [ResponseType(typeof(Scan))]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetFrontScan_Subscriber_Module(int subscriberId, int moduleId)
         {
             var scans = db.scans.Where(s => (s.policy.subscriberId == subscriberId) && (s.policy.moduleId == moduleId))
@@ -68,6 +71,7 @@ namespace CyAwareWebApi.Controllers
         // GET: front/Scans/subscriber/1/policy/1
         [Route("front/scans/subscriber/{subscriberId}/policy/{policyId}")]
         [ResponseType(typeof(Scan))]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetFrontScan_Subscriber_Policy(int subscriberId, int policyId)
         {
             var scans = db.scans.Where(s => (s.policy.subscriberId == subscriberId) && (s.policyId == policyId))
@@ -94,6 +98,7 @@ namespace CyAwareWebApi.Controllers
         // GET: back/Scans/5
         [Route("back/scans/{id}")]
         [ResponseType(typeof(Scan))]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetBackScan(int id)
         {
             //getScanFromDatabase(id);
@@ -128,38 +133,38 @@ namespace CyAwareWebApi.Controllers
             }
         }
 
-        private void getScanFromDatabase(int id)
-        {
-            SqlConnection myConnection = new SqlConnection("Data Source=localhost\\SQLEXPRESS; Initial Catalog=cyawaredb;uid=cyaware;pwd=Test12345;MultipleActiveResultSets=true");
-            try
-            {
-                myConnection.Open();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+        //private void getScanFromDatabase(int id)
+        //{
+        //    SqlConnection myConnection = new SqlConnection("Data Source=localhost\\SQLEXPRESS; Initial Catalog=cyawaredb;uid=cyaware;pwd=Test12345;MultipleActiveResultSets=true");
+        //    try
+        //    {
+        //        myConnection.Open();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.ToString());
+        //    }
 
-            try
-            {
-                SqlDataReader myReader = null;
-                SqlCommand myCommand = new SqlCommand("SELECT TOP 1000 [id] ,[scanRefId],[scanSuccessCode],[policyId] FROM [cyawaredb].[dbo].[Scans]", myConnection);
-                myReader = myCommand.ExecuteReader();
-                while (myReader.Read())
-                {
-                    Console.WriteLine(myReader["scanRefId"].ToString());
-                    Console.WriteLine(myReader["policyId"].ToString());
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+        //    try
+        //    {
+        //        SqlDataReader myReader = null;
+        //        SqlCommand myCommand = new SqlCommand("SELECT TOP 1000 [id] ,[scanRefId],[scanSuccessCode],[policyId] FROM [cyawaredb].[dbo].[Scans]", myConnection);
+        //        myReader = myCommand.ExecuteReader();
+        //        while (myReader.Read())
+        //        {
+        //            Console.WriteLine(myReader["scanRefId"].ToString());
+        //            Console.WriteLine(myReader["policyId"].ToString());
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.ToString());
+        //    }
 
 
 
-            //return null;
-        }
+        //    //return null;
+        //}
         
         //// PUT: api/Scans/5
         //[ResponseType(typeof(void))]
@@ -208,10 +213,10 @@ namespace CyAwareWebApi.Controllers
             }
             try
             {
-                Policy policy = db.policies.Find(scan.policyId);
-                scan.policy = policy;
                 db.scans.Add(scan);
                 db.SaveChanges();
+                AlertsController alerter = new AlertsController();
+                alerter.runFilters(scan);
             }
             catch (Exception e)
             {

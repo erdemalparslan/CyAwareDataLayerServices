@@ -32,6 +32,8 @@ namespace CyAwareWebApi.Models
         public bool HasRegistered { get; set; }
 
         public string LoginProvider { get; set; }
+
+        public int subscriberId { get; set; }
     }
 
     public class UserLoginInfoViewModel

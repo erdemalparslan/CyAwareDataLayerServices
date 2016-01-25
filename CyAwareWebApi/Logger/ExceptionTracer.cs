@@ -25,13 +25,13 @@ public class ExceptionTracer : ITraceWriter
     {
         try
         {
-            SysLog log = new SysLog() { message = record.Message, severity = "Error", source = record.Category.Split(':')[1], apiMethod = record.Category.Split(':')[0] };
+            SysLog log = new SysLog() { message = record.Message, severity = "Error", source = record.Category.Split(':')[1], apiMethod = record.Category.Split(':')[0], date = DateTime.Now };
             db = new CyAwareContext();
             db.Configuration.ProxyCreationEnabled = false;
             db.SysLogs.Add(log);
-            db.SaveChangesAsync();
+            db.SaveChanges();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             var uriPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
             var path = new Uri(uriPath).LocalPath + "/../Logs/Exceptions.log";

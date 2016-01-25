@@ -11,7 +11,8 @@ using System.Web.Http.Description;
 using CyAwareWebApi.Models;
 using CyAwareWebApi.Models.Entities;
 using System.Web.Http.Tracing;
-using CyAwareWebApi.Models.EntitiesDTO;
+using CyAwareWebApi.Utils;
+using System.Web.Http.OData;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -21,35 +22,35 @@ namespace CyAwareWebApi.Controllers
 
         // GET: front/policies
         [Route("front/policies")]
-        [ResponseType(typeof(Policy))]
+        [ResponseType(typeof(PolicyDTOEnriched))]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic Getpolicies()
         {
             try
             {
-                List<EntityBaseDTO> dtos = new List<EntityBaseDTO>();
-                var policies = (from p in db.policies.Where(p => p.isDeleted == false).Include("entities")
-                              select new
+                IQueryable<PolicyDTOEnriched> policies = (from p in db.policies.Where(p => p.isDeleted == false).Include("entities")
+                              select new PolicyDTOEnriched
                               {
                                   Id = p.Id,
-                                  p.isActive,
-                                  p.setDate,
-                                  p.moduleId,
-                                  p.activationDate,
-                                  subscriber = new { Id = p.subscriber.id, p.subscriber.name, },
-                                  action = from a in p.actions select new { Id = a.id, a.actionType, a.destination },
-                                  entities = from e in p.entities select new { Id = e.Id, e.entityType },
-                                  p.s_isMonthly,
-                                  p.s_isWeekly,
-                                  p.s_isDaily,
-                                  p.s_isHourly,
-                                  p.s_isPerMinute,
-                                  p.s_period,
-                                  p.s_enableStartTime24Format,
-                                  p.s_enableEndTime24Format
+                                  isActive = p.isActive,
+                                  setDate = p.setDate,
+                                  moduleId = p.moduleId,
+                                  activationDate = p.activationDate,
+                                  subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name},
+                                  actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
+                                  entities = (from e in p.entities select new EntityBaseDTO{ Id = e.Id, entityType = e.entityType }),
+                                  s_isMonthly = p.s_isMonthly,
+                                  s_isWeekly = p.s_isWeekly,
+                                  s_isDaily = p.s_isDaily,
+                                  s_isHourly = p.s_isHourly,
+                                  s_isPerMinute = p.s_isPerMinute,
+                                  s_period = p.s_period,
+                                  s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                  s_enableEndTime24Format = p.s_enableEndTime24Format
                               });
 
 
-                if (policies != null)
+                if (policies.Any())
                 {
                     return policies;
                 }
@@ -69,22 +70,31 @@ namespace CyAwareWebApi.Controllers
         // GET: back/policies/5
         [Route("back/policies/{id}")]
         [HttpGet]
-        [ResponseType(typeof(Policy))]
+        [ResponseType(typeof(PolicyDTOEnriched))]
         public dynamic GetBackPolicy(int id)
         {
             try
             {
-                var policy = (db.policies.Where(p => (p.Id == id && p.isDeleted==false)).Include(p => p.entities)
-                        .Select(p => new { p.Id, p.isActive, p.setDate, p.entities, p.moduleId,
-                            p.s_isMonthly,
-                            p.s_isWeekly,
-                            p.s_isDaily,
-                            p.s_isHourly,
-                            p.s_isPerMinute,
-                            p.s_period,
-                            p.s_enableStartTime24Format,
-                            p.s_enableEndTime24Format
-                        })).FirstOrDefault();
+                PolicyDTOEnriched policy = (from p in db.policies.Where(p => p.isDeleted == false && p.Id == id).Include("entities")
+                                                          select new PolicyDTOEnriched
+                                                          {
+                                                              Id = p.Id,
+                                                              isActive = p.isActive,
+                                                              setDate = p.setDate,
+                                                              moduleId = p.moduleId,
+                                                              activationDate = p.activationDate,
+                                                              subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name },
+                                                              actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
+                                                              entities = (from e in p.entities select new EntityBaseDTO { Id = e.Id, entityType = e.entityType }),
+                                                              s_isMonthly = p.s_isMonthly,
+                                                              s_isWeekly = p.s_isWeekly,
+                                                              s_isDaily = p.s_isDaily,
+                                                              s_isHourly = p.s_isHourly,
+                                                              s_isPerMinute = p.s_isPerMinute,
+                                                              s_period = p.s_period,
+                                                              s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                                              s_enableEndTime24Format = p.s_enableEndTime24Format
+                                                          }).FirstOrDefault();
                 if (policy != null)
                 {
                     return policy;
@@ -104,32 +114,31 @@ namespace CyAwareWebApi.Controllers
 
         // GET: front/policies/5
         [Route("front/policies/{id}")]
-        [ResponseType(typeof(Policy))]
+        [ResponseType(typeof(PolicyDTOEnriched))]
         public dynamic GetFrontPolicy(int id)
         {
             try
             {
-                var policy = (from p in db.policies.Include("entities")
-                                  where (p.Id == id && p.isDeleted == false)
-                                  select new
-                                  {
-                                      Id = p.Id,
-                                      p.isActive,
-                                      p.setDate,
-                                      p.moduleId,
-                                      p.activationDate,
-                                      subscriber = new { Id = p.subscriber.id, p.subscriber.name, },
-                                      action = from a in p.actions select new { Id = a.id, a.actionType, a.destination },
-                                      entities = from e in p.entities select new { Id = e.Id, e.entityType },
-                                      p.s_isMonthly,
-                                      p.s_isWeekly,
-                                      p.s_isDaily,
-                                      p.s_isHourly,
-                                      p.s_isPerMinute,
-                                      p.s_period,
-                                      p.s_enableStartTime24Format,
-                                      p.s_enableEndTime24Format
-                                  }).FirstOrDefault();
+                PolicyDTOEnriched policy = (from p in db.policies.Where(p => p.isDeleted == false && p.Id == id).Include("entities")
+                                            select new PolicyDTOEnriched
+                                            {
+                                                Id = p.Id,
+                                                isActive = p.isActive,
+                                                setDate = p.setDate,
+                                                moduleId = p.moduleId,
+                                                activationDate = p.activationDate,
+                                                subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name },
+                                                actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
+                                                entities = (from e in p.entities select new EntityBaseDTO { Id = e.Id, entityType = e.entityType }),
+                                                s_isMonthly = p.s_isMonthly,
+                                                s_isWeekly = p.s_isWeekly,
+                                                s_isDaily = p.s_isDaily,
+                                                s_isHourly = p.s_isHourly,
+                                                s_isPerMinute = p.s_isPerMinute,
+                                                s_period = p.s_period,
+                                                s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                                s_enableEndTime24Format = p.s_enableEndTime24Format
+                                            }).FirstOrDefault();
                 if (policy != null)
                 {
                     return policy;
@@ -149,28 +158,36 @@ namespace CyAwareWebApi.Controllers
 
         // GET: front/policies/subscriber/1
         [Route("front/policies/subscriber/{id}")]
-        [ResponseType(typeof(Policy))]
+        [ResponseType(typeof(PolicyDTOEnriched))]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetPolicyBySubscriber(int id)
         {
             try
             {
-                var policyList = (from p in db.policies.Include("entities")
-                                  where p.subscriberId == id && p.isDeleted == false
-                                  select new
-                                  {
-                                      Id = p.Id,
-                                      p.isActive,
-                                      p.setDate,
-                                      p.moduleId,
-                                      p.activationDate,
-                                      subscriber = new {Id = p.subscriber.id, p.subscriber.name, },
-                                      action = from a in p.actions select new { Id = a.id, a.actionType, a.destination },
-                                      entities = from e in p.entities select new { Id = e.Id, e.entityType },
-                                      p.s_isMonthly, p.s_isWeekly, p.s_isDaily, p.s_isHourly, p.s_isPerMinute, p.s_period, p.s_enableStartTime24Format,p.s_enableEndTime24Format
-                                  }).ToList();
-                if (policyList != null && policyList.Count > 0)
+                IQueryable<PolicyDTOEnriched> policies = (from p in db.policies.Where(p => p.isDeleted == false && p.subscriberId == id).Include("entities")
+                                            select new PolicyDTOEnriched
+                                            {
+                                                Id = p.Id,
+                                                isActive = p.isActive,
+                                                setDate = p.setDate,
+                                                moduleId = p.moduleId,
+                                                activationDate = p.activationDate,
+                                                subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name },
+                                                actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
+                                                entities = (from e in p.entities select new EntityBaseDTO { Id = e.Id, entityType = e.entityType }),
+                                                s_isMonthly = p.s_isMonthly,
+                                                s_isWeekly = p.s_isWeekly,
+                                                s_isDaily = p.s_isDaily,
+                                                s_isHourly = p.s_isHourly,
+                                                s_isPerMinute = p.s_isPerMinute,
+                                                s_period = p.s_period,
+                                                s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                                s_enableEndTime24Format = p.s_enableEndTime24Format
+                                            });
+
+                if (policies.Any())
                 {
-                    return policyList;
+                    return policies;
                 }
                 else
                 {

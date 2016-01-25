@@ -21,4 +21,22 @@ namespace CyAwareWebApi.Models
 
         //public virtual HashSet<Policy> policies { get; set; }
     }
+
+    public class SubscriberDTO
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public int subscriptionId { get; set; }
+
+        // Navigation property 
+        //public virtual HashSet<ENetworks> networks { get; set; }
+        //public virtual HashSet<ESocNetId> socNetIds { get; set; }
+
+        //public virtual HashSet<Policy> policies { get; set; }
+    }
+
+    public class SubscriberDTOEnriched : SubscriberDTO
+    {
+        public virtual IEnumerable<EntityBaseDTO> entities { get; set; }
+    }
 }

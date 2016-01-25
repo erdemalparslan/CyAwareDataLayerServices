@@ -10,4 +10,11 @@ namespace CyAwareWebApi.Models.Results
         public string tcpPortNumbers { get; set; }
         public string udpPortNumbers { get; set; }
     }
+
+    public class RModule1DTO : ResultBaseDTO
+    {
+        public string ipAddress { get; set; }
+        public string tcpPortNumbers { get; set; }
+        public string udpPortNumbers { get; set; }
+    }
 }

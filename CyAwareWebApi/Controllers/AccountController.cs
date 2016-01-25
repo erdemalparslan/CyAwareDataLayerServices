@@ -58,11 +58,15 @@ namespace CyAwareWebApi.Controllers
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+
+
             return new UserInfoViewModel
             {
                 Email = User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
+                subscriberId = currentUser.subscriberId
             };
         }
 
@@ -328,7 +332,7 @@ namespace CyAwareWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email, subscriberId = model.subscriberId };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
