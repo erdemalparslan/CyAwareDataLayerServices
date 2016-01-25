@@ -13,7 +13,7 @@ namespace Inspinia_MVC5_SeedProject.Models
         public List<InstagramProfile> instagramList { get; set; }
     }
 
-    public class EditPolicyViewModel : EntityBaseViewModel
+    public class PolicyEntityBaseViewModel : EntityBaseViewModel
     {
         public Policy policy { get; set; }
     }

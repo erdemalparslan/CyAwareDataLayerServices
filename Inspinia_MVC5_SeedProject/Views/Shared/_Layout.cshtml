@@ -8,27 +8,8 @@
     <title>MyScanner | @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/font-awesome/css")
+
     @RenderSection("css", false)
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Data Tables -->
-    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
-    <link href="css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
-    <link href="css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
-
-    <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-
-    <style type="text/css">
-        th{
-            text-align: center;
-        }
-        td{
-            text-align: center;
-        }
-    </style>
-
 </head>
 <body>
 
@@ -64,6 +45,7 @@
     @Scripts.Render("~/plugins/pace")
     @Scripts.Render("~/plugins/slimScroll")
     @Scripts.Render("~/bundles/inspinia")
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

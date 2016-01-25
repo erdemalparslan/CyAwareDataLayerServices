@@ -61,6 +61,15 @@ namespace Inspinia_MVC5_SeedProject.App_LocalResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action.
+        /// </summary>
+        public static string Action {
+            get {
+                return ResourceManager.GetString("Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activation Date.
         /// </summary>
         public static string ActivationDateColHeader {
@@ -286,15 +295,6 @@ namespace Inspinia_MVC5_SeedProject.App_LocalResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please enter a valid ip address (ex. 123.32.45.56).
-        /// </summary>
-        public static string IpLengthCheck {
-            get {
-                return ResourceManager.GetString("IpLengthCheck", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ip Range.
         /// </summary>
         public static string IpRange {
@@ -327,6 +327,15 @@ namespace Inspinia_MVC5_SeedProject.App_LocalResources {
         public static string IpRequired {
             get {
                 return ResourceManager.GetString("IpRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid ip address (ex. 123.32.45.56).
+        /// </summary>
+        public static string IpValidCheck {
+            get {
+                return ResourceManager.GetString("IpValidCheck", resourceCulture);
             }
         }
         
@@ -700,6 +709,15 @@ namespace Inspinia_MVC5_SeedProject.App_LocalResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a finish hour between 0-23.
+        /// </summary>
+        public static string ScheduleFinishValueCheck {
+            get {
+                return ResourceManager.GetString("ScheduleFinishValueCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to hour(s).
         /// </summary>
         public static string ScheduleHour {
@@ -741,6 +759,33 @@ namespace Inspinia_MVC5_SeedProject.App_LocalResources {
         public static string ScheduleMoreBetween {
             get {
                 return ResourceManager.GetString("ScheduleMoreBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Period value is required.
+        /// </summary>
+        public static string SchedulePeriodRequired {
+            get {
+                return ResourceManager.GetString("SchedulePeriodRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a period between 1-100.
+        /// </summary>
+        public static string SchedulePeriodValueCheck {
+            get {
+                return ResourceManager.GetString("SchedulePeriodValueCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a start hour between 0-23.
+        /// </summary>
+        public static string ScheduleStartValueCheck {
+            get {
+                return ResourceManager.GetString("ScheduleStartValueCheck", resourceCulture);
             }
         }
         

@@ -1,4 +1,4 @@
-﻿@model Inspinia_MVC5_SeedProject.Models.EditPolicyViewModel
+﻿@model Inspinia_MVC5_SeedProject.Models.PolicyEntityBaseViewModel
 @using Inspinia_MVC5_SeedProject.App_LocalResources
 
 @helper printEntity(int id)
@@ -17,6 +17,8 @@
 @Html.HiddenFor(model => model.policy.id)
 @Html.HiddenFor(model => model.policy.actionId)
 @Html.HiddenFor(model => model.policy.isActive)
+<input type="hidden" value="@Model.policy.activationDate" name="policy.activationDate" id="policy_activationDate">
+@Html.HiddenFor(model => model.policy.subscriberId)
 
 <div class="ibox float-e-margins">
     <div class="ibox-content">
@@ -32,17 +34,17 @@
                     </h3>
                     <div class="radio">
                         <label>
-                            <input type="radio" value="1" id="1" name="policy.module.id" @(Model.policy.module.id == 1 ? "checked" : "disabled")> @Resource.ModuleName1
+                            <input type="radio" value="1" id="1" name="policy.moduleId" @(Model.policy.moduleId == 1 ? "checked" : "disabled")> @Resource.ModuleName1
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" value="2" id="2" name="policy.module.id" @(Model.policy.module.id == 2 ? "checked" : "disabled")> @Resource.ModuleName2
+                            <input type="radio" value="2" id="2" name="policy.moduleId" @(Model.policy.moduleId == 2 ? "checked" : "disabled")> @Resource.ModuleName2
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" value="3" id="3" name="policy.module.id" @(Model.policy.module.id == 3 ? "checked" : "disabled")> @Resource.ModuleName3
+                            <input type="radio" value="3" id="3" name="policy.moduleId" @(Model.policy.moduleId == 3 ? "checked" : "disabled")> @Resource.ModuleName3
                         </label>
                     </div>
                 </div>
@@ -134,14 +136,27 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        @Resource.PolicySchedulePeriod:
-                        <input type="text" name="policy.schedule.period" value="@Model.policy.s_period">
-                        <br>
-                        @Resource.PolicyScheduleStartAt:
-                        <input type="text" name="policy.schedule.enableStartTime24Format" value="@Model.policy.s_enableStartTime24Format">
-                        <br>
-                        @Resource.PolicyScheduleFinishAt:
-                        <input type="text" name="policy.schedule.enableEndTime24Format" value="@Model.policy.s_enableEndTime24Format">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.policy.s_period, new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                @Html.EditorFor(model => model.policy.s_period)
+                                @Html.ValidationMessageFor(model => model.policy.s_period)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.policy.s_enableStartTime24Format, new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                @Html.EditorFor(model => model.policy.s_enableStartTime24Format)
+                                @Html.ValidationMessageFor(model => model.policy.s_enableStartTime24Format)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.policy.s_enableEndTime24Format, new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                @Html.EditorFor(model => model.policy.s_enableEndTime24Format)
+                                @Html.ValidationMessageFor(model => model.policy.s_enableEndTime24Format)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,3 +164,4 @@
         </div>
 </div>
 </div>
+

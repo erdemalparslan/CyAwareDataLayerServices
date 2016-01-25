@@ -189,7 +189,7 @@
   <data name="IpAddress" xml:space="preserve">
     <value>Ip Address</value>
   </data>
-  <data name="IpLengthCheck" xml:space="preserve">
+  <data name="IpValidCheck" xml:space="preserve">
     <value>Please enter a valid ip address (ex. 123.32.45.56)</value>
   </data>
   <data name="IpRange" xml:space="preserve">
@@ -371,5 +371,20 @@
   </data>
   <data name="Login" xml:space="preserve">
     <value>Log in</value>
+  </data>
+  <data name="ScheduleStartValueCheck" xml:space="preserve">
+    <value>Please enter a start hour between 0-23</value>
+  </data>
+  <data name="ScheduleFinishValueCheck" xml:space="preserve">
+    <value>Please enter a finish hour between 0-23</value>
+  </data>
+  <data name="SchedulePeriodValueCheck" xml:space="preserve">
+    <value>Please enter a period between 1-100</value>
+  </data>
+  <data name="SchedulePeriodRequired" xml:space="preserve">
+    <value>Period value is required</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
   </data>
 </root>

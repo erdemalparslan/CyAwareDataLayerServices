@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using Inspinia_MVC5_SeedProject.Utility;
+using System;
+using System.Globalization;
+using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 

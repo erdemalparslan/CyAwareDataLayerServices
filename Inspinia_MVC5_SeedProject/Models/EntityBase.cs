@@ -13,9 +13,12 @@ namespace Inspinia_MVC5_SeedProject.Models
         public string entityType { get; set; }
         [Display(Name = "Subscriber Id")]
         public int subscriberId { get; set; }
+        public int? mainEntityId { get; set; }
 
         // Navigation properties 
         public virtual Subscriber subscriber { get; set; }
+        public virtual EntityBase mainEntity { get; set; }
+        public virtual HashSet<EntityBase> subentities { get; set; }
         public virtual HashSet<EntityExtraForPolicy> extraInfo { get; set; }
     }
 
@@ -42,6 +45,11 @@ namespace Inspinia_MVC5_SeedProject.Models
         public string address { get; set; }
     }
 
+    public class EHostname : EntityBase
+    {
+        public string hostname { get; set; }
+    }
+
     public class Identificaiton : EntityBase
     {
         public string type { get; set; }
@@ -57,11 +65,11 @@ namespace Inspinia_MVC5_SeedProject.Models
 
     public class Ip : EntityBase
     {
-        [Display(Name = "Ip", ResourceType = typeof(Resource))]
+        [Display(Name = "IpAddress", ResourceType = typeof(Resource))]
         [Required(ErrorMessageResourceType = typeof(Resource),
               ErrorMessageResourceName = "IpRequired")]
-        [StringLength(15, ErrorMessageResourceType = typeof(Resource),
-                      ErrorMessageResourceName = "IpLengthCheck")]
+        [RegularExpression(@"^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$",
+              ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "IpValidCheck")]
         public string ip { get; set; }
     }
 
@@ -70,7 +78,7 @@ namespace Inspinia_MVC5_SeedProject.Models
         [Display(Name = "IpRange", ResourceType = typeof(Resource))]
         [Required(ErrorMessageResourceType = typeof(Resource),
               ErrorMessageResourceName = "IpRangeRequired")]
-        [StringLength(15, ErrorMessageResourceType = typeof(Resource),
+        [Range(0,32, ErrorMessageResourceType = typeof(Resource),
                       ErrorMessageResourceName = "IpRangeLengthCheck")]
         public int range { get; set; }
     }
