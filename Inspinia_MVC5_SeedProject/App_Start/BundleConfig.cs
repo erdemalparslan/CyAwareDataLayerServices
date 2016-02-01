@@ -44,6 +44,21 @@ namespace Inspinia_MVC5_SeedProject
             bundles.Add(new ScriptBundle("~/plugins/steps").Include(
                       "~/Scripts/plugins/steps/jquery.steps.min.js"));
 
+            bundles.Add(new ScriptBundle("~/plugins/mySteps").Include(
+                      "~/Scripts/plugins/steps/mySteps.js"));
+
+            bundles.Add(new ScriptBundle("~/plugins/jquery.dataTables").Include(
+                      "~/Scripts/plugins/dataTables/jquery.dataTables.js"));
+
+            bundles.Add(new ScriptBundle("~/plugins/dataTables.bootstrap").Include(
+                      "~/Scripts/plugins/dataTables/dataTables.bootstrap.js"));
+
+            bundles.Add(new ScriptBundle("~/plugins/dataTables.responsive").Include(
+                      "~/Scripts/plugins/dataTables/dataTables.responsive.js"));
+
+            bundles.Add(new ScriptBundle("~/plugins/dataTables.tableTools.min").Include(
+                      "~/Scripts/plugins/dataTables/dataTables.tableTools.min.js"));
+
             // CSS style (bootstrap/inspinia)
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
@@ -60,6 +75,18 @@ namespace Inspinia_MVC5_SeedProject
             // CSS style (steps)
             bundles.Add(new StyleBundle("~/Content/steps").Include(
                       "~/Content/plugins/steps/jquery.steps.css"));
+
+            // css style (dataTables.bootstrap)
+            bundles.Add(new StyleBundle("~/Content/dataTables.bootstrap").Include(
+                      "~/Content/plugins/dataTables/dataTables.bootstrap.css"));
+
+            // css style (dataTables)
+            bundles.Add(new StyleBundle("~/Content/dataTables.tableTools.min").Include(
+                      "~/Content/plugins/dataTables/dataTables.tableTools.min.css"));
+
+            // css style (dataTables)
+            bundles.Add(new StyleBundle("~/Content/dataTables.responsive").Include(
+                      "~/Content/plugins/dataTables/dataTables.responsive.css"));
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [HttpGet]
         public ActionResult Unmock()
         {
-            Session["mock"] = null;
+            Session["mock"] = false;
             session_str = "";
             return RedirectToAction("Index");
         }
@@ -186,6 +186,8 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateInstagram(InstagramProfile instagramEntity)
         {
+            instagramEntity.subscriberId = 1; //tmp
+
             if (session_str == "true")
             {
                 mockDb.addEntityBase(instagramEntity);
@@ -202,6 +204,8 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateIp(Ip ipEntity)
         {
+            ipEntity.subscriberId = 1; // tmp
+
             if (session_str == "true")
             {
                 mockDb.addEntityBase(ipEntity);
@@ -217,6 +221,8 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateIpRange(IpRange ipRangeEntity)
         {
+            ipRangeEntity.subscriberId = 1; // tmp
+
             if (session_str == "true")
             {
                 mockDb.addEntityBase(ipRangeEntity);
@@ -249,6 +255,8 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateTwitter(TwitterProfile twitterEntity)
         {
+            twitterEntity.subscriberId = 1; // tmp
+
             if (session_str == "true")
             {
                 mockDb.addEntityBase(twitterEntity);

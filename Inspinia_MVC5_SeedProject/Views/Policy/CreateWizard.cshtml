@@ -1,4 +1,4 @@
-﻿@model Inspinia_MVC5_SeedProject.Models.EntityBaseViewModel
+﻿@model Inspinia_MVC5_SeedProject.Models.PolicyEntityBaseViewModel
 @using Inspinia_MVC5_SeedProject.App_LocalResources
 
 <div class="ibox float-e-margins">
@@ -15,17 +15,17 @@
                     </h3>
                     <div class="radio">
                         <label>
-                            <input type="radio" value="1" id="1" name="module.id"> @Resource.ModuleName1
+                            <input type="radio" value="1" id="1" name="policy.moduleId"> @Resource.ModuleName1
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" value="2" id="2" name="module.id"> @Resource.ModuleName2
+                            <input type="radio" value="2" id="2" name="policy.moduleId"> @Resource.ModuleName2
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" value="3" id="3" name="module.id"> @Resource.ModuleName3
+                            <input type="radio" value="3" id="3" name="policy.moduleId"> @Resource.ModuleName3
                         </label>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                         @foreach (var item in Model.ipList)
                         {
                             <h5>
-                                <input type="checkbox" name="selectedObjects" value="@item.id">@item.ip
+                                <input type="checkbox" name="policy.selectedObjects" value="@item.id">@item.ip
                             </h5>
                         }
                     </div>
@@ -56,7 +56,7 @@
                         @foreach (var item in Model.ipRangeList)
                         {
                             <h5>
-                                <input type="checkbox" name="selectedObjects" value="@item.id">@(item.ip + " / " + item.range)
+                                <input type="checkbox" name="policy.selectedObjects" value="@item.id">@(item.ip + " / " + item.range)
                             </h5>
                         }
                     </div>
@@ -68,7 +68,7 @@
 
                     @foreach (var item in Model.twitterList)
                     {
-                        <input type="checkbox" name="selectedObjects" value="@item.id">@item.idStr
+                        <input type="checkbox" name="policy.selectedObjects" value="@item.id">@item.idStr
                     }
 
                 </div>
@@ -78,7 +78,7 @@
                     </h3>
                     @foreach (var item in Model.instagramList)
                     {
-                        <input type="checkbox" name="selectedObjects" value="@item.id">@item.idStr
+                        <input type="checkbox" name="policy.selectedObjects" value="@item.id">@item.idStr
                     }
                 </div>
             </div>
@@ -92,39 +92,52 @@
                     <div class="col-sm-6">
                         <div class="radio">
                             <label>
-                                <input type="radio" value="1" id="1" name="scheduleType"> @Resource.PolicyScheduleMonthInfo
+                                <input type="radio" value="1" id="1" name="policy.scheduleType"> @Resource.PolicyScheduleMonthInfo
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="2" id="2" name="scheduleType"> @Resource.PolicyScheduleWeekInfo
+                                <input type="radio" value="2" id="2" name="policy.scheduleType"> @Resource.PolicyScheduleWeekInfo
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="3" id="3" name="scheduleType"> @Resource.PolicyScheduleDayInfo
+                                <input type="radio" value="3" id="3" name="policy.scheduleType"> @Resource.PolicyScheduleDayInfo
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="4" id="4" name="scheduleType"> @Resource.PolicyScheduleHourInfo
+                                <input type="radio" value="4" id="4" name="policy.scheduleType"> @Resource.PolicyScheduleHourInfo
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" value="5" id="5" name="scheduleType"> @Resource.PolicyScheduleMinuteInfo
+                                <input type="radio" value="5" id="5" name="policy.scheduleType"> @Resource.PolicyScheduleMinuteInfo
                             </label>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        @Resource.PolicySchedulePeriod:
-                        <input type="text" name="s_period">
-                        <br>
-                        @Resource.PolicyScheduleStartAt:
-                        <input type="text" name="s_enableStartTime24Format">
-                        <br>
-                        @Resource.PolicyScheduleFinishAt:
-                        <input type="text" name="s_enableEndTime24Format">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.policy.s_period, new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                @Html.EditorFor(model => model.policy.s_period)
+                                @Html.ValidationMessageFor(model => model.policy.s_period)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.policy.s_enableStartTime24Format, new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                @Html.EditorFor(model => model.policy.s_enableStartTime24Format)
+                                @Html.ValidationMessageFor(model => model.policy.s_enableStartTime24Format)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.policy.s_enableEndTime24Format, new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                @Html.EditorFor(model => model.policy.s_enableEndTime24Format)
+                                @Html.ValidationMessageFor(model => model.policy.s_enableEndTime24Format)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

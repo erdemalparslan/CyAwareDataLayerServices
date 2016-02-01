@@ -1,4 +1,4 @@
-﻿@model Inspinia_MVC5_SeedProject.Models.Policy
+﻿@model Inspinia_MVC5_SeedProject.Models.PolicyEntityBaseViewModel
 @using Inspinia_MVC5_SeedProject.Models
 @using Inspinia_MVC5_SeedProject.App_LocalResources
 
@@ -76,32 +76,32 @@ else
             @Html.ValidationSummary(true)
             <dl class="dl-horizontal">
                 <dt>
-                    @Html.DisplayNameFor(model => model.module.moduleName)
+                    @Html.DisplayNameFor(model => model.policy.module.moduleName)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.module.moduleName)
+                    @Html.DisplayFor(model => model.policy.module.moduleName)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.isActive)
+                    @Html.DisplayNameFor(model => model.policy.isActive)
                 </dt>
                 <dd>
-                    @(Model.isActive ? "Active" : "Inactive")
+                    @(Model.policy.isActive ? Resource.PolicyStatusActive : Resource.PolicyStatusInactive)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.actionId)
+                    @Html.DisplayNameFor(model => model.policy.actionId)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.actionId)
+                    @Html.DisplayFor(model => model.policy.actionId)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.entities)
+                    @Html.DisplayNameFor(model => model.policy.entities)
                 </dt>
-                @foreach (var item in Model.entities)
+                @foreach (var item in Model.policy.entities)
                 {
-                    if (Model.module.id == 1)
+                    if (Model.policy.moduleId == 1)
                     {
                         if (item.entityType == "EIpAddress")
                         {
@@ -119,7 +119,7 @@ else
                             </dd>
                         }
                     }
-                    else if (Model.module.id == 2)
+                    else if (Model.policy.moduleId == 2)
                     {
                         if (item.entityType == "ETwitterProfile")
                         {
@@ -129,7 +129,7 @@ else
                             </dd>
                         }
                     }
-                    else if (Model.module.id == 3)
+                    else if (Model.policy.moduleId == 3)
                     {
                         if (item.entityType == "EInstagramProfile")
                         {
@@ -147,16 +147,16 @@ else
                 </dt>
                 
                 <dd>
-                    @DisplaySchedule(Model)
+                    @DisplaySchedule(Model.policy)
                 </dd>
             </dl>
 
-            @Html.HiddenFor(model => model.id)
-            @Html.HiddenFor(model => model.isActive)
+            @Html.HiddenFor(model => model.policy.id)
+            @Html.HiddenFor(model => model.policy.isActive)
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">@Resource.CancelBtn</button>
-            <button id="deletePolicyBtn" type="submit" class="btn btn-primary">@Resource.SaveBtn</button>
+            <button id="deletePolicyBtn" type="submit" class="btn btn-primary">@Resource.DeleteBtn</button>
         </div>
     }
 </div>

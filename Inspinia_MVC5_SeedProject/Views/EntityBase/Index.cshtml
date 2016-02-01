@@ -1,6 +1,53 @@
 ﻿@using Inspinia_MVC5_SeedProject.Models;
 @using Inspinia_MVC5_SeedProject.App_LocalResources
 
+@section css{
+    @Styles.Render("~/Content/dataTables.bootstrap")
+    @Styles.Render("~/Content/dataTables.tableTools.min")
+    @Styles.Render("~/Content/dataTables.responsive")
+
+    <style>
+        body.DTTT_Print {
+            background: #fff;
+        }
+
+        .DTTT_Print #page-wrapper {
+            margin: 0;
+            background: #fff;
+        }
+
+        button.DTTT_button, div.DTTT_button, a.DTTT_button {
+            border: 1px solid #e7eaec;
+            background: #fff;
+            color: #676a6c;
+            box-shadow: none;
+            padding: 6px 8px;
+        }
+
+            button.DTTT_button:hover, div.DTTT_button:hover, a.DTTT_button:hover {
+                border: 1px solid #d2d2d2;
+                background: #fff;
+                color: #676a6c;
+                box-shadow: none;
+                padding: 6px 8px;
+            }
+
+        .dataTables_filter label {
+            margin-right: 5px;
+        }
+    </style>
+
+    <style>
+        th {
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+}
+
 @{
     ViewBag.Title = Resource.EntityBaseTitle;
 }
@@ -23,6 +70,18 @@
 
 @section Scripts {
     
+    <script>
+        $(document).ready(function () {
+            $('.dataTables-example').dataTable({
+                responsive: true,
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "/Scripts/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+                }
+            });
+        });
+    </script>
+
     <script type="text/javascript">
         $(function () {
             $('a.createBtn, a.editBtn, a.deleteBtn').on('click', function (e) {
@@ -43,4 +102,9 @@
             });
         });
     </script>
+
+    @Scripts.Render("~/plugins/jquery.dataTables")
+    @Scripts.Render("~/plugins/dataTables.bootstrap")
+    @Scripts.Render("~/plugins/dataTables.responsive")
+    @Scripts.Render("~/plugins/dataTables.tableTools.min")
 }

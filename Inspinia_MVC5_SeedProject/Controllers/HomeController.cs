@@ -11,8 +11,10 @@ namespace Inspinia_MVC5_SeedProject.Controllers
     {
         public ActionResult Index()
         {
-            ViewData["SubTitle"] = "Welcome in ASP.NET MVC 5 INSPINIA SeedProject ";
-            ViewData["Message"] = "It is an application skeleton for a typical MVC 5 project. You can use it to quickly bootstrap your webapp projects.";
+            //ViewData["SubTitle"] = "Welcome in ASP.NET MVC 5 INSPINIA SeedProject ";
+            //ViewData["Message"] = "It is an application skeleton for a typical MVC 5 project. You can use it to quickly bootstrap your webapp projects.";
+            ViewData["SubTitle"] = "Welcome in yet another vulnerability scanner : MONAWARE";
+            ViewData["Message"] = "It brings a new perspective into the continious vulnerability scanning.";
 
             return View();
         }
@@ -40,7 +42,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                 cookie.Expires = DateTime.Now.AddYears(1);
             }
             Response.Cookies.Add(cookie);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "EntityBase");
         }
 
         public ActionResult Settings()

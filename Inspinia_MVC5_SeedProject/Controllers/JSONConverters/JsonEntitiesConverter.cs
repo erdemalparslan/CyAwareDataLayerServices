@@ -24,14 +24,14 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                     return new Email();
                 case "EIdentification":
                     return new Identificaiton();
+                case "EHostname":
+                    return new EHostname();
                 case "EInstagramProfile":
                     return new InstagramProfile();
                 case "EIpAddress":
                     return new Ip();
                 case "EIpRange":
                     return new IpRange();
-                case "EPort":
-                    return new Port();
                 case "EService":
                     return new Service();
                 case "ETemplate":

@@ -3,7 +3,7 @@
 @{ 
     String control = Session["mock"] as String;
     string name = "";
-    if (control != "true")
+    if (control != "true" && control != null)
     {
         name = "Mock";
     }

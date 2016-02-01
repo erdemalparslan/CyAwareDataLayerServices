@@ -51,7 +51,9 @@ namespace Inspinia_MVC5_SeedProject.Controllers
 
             foreach (var policy in policies)
             {
-                policy.module.id = policy.moduleId;
+                Module m = new Module();
+                m.id = policy.moduleId;
+                policy.module = m;
 
                 HashSet<EntityBase> entityList = policy.entities;
                 foreach(var entity in entityList)
@@ -135,26 +137,26 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                     tList.Add((TwitterProfile)entity);
                 }
             }
-            EntityBaseViewModel ebvm = new EntityBaseViewModel();
-            ebvm.ipList = ipList;
-            ebvm.ipRangeList = ipRangeList;
-            ebvm.twitterList = tList;
-            ebvm.instagramList = insList;
-            Session["ebvm"] = ebvm;
-            return PartialView(ebvm);
+            PolicyEntityBaseViewModel pebvm = new PolicyEntityBaseViewModel();
+            pebvm.ipList = ipList;
+            pebvm.ipRangeList = ipRangeList;
+            pebvm.twitterList = tList;
+            pebvm.instagramList = insList;
+            Session["pebvm"] = pebvm;
+            return PartialView(pebvm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Policy policy)
         {
-            EntityBaseViewModel ebvm = Session["ebvm"] as EntityBaseViewModel;
+            PolicyEntityBaseViewModel pebvm = Session["pebvm"] as PolicyEntityBaseViewModel;
             HashSet<EntityBase> enList = new HashSet<EntityBase>();
-            if (policy.module.id == 1)
+            if (policy.moduleId == 1)
             {
                 foreach (int selectedId in policy.selectedObjects)
                 {
-                    foreach(Ip tmpIp in ebvm.ipList)
+                    foreach(Ip tmpIp in pebvm.ipList)
                     {
                         if(tmpIp.id == selectedId)
                         {
@@ -162,7 +164,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                         }
                     }
 
-                    foreach (IpRange tmpIpRange in ebvm.ipRangeList)
+                    foreach (IpRange tmpIpRange in pebvm.ipRangeList)
                     {
                         if (tmpIpRange.id == selectedId)
                         {
@@ -171,11 +173,11 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                     }
                 }
             }
-            else if (policy.module.id == 2)
+            else if (policy.moduleId == 2)
             {
                 foreach (int selectedId in policy.selectedObjects)
                 {
-                    foreach (TwitterProfile tmpTp in ebvm.twitterList)
+                    foreach (TwitterProfile tmpTp in pebvm.twitterList)
                     {
                         if (tmpTp.id == selectedId)
                         {
@@ -184,11 +186,11 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                     }
                 }
             }
-            else if (policy.module.id == 3)
+            else if (policy.moduleId == 3)
             {
                 foreach (int selectedId in policy.selectedObjects)
                 {
-                    foreach (InstagramProfile tmpIp in ebvm.instagramList)
+                    foreach (InstagramProfile tmpIp in pebvm.instagramList)
                     {
                         if (tmpIp.id == selectedId)
                         {
@@ -227,7 +229,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
             policy.entities = enList;
 
             policy.actionId = 1;
-            //policy.subscriberId = 1;
+            policy.subscriberId = 1;
             policy.isActive = true;
 
             if(ebc.getSessionStr() == "true")
@@ -239,7 +241,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                 await httpClient.PostAsync(policy);
             }
 
-            Session["ebvm"] = null;
+            Session["pebvm"] = null;
 
             return RedirectToAction("Index");
         }
@@ -310,7 +312,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                 policy.scheduleType = 5;
             }
 
-            EditPolicyViewModel epvm = new EditPolicyViewModel();
+            PolicyEntityBaseViewModel epvm = new PolicyEntityBaseViewModel();
             epvm.ipList = ipList;
             epvm.ipRangeList = ipRangeList;
             epvm.twitterList = tList;
@@ -325,9 +327,9 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Policy policy)
         {
-            EditPolicyViewModel epvm = Session["epvm"] as EditPolicyViewModel;
+            PolicyEntityBaseViewModel epvm = Session["epvm"] as PolicyEntityBaseViewModel;
             HashSet<EntityBase> enList = new HashSet<EntityBase>();
-            if (policy.module.id == 1)
+            if (policy.moduleId == 1)
             {
                 foreach (int selectedId in policy.selectedObjects)
                 {
@@ -348,7 +350,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                     }
                 }
             }
-            else if (policy.module.id == 2)
+            else if (policy.moduleId == 2)
             {
                 foreach (int selectedId in policy.selectedObjects)
                 {
@@ -361,7 +363,7 @@ namespace Inspinia_MVC5_SeedProject.Controllers
                     }
                 }
             }
-            else if(policy.module.id == 3)
+            else if(policy.moduleId == 3)
             {
                 foreach (int selectedId in policy.selectedObjects)
                 {
@@ -402,6 +404,10 @@ namespace Inspinia_MVC5_SeedProject.Controllers
             }
 
             policy.entities = enList;
+            policy.subscriberId = 1; // tmp
+            policy.actionId = 1; // tmp
+            DateTime dt1 = new DateTime(2015, 11, 23, 21, 19, 55);
+            policy.setDate = dt1;
 
             if (ebc.getSessionStr() == "true")
             {
@@ -421,15 +427,126 @@ namespace Inspinia_MVC5_SeedProject.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             Policy policy;
+            List<EntityBase> assets;
             if (ebc.getSessionStr() == "true")
             {
+                PolicyEntityBaseViewModel epvm = new PolicyEntityBaseViewModel();
                 policy = ebc.getMockDB().getPolicyById(id);
+                epvm.policy = policy;
+                return PartialView(epvm);
             }
             else
             {
+                GenericHttpClient<EntityBase, int> httpClientx = new GenericHttpClient<EntityBase, int>("http://monaware.com", "front/entitybases/subscriber/");
+                string result = await httpClientx.GetByIdAsyncString(1);
+                assets = JsonConvert.DeserializeObject<List<EntityBase>>(result, new JsonEntitiesConverter());
+
+                List<Ip> ipList = new List<Ip>();
+                List<IpRange> ipRangeList = new List<IpRange>();
+                List<TwitterProfile> tList = new List<TwitterProfile>();
+                List<InstagramProfile> insList = new List<InstagramProfile>();
+
+                foreach (var entity in assets)
+                {
+                    if (entity.entityType == "EIpAddress")
+                    {
+                        ipList.Add((Ip)entity);
+                    }
+                    else if (entity.entityType == "EIpRange")
+                    {
+                        ipRangeList.Add((IpRange)entity);
+                    }
+                    else if (entity.entityType == "EInstagramProfile")
+                    {
+                        insList.Add((InstagramProfile)entity);
+                    }
+                    else if (entity.entityType == "ETwitterProfile")
+                    {
+                        tList.Add((TwitterProfile)entity);
+                    }
+                }
                 policy = await httpClient.GetByIdAsync(id);
+                HashSet<EntityBase> enList = new HashSet<EntityBase>();
+                if (policy.moduleId == 1)
+                {
+                    foreach (EntityBase selected in policy.entities)
+                    {
+                        foreach (Ip tmpIp in ipList)
+                        {
+                            if (tmpIp.id == selected.id)
+                            {
+                                enList.Add(tmpIp);
+                            }
+                        }
+
+                        foreach (IpRange tmpIpRange in ipRangeList)
+                        {
+                            if (tmpIpRange.id == selected.id)
+                            {
+                                enList.Add(tmpIpRange);
+                            }
+                        }
+                    }
+                }
+                else if (policy.moduleId == 2)
+                {
+                    foreach (EntityBase selected in policy.entities)
+                    {
+                        foreach (TwitterProfile tmpTp in tList)
+                        {
+                            if (tmpTp.id == selected.id)
+                            {
+                                enList.Add(tmpTp);
+                            }
+                        }
+                    }
+                }
+                else if (policy.moduleId == 3)
+                {
+                    foreach (EntityBase selected in policy.entities)
+                    {
+                        foreach (InstagramProfile tmpIp in insList)
+                        {
+                            if (tmpIp.id == selected.id)
+                            {
+                                enList.Add(tmpIp);
+                            }
+                        }
+                    }
+                }
+
+                policy.entities = enList;
+                policy.actionId = 1;
+                Module m = new Module();
+                m.id = policy.moduleId;
+                policy.module = m;
+
+                if (policy.s_isMonthly)
+                {
+                    policy.scheduleType = 1;
+                }
+                else if (policy.s_isWeekly)
+                {
+                    policy.scheduleType = 2;
+                }
+                else if (policy.s_isDaily)
+                {
+                    policy.scheduleType = 3;
+                }
+                else if (policy.s_isHourly)
+                {
+                    policy.scheduleType = 4;
+                }
+                else if (policy.s_isPerMinute)
+                {
+                    policy.scheduleType = 5;
+                }
+
+                PolicyEntityBaseViewModel epvm = new PolicyEntityBaseViewModel();
+                epvm.policy = policy;
+
+                return PartialView(epvm);
             }
-            return PartialView(policy);
         }
 
         // POST: /EntityBase/Delete/5
