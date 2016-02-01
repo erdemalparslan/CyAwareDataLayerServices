@@ -56,7 +56,7 @@ namespace CyAwareWebApi.Controllers
                 }
                 else
                 {
-                    Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies", "No any policy found!");
+                    Configuration.Services.GetTraceWriter().Error(Request, "GET: front/policies", "No any policy found! ");
                     return StatusCode(HttpStatusCode.NotFound);
                 }
             }

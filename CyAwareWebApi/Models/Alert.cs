@@ -29,18 +29,18 @@ namespace CyAwareWebApi.Models
         public virtual Scan scan { get; set; }
         public virtual ResultBase resultbase { get; set; }
 
-        //public Alert(DateTime _occuringdate, DateTime _dismissdate, int _incidententityid, int _severitylevel, string _incident, Scan _scan, int _scanid, ResultBase _resultbase, int _resultbaseid)
-        //{
-        //    occuringdate = _occuringdate;
-        //    dismissdate = _dismissdate;
-        //    incidententityid = _incidententityid;
-        //    severitylevel = _severitylevel;
-        //    incident = _incident;
-        //    scanid = _scanid;
-        //    scan = _scan;
-        //    resultbaseid = _resultbaseid;
-        //    resultbase = _resultbase;
-        //}
+        public Alert()
+        {
+
+        }
+
+        public Alert(int _scanid,  int _severitylevel, string _incident)
+        {
+            occuringdate = DateTime.Now;
+            severitylevel = _severitylevel;
+            incident = _incident;
+            scanid = _scanid;
+        }
 
     }
 

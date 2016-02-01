@@ -11,7 +11,7 @@ namespace CyAwareWebApi.Models.Results
         public int actualTweets { get; set; }
         public int actualCAPITALLETTERRatio { get; set; }
         public int actualFollowerNumber { get; set; }
-        public int actualFalloweeNumber { get; set; }
+        public int actualFolloweeNumber { get; set; }
         public string unusualContentFound { get; set; }
 
     }

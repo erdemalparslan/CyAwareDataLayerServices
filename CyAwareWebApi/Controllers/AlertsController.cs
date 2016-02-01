@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CyAwareWebApi.Models;
+using CyAwareWebApi.Models.Entities;
 using CyAwareWebApi.Models.Results;
 using System.Web.Http.Tracing;
 using System.Web.Http.OData;
@@ -19,6 +20,7 @@ namespace CyAwareWebApi.Controllers
 {
     public class AlertsController : ApiController
     {
+        private Alert alert;
         private CyAwareContext db = new CyAwareContext();
 
         // GET: front/alerts/subscriberId/1/moduleId/1      
@@ -179,6 +181,34 @@ namespace CyAwareWebApi.Controllers
                     case 1:
                         checkModule1(scan);
                         break;
+
+                    case 2:
+                        checkModule2(scan);
+                        break;
+
+                    case 3:
+                        checkModule3(scan);
+                        break;
+
+                    case 4:
+                        checkModule4(scan);
+                        break;
+
+                    case 5:
+                        checkModule5(scan);
+                        break;
+
+                    case 6:
+                        checkModule6(scan);
+                        break;
+
+                    case 7:
+                        checkModule7(scan);
+                        break;
+
+                    case 8:
+                        checkModule8(scan);
+                        break;
                 }
             }
             catch (Exception e)
@@ -189,8 +219,7 @@ namespace CyAwareWebApi.Controllers
 
         private void checkModule1(Scan actualScan) 
         {
-            Alert alert;
-            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).First();
+            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
 
             try
             {
@@ -265,5 +294,261 @@ namespace CyAwareWebApi.Controllers
                 throw e;
             }
         }
+
+
+        private void checkModule2(Scan actualScan)
+        {
+            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
+
+            foreach (RModule2 result in actualScan.results)
+            {
+                try
+                {
+                    var policyOfResult = (from p in db.policies where (p.Id == result.policyId) select p).First();
+                    foreach (ETwitterProfile profile in policyOfResult.entities)
+                    {
+                        if (profile.idStr == result.idStr)
+                        {
+                            A2checkForChangedScreenName(result, profile, actualScan);
+                            A2checkForDailyMaxTweetsExceeded(result, profile, actualScan);
+                            if (previousScan != null)
+                            {
+                                A2checkForDailyMaxFollowerChangeRatioExceeded(result, profile, actualScan, previousScan);
+                                A2checkForDailyMaxFolloweeChangeRatioExceeded(result, profile, actualScan, previousScan);
+                            }
+                            A2checkForDailyMaxCAPITALLETTERRatioExceeded(result, profile, actualScan);
+                            A2unusualContentFound(result, profile, actualScan);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    throw e;
+                }
+            }
+        }
+
+        private void A2checkForChangedScreenName(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        {
+            if(!actual.actualScreenName.Equals(expected.screenName))
+            {
+                alert = new Alert(actualScan.id,2, "Changed Twitter Screenname;expected:" + expected.screenName + ";found:" + actual.actualScreenName);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A2checkForDailyMaxTweetsExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        {
+            if (actual.actualTweets > expected.dailyMaxTweets)
+            {
+                alert = new Alert(actualScan.id, 2, "More than daily max tweets;expected:" + expected.dailyMaxTweets + ";found:" + actual.actualTweets);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A2checkForDailyMaxCAPITALLETTERRatioExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        {
+            if (actual.actualCAPITALLETTERRatio > expected.dailyMaxCAPITALLETTERRatio)
+            {
+                alert = new Alert(actualScan.id, 2, "More than daily max CAPITAL LETTER Ratio;expected:" + expected.dailyMaxCAPITALLETTERRatio + ";found:" + actual.actualCAPITALLETTERRatio);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A2checkForDailyMaxFollowerChangeRatioExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan, Scan previousScan)
+        {
+            int previousFollowernumber = (from p in previousScan.results where actual.idStr == ((RModule2)p).idStr select ((RModule2)p).actualFollowerNumber).FirstOrDefault();
+            if (previousFollowernumber == 0)
+                return;
+            double actualChangeRatio = ((actual.actualFollowerNumber / previousFollowernumber) - 1);
+            if (actualChangeRatio > expected.dailyMaxFollowerChangeRatio)
+            {
+                alert = new Alert(actualScan.id, 1, "More than daily max change in the number followers;expected:" + expected.dailyMaxFollowerChangeRatio + ";found:" + actualChangeRatio);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A2checkForDailyMaxFolloweeChangeRatioExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan, Scan previousScan)
+        {
+            int previousFolloweenumber = (from p in previousScan.results where actual.idStr == ((RModule2)p).idStr select ((RModule2)p).actualFolloweeNumber).FirstOrDefault();
+            if (previousFolloweenumber == 0)
+                return;
+            double actualChangeRatio = ((actual.actualFolloweeNumber / previousFolloweenumber) - 1);
+            if (actualChangeRatio > expected.dailyMaxFalloweeChangeRatio)
+            {
+                alert = new Alert(actualScan.id, 1, "More than daily max change in the number followees;expected:" + expected.dailyMaxFalloweeChangeRatio + ";found:" + actualChangeRatio);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A2unusualContentFound(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        {
+            if (!(actual.unusualContentFound == null) && !actual.unusualContentFound.Equals(""))
+            {
+                alert = new Alert(actualScan.id, 3, "Unusual content found;" + actual.unusualContentFound);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void checkModule3(Scan actualScan)
+        {
+            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
+
+            foreach (RModule3 result in actualScan.results)
+            {
+                try
+                {
+                    var policyOfResult = (from p in db.policies where (p.Id == result.policyId) select p).First();
+                    foreach (EInstagramProfile profile in policyOfResult.entities)
+                    {
+                        if (profile.idStr == result.idStr)
+                        {
+                            A3checkForChangedScreenName(result, profile, actualScan);
+                            A3checkForChangedProfilePicture(result, profile, actualScan);
+                            A3checkForDailyMaxPostsExceeded(result, profile, actualScan);
+                            if (previousScan != null)
+                            {
+                                A3checkForDailyMaxFollowerChangeRatioExceeded(result, profile, actualScan, previousScan);
+                                A3checkForDailyMaxFolloweeChangeRatioExceeded(result, profile, actualScan, previousScan);
+                            }
+                            A3checkForDailyMaxCAPITALLETTERRatioExceeded(result, profile, actualScan);
+                            A3unusualContentFound(result, profile, actualScan);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    throw e;
+                }
+            }
+        }
+
+        private void A3checkForChangedScreenName(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        {
+            if (!actual.actualScreenName.Equals(expected.screenName))
+            {
+                alert = new Alert(actualScan.id, 3, "Changed Instagram Screenname;expected:" + expected.screenName + ";found:" + actual.actualScreenName);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A3checkForChangedProfilePicture(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        {
+            if (!actual.actualProfilePictureMD5.Equals(expected.profilePictureMD5))
+            {
+                alert = new Alert(actualScan.id, 3, "Changed Instagram profile picture;expected:" + expected.profilePictureMD5 + ";found:" + actual.actualProfilePictureMD5);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A3checkForDailyMaxPostsExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        {
+            if (actual.actualPosts > expected.dailyMaxPosts)
+            {
+                alert = new Alert(actualScan.id, 2, "More than daily max posts;expected:" + expected.dailyMaxPosts + ";found:" + actual.actualPosts);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A3checkForDailyMaxCAPITALLETTERRatioExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        {
+            if (actual.actualCAPITALLETTERRatio > expected.dailyMaxCAPITALLETTERRatio)
+            {
+                alert = new Alert(actualScan.id, 2, "More than daily max CAPITAL LETTER Ratio;expected:" + expected.dailyMaxCAPITALLETTERRatio + ";found:" + actual.actualCAPITALLETTERRatio);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A3checkForDailyMaxFollowerChangeRatioExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan, Scan previousScan)
+        {
+            int previousFollowernumber = (from p in previousScan.results where actual.idStr == ((RModule3)p).idStr select ((RModule3)p).actualFollowerNumber).FirstOrDefault();
+            if (previousFollowernumber == 0)
+                return;
+            double actualChangeRatio = ((actual.actualFollowerNumber / previousFollowernumber) - 1);
+            if (actualChangeRatio > expected.dailyMaxFollowerChangeRatio)
+            {
+                alert = new Alert(actualScan.id, 1, "More than daily max change in the number followers;expected:" + expected.dailyMaxFollowerChangeRatio + ";found:" + actualChangeRatio);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A3checkForDailyMaxFolloweeChangeRatioExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan, Scan previousScan)
+        {
+            int previousFolloweenumber = (from p in previousScan.results where actual.idStr == ((RModule3)p).idStr select ((RModule3)p).actualFalloweeNumber).FirstOrDefault();
+            if (previousFolloweenumber == 0)
+                return;
+            double actualChangeRatio = ((actual.actualFalloweeNumber / previousFolloweenumber) - 1);
+            if (actualChangeRatio > expected.dailyMaxFalloweeChangeRatio)
+            {
+                alert = new Alert(actualScan.id, 1, "More than daily max change in the number followees;expected:" + expected.dailyMaxFalloweeChangeRatio + ";found:" + actualChangeRatio);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void A3unusualContentFound(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        {
+            if (!(actual.unusualContentFound == null) && !actual.unusualContentFound.Equals(""))
+            {
+                alert = new Alert(actualScan.id, 3, "Unusual content found;" + actual.unusualContentFound);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = expected.Id;
+                db.Alerts.Add(alert);
+            }
+        }
+
+        private void checkModule4(Scan actualScan)
+        {
+
+        }
+
+        private void checkModule5(Scan actualScan)
+        {
+
+        }
+
+        private void checkModule6(Scan actualScan)
+        {
+
+        }
+
+        private void checkModule7(Scan actualScan)
+        {
+
+        }
+
+        private void checkModule8(Scan actualScan)
+        {
+
+        }
+
+
     }
 }
