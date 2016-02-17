@@ -39,23 +39,20 @@ namespace CyAwareWebApi.Controllers
                              scanid = a.scanid,
                              isthrown = a.isthrown,
                              incidententityid = a.incidententityid,
-                             resultbaseid = a.resultbaseid
+                             resultbaseid = a.resultbaseid,
+                             moduleId = a.scan.policy.moduleId
                          };
 
             return alerts;
         }
 
-        // GET: front/alerts/1/subscriberId/1/moduleId/1      
-        [Route("front/alerts/{lastAlert}/subscriberId/{subscriberId}/moduleId/{moduleId}/odata")]
-        //[EnableQuery(PageSize = 3)]
-        public PageResult<AlertDTO> GetAlertsOdata(int lastAlert, int subscriberId, int moduleId, ODataQueryOptions<AlertDTO> options)
+        // GET: front/alerts/subscriberId/1     
+        [Route("front/alerts/subscriberId/{subscriberId}")]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
+        public IQueryable<AlertDTO> GetAlerts(int subscriberId)
         {
-            ODataQuerySettings settings = new ODataQuerySettings()
-            {
-                PageSize = 5
-            };
             IQueryable<AlertDTO> alerts = from a in db.Alerts
-                                          where (a.Id > lastAlert && a.scan.policy.subscriberId == subscriberId && a.scan.policy.moduleId == moduleId)
+                                          where (a.scan.policy.subscriberId == subscriberId)
                                           select new AlertDTO
                                           {
                                               Id = a.Id,
@@ -66,15 +63,57 @@ namespace CyAwareWebApi.Controllers
                                               scanid = a.scanid,
                                               isthrown = a.isthrown,
                                               incidententityid = a.incidententityid,
-                                              resultbaseid = a.resultbaseid
+                                              resultbaseid = a.resultbaseid,
+                                              moduleId = a.scan.policy.moduleId
                                           };
 
-            IQueryable results = options.ApplyTo(alerts.AsQueryable(),settings);
+            return alerts;
+        }
 
-            return new PageResult<AlertDTO>(
-                    results as IEnumerable<AlertDTO>,
-                    Request.GetNextPageLink(),
-                    Request.GetInlineCount());
+        // GET: front/alerts/1/subscriberId/1/moduleId/1      
+        [Route("front/alerts/{lastAlert}/subscriberId/{subscriberId}/moduleId/{moduleId}")]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
+        public IQueryable<AlertDTO> GetAlertsOdata(int lastAlert, int subscriberId, int moduleId, ODataQueryOptions<AlertDTO> options)
+        {
+            IQueryable<AlertDTO> alerts = from a in db.Alerts
+                                          where (a.Id > lastAlert && a.scan.policy.subscriberId == subscriberId && a.scan.policy.moduleId == moduleId)
+                                          select new AlertDTO
+                                          { 
+                                              Id = a.Id,
+                                              occuringdate = a.occuringdate,
+                                              dismissdate = a.dismissdate,
+                                              severitylevel = a.severitylevel,
+                                              incident = a.incident,
+                                              scanid = a.scanid,
+                                              isthrown = a.isthrown,
+                                              incidententityid = a.incidententityid,
+                                              resultbaseid = a.resultbaseid,
+                                              moduleId = a.scan.policy.moduleId
+                                          };
+            return alerts;
+        }
+
+        // GET: front/alerts/1/subscriberId    
+        [Route("front/alerts/{lastAlert}/subscriberId/{subscriberId}")]
+        [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
+        public IQueryable<AlertDTO> GetAlertsOdata(int lastAlert, int subscriberId, ODataQueryOptions<AlertDTO> options)
+        {
+            IQueryable<AlertDTO> alerts = from a in db.Alerts
+                                          where (a.Id > lastAlert && a.scan.policy.subscriberId == subscriberId)
+                                          select new AlertDTO
+                                          {
+                                              Id = a.Id,
+                                              occuringdate = a.occuringdate,
+                                              dismissdate = a.dismissdate,
+                                              severitylevel = a.severitylevel,
+                                              incident = a.incident,
+                                              scanid = a.scanid,
+                                              isthrown = a.isthrown,
+                                              incidententityid = a.incidententityid,
+                                              resultbaseid = a.resultbaseid,
+                                              moduleId = a.scan.policy.moduleId
+                                          };
+            return alerts;
         }
 
         // GET: api/Alerts/5

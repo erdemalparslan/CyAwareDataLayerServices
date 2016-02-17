@@ -55,6 +55,7 @@ namespace CyAwareWebApi.Models
         public bool isthrown { get; set; }
         public int severitylevel { get; set; }
         public string incident { get; set; }
+        public int moduleId { get; set; }
     }
 
     public class AlertDTOEnriched : AlertDTO
