@@ -6,6 +6,8 @@ using System.Data.Entity;
 using CyAwareWebApi.Models.Entities;
 using CyAwareWebApi.Models.Results;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Threading.Tasks;
+using CyAwareWebApi.Utils;
 
 namespace CyAwareWebApi.Models
 {
@@ -37,6 +39,11 @@ namespace CyAwareWebApi.Models
 
         }
 
-        public System.Data.Entity.DbSet<CyAwareWebApi.Models.Alert> Alerts { get; set; }
+        public DbSet<Alert> Alerts { get; set; }
+
+        public override Task<int> SaveChangesAsync()
+        {
+            return base.SaveChangesAsync();
+        }
     }
 }

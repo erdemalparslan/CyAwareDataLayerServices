@@ -15,6 +15,7 @@ using CyAwareWebApi.Models.Results;
 using System.Web.Http.Tracing;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Query;
+using CyAwareWebApi.Utils;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -259,7 +260,7 @@ namespace CyAwareWebApi.Controllers
         private void checkModule1(Scan actualScan) 
         {
             var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
-
+            List<Alert> newAlerts = new List<Alert>();
             try
             {
                 if (previousScan != null)
@@ -293,7 +294,7 @@ namespace CyAwareWebApi.Controllers
                         alert.severitylevel = 3;
                         alert.scanid = actualScan.id;
                         alert.incident = "NEWIP-TCP;ip:" + item.Key + ";port:" + item.Value;
-                        db.Alerts.Add(alert);
+                        newAlerts.Add(alert);
                     }
 
                     foreach (KeyValuePair<string, string> item in newIpUdpPorts)
@@ -303,7 +304,7 @@ namespace CyAwareWebApi.Controllers
                         alert.severitylevel = 2;
                         alert.scanid = actualScan.id;
                         alert.incident = "NEWIP-UDP;ip:" + item.Key + ";port:" + item.Value;
-                        db.Alerts.Add(alert);
+                        newAlerts.Add(alert);
                     }
 
                     foreach (KeyValuePair<string, string> item in oldIpTcpPorts)
@@ -313,7 +314,7 @@ namespace CyAwareWebApi.Controllers
                         alert.severitylevel = 1;
                         alert.scanid = actualScan.id;
                         alert.incident = "OLDIP-TCP;ip:" + item.Key + ";port:" + item.Value;
-                        db.Alerts.Add(alert);
+                        newAlerts.Add(alert);
                     }
 
                     foreach (KeyValuePair<string, string> item in oldIpUdpPorts)
@@ -323,9 +324,12 @@ namespace CyAwareWebApi.Controllers
                         alert.severitylevel = 1;
                         alert.scanid = actualScan.id;
                         alert.incident = "OLDIP-UDP;ip:" + item.Key + ";port:" + item.Value;
-                        db.Alerts.Add(alert);
+                        newAlerts.Add(alert);
                     }
-                    db.SaveChanges();
+                    db.Alerts.AddRange(newAlerts);
+                    foreach (Alert alert in newAlerts)
+                        checkForActions(alert);
+                    db.SaveChangesAsync();
                 }
             }
             catch(Exception e)
@@ -338,6 +342,7 @@ namespace CyAwareWebApi.Controllers
         private void checkModule2(Scan actualScan)
         {
             var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
+            List<Alert> newAlerts = new List<Alert>();
 
             foreach (RModule2 result in actualScan.results)
             {
@@ -348,16 +353,19 @@ namespace CyAwareWebApi.Controllers
                     {
                         if (profile.idStr == result.idStr)
                         {
-                            A2checkForChangedScreenName(result, profile, actualScan);
-                            A2checkForDailyMaxTweetsExceeded(result, profile, actualScan);
+                            A2checkForChangedScreenName(newAlerts, result, profile, actualScan);
+                            A2checkForDailyMaxTweetsExceeded(newAlerts, result, profile, actualScan);
                             if (previousScan != null)
                             {
-                                A2checkForDailyMaxFollowerChangeRatioExceeded(result, profile, actualScan, previousScan);
-                                A2checkForDailyMaxFolloweeChangeRatioExceeded(result, profile, actualScan, previousScan);
+                                A2checkForDailyMaxFollowerChangeRatioExceeded(newAlerts, result, profile, actualScan, previousScan);
+                                A2checkForDailyMaxFolloweeChangeRatioExceeded(newAlerts, result, profile, actualScan, previousScan);
                             }
-                            A2checkForDailyMaxCAPITALLETTERRatioExceeded(result, profile, actualScan);
-                            A2unusualContentFound(result, profile, actualScan);
-                            db.SaveChanges();
+                            A2checkForDailyMaxCAPITALLETTERRatioExceeded(newAlerts, result, profile, actualScan);
+                            A2unusualContentFound(newAlerts, result, profile, actualScan);
+                            db.Alerts.AddRange(newAlerts);
+                            foreach (Alert alert in newAlerts)
+                                checkForActions(alert);
+                            db.SaveChangesAsync();
                         }
                     }
                 }
@@ -369,40 +377,40 @@ namespace CyAwareWebApi.Controllers
             }
         }
 
-        private void A2checkForChangedScreenName(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        private void A2checkForChangedScreenName(List<Alert> newAlerts, RModule2 actual, ETwitterProfile expected, Scan actualScan)
         {
             if(!actual.actualScreenName.Equals(expected.screenName))
             {
                 alert = new Alert(actualScan.id,2, "Changed Twitter Screenname;expected:" + expected.screenName + ";found:" + actual.actualScreenName);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A2checkForDailyMaxTweetsExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        private void A2checkForDailyMaxTweetsExceeded(List<Alert> newAlerts, RModule2 actual, ETwitterProfile expected, Scan actualScan)
         {
             if (actual.actualTweets > expected.dailyMaxTweets)
             {
                 alert = new Alert(actualScan.id, 2, "More than daily max tweets;expected:" + expected.dailyMaxTweets + ";found:" + actual.actualTweets);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A2checkForDailyMaxCAPITALLETTERRatioExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        private void A2checkForDailyMaxCAPITALLETTERRatioExceeded(List<Alert> newAlerts, RModule2 actual, ETwitterProfile expected, Scan actualScan)
         {
             if (actual.actualCAPITALLETTERRatio > expected.dailyMaxCAPITALLETTERRatio)
             {
                 alert = new Alert(actualScan.id, 2, "More than daily max CAPITAL LETTER Ratio;expected:" + expected.dailyMaxCAPITALLETTERRatio + ";found:" + actual.actualCAPITALLETTERRatio);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A2checkForDailyMaxFollowerChangeRatioExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan, Scan previousScan)
+        private void A2checkForDailyMaxFollowerChangeRatioExceeded(List<Alert> newAlerts, RModule2 actual, ETwitterProfile expected, Scan actualScan, Scan previousScan)
         {
             int previousFollowernumber = (from p in previousScan.results where actual.idStr == ((RModule2)p).idStr select ((RModule2)p).actualFollowerNumber).FirstOrDefault();
             if (previousFollowernumber == 0)
@@ -413,11 +421,11 @@ namespace CyAwareWebApi.Controllers
                 alert = new Alert(actualScan.id, 1, "More than daily max change in the number followers;expected:" + expected.dailyMaxFollowerChangeRatio + ";found:" + actualChangeRatio);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A2checkForDailyMaxFolloweeChangeRatioExceeded(RModule2 actual, ETwitterProfile expected, Scan actualScan, Scan previousScan)
+        private void A2checkForDailyMaxFolloweeChangeRatioExceeded(List<Alert> newAlerts, RModule2 actual, ETwitterProfile expected, Scan actualScan, Scan previousScan)
         {
             int previousFolloweenumber = (from p in previousScan.results where actual.idStr == ((RModule2)p).idStr select ((RModule2)p).actualFolloweeNumber).FirstOrDefault();
             if (previousFolloweenumber == 0)
@@ -428,24 +436,25 @@ namespace CyAwareWebApi.Controllers
                 alert = new Alert(actualScan.id, 1, "More than daily max change in the number followees;expected:" + expected.dailyMaxFalloweeChangeRatio + ";found:" + actualChangeRatio);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A2unusualContentFound(RModule2 actual, ETwitterProfile expected, Scan actualScan)
+        private void A2unusualContentFound(List<Alert> newAlerts, RModule2 actual, ETwitterProfile expected, Scan actualScan)
         {
             if (!(actual.unusualContentFound == null) && !actual.unusualContentFound.Equals(""))
             {
                 alert = new Alert(actualScan.id, 3, "Unusual content found;" + actual.unusualContentFound);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
         private void checkModule3(Scan actualScan)
         {
             var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
+            List<Alert> newAlerts = new List<Alert>();
 
             foreach (RModule3 result in actualScan.results)
             {
@@ -456,17 +465,20 @@ namespace CyAwareWebApi.Controllers
                     {
                         if (profile.idStr == result.idStr)
                         {
-                            A3checkForChangedScreenName(result, profile, actualScan);
-                            A3checkForChangedProfilePicture(result, profile, actualScan);
-                            A3checkForDailyMaxPostsExceeded(result, profile, actualScan);
+                            A3checkForChangedScreenName(newAlerts, result, profile, actualScan);
+                            A3checkForChangedProfilePicture(newAlerts, result, profile, actualScan);
+                            A3checkForDailyMaxPostsExceeded(newAlerts, result, profile, actualScan);
                             if (previousScan != null)
                             {
-                                A3checkForDailyMaxFollowerChangeRatioExceeded(result, profile, actualScan, previousScan);
-                                A3checkForDailyMaxFolloweeChangeRatioExceeded(result, profile, actualScan, previousScan);
+                                A3checkForDailyMaxFollowerChangeRatioExceeded(newAlerts, result, profile, actualScan, previousScan);
+                                A3checkForDailyMaxFolloweeChangeRatioExceeded(newAlerts, result, profile, actualScan, previousScan);
                             }
-                            A3checkForDailyMaxCAPITALLETTERRatioExceeded(result, profile, actualScan);
-                            A3unusualContentFound(result, profile, actualScan);
-                            db.SaveChanges();
+                            A3checkForDailyMaxCAPITALLETTERRatioExceeded(newAlerts, result, profile, actualScan);
+                            A3unusualContentFound(newAlerts, result, profile, actualScan);
+                            db.Alerts.AddRange(newAlerts);
+                            foreach (Alert alert in newAlerts)
+                                checkForActions(alert);
+                            db.SaveChangesAsync();
                         }
                     }
                 }
@@ -478,51 +490,51 @@ namespace CyAwareWebApi.Controllers
             }
         }
 
-        private void A3checkForChangedScreenName(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        private void A3checkForChangedScreenName(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan)
         {
             if (!actual.actualScreenName.Equals(expected.screenName))
             {
                 alert = new Alert(actualScan.id, 3, "Changed Instagram Screenname;expected:" + expected.screenName + ";found:" + actual.actualScreenName);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A3checkForChangedProfilePicture(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        private void A3checkForChangedProfilePicture(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan)
         {
             if (!actual.actualProfilePictureMD5.Equals(expected.profilePictureMD5))
             {
                 alert = new Alert(actualScan.id, 3, "Changed Instagram profile picture;expected:" + expected.profilePictureMD5 + ";found:" + actual.actualProfilePictureMD5);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A3checkForDailyMaxPostsExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        private void A3checkForDailyMaxPostsExceeded(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan)
         {
             if (actual.actualPosts > expected.dailyMaxPosts)
             {
                 alert = new Alert(actualScan.id, 2, "More than daily max posts;expected:" + expected.dailyMaxPosts + ";found:" + actual.actualPosts);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A3checkForDailyMaxCAPITALLETTERRatioExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        private void A3checkForDailyMaxCAPITALLETTERRatioExceeded(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan)
         {
             if (actual.actualCAPITALLETTERRatio > expected.dailyMaxCAPITALLETTERRatio)
             {
                 alert = new Alert(actualScan.id, 2, "More than daily max CAPITAL LETTER Ratio;expected:" + expected.dailyMaxCAPITALLETTERRatio + ";found:" + actual.actualCAPITALLETTERRatio);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A3checkForDailyMaxFollowerChangeRatioExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan, Scan previousScan)
+        private void A3checkForDailyMaxFollowerChangeRatioExceeded(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan, Scan previousScan)
         {
             int previousFollowernumber = (from p in previousScan.results where actual.idStr == ((RModule3)p).idStr select ((RModule3)p).actualFollowerNumber).FirstOrDefault();
             if (previousFollowernumber == 0)
@@ -533,11 +545,11 @@ namespace CyAwareWebApi.Controllers
                 alert = new Alert(actualScan.id, 1, "More than daily max change in the number followers;expected:" + expected.dailyMaxFollowerChangeRatio + ";found:" + actualChangeRatio);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A3checkForDailyMaxFolloweeChangeRatioExceeded(RModule3 actual, EInstagramProfile expected, Scan actualScan, Scan previousScan)
+        private void A3checkForDailyMaxFolloweeChangeRatioExceeded(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan, Scan previousScan)
         {
             int previousFolloweenumber = (from p in previousScan.results where actual.idStr == ((RModule3)p).idStr select ((RModule3)p).actualFalloweeNumber).FirstOrDefault();
             if (previousFolloweenumber == 0)
@@ -548,18 +560,18 @@ namespace CyAwareWebApi.Controllers
                 alert = new Alert(actualScan.id, 1, "More than daily max change in the number followees;expected:" + expected.dailyMaxFalloweeChangeRatio + ";found:" + actualChangeRatio);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
-        private void A3unusualContentFound(RModule3 actual, EInstagramProfile expected, Scan actualScan)
+        private void A3unusualContentFound(List<Alert> newAlerts, RModule3 actual, EInstagramProfile expected, Scan actualScan)
         {
             if (!(actual.unusualContentFound == null) && !actual.unusualContentFound.Equals(""))
             {
                 alert = new Alert(actualScan.id, 3, "Unusual content found;" + actual.unusualContentFound);
                 alert.resultbaseid = actual.Id;
                 alert.incidententityid = expected.Id;
-                db.Alerts.Add(alert);
+                newAlerts.Add(alert);
             }
         }
 
@@ -587,7 +599,11 @@ namespace CyAwareWebApi.Controllers
         {
 
         }
-
+        private void checkForActions(Alert alert)
+        {
+            SMTPClient.Instance.send(alert.incident, "ealparslan@gmail.com");
+            SMSClient.Instance.send(alert.incident);
+        }
 
     }
 }
