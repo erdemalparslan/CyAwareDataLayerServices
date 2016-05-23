@@ -14,11 +14,9 @@ namespace CyAwareWebApi.Models.Results
         public string ip { get; set; }
         public int port { get; set; }
         public string information { get; set; }
-        public HashSet<Detail> details { get; set; }
 
-        public class Detail
+        public class RModule7Detail : ResultDetail
         {
-            public int Id { get; set; }
             public string identifier { get; set; }
             public string type { get; set; }
             public string severity { get; set; }
@@ -33,26 +31,6 @@ namespace CyAwareWebApi.Models.Results
         public string ip { get; set; }
         public int port { get; set; }
         public string information { get; set; }
-        public HashSet<Detail> details { get; set; }
-
-        public class Detail
-        {
-            public int Id { get; set; }
-            public string identifier { get; set; }
-            public string type { get; set; }
-            public string severity { get; set; }
-            public string finding { get; set; }
-
-            public static explicit operator Detail(RModule7.Detail v)
-            {
-                Detail d = new Detail();
-                d.identifier = v.identifier;
-                d.type = v.type;
-                d.severity = v.severity;
-                d.finding = v.finding;
-                return d;
-            }
-        }
     }
 
     }

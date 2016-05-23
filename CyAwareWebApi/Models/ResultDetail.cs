@@ -7,5 +7,6 @@ namespace CyAwareWebApi.Models
 {
     public class ResultDetail
     {
+        public int Id { get; set; }
     }
 }

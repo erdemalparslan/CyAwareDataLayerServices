@@ -50,14 +50,7 @@ namespace CyAwareWebApi.Controllers
         public dynamic GetFrontScan_Subscriber_Module(int subscriberId, int moduleId)
         {
 
-            var scans = (from s in db.scans.Include("results") where s.policy.subscriberId == subscriberId && s.policy.moduleId == moduleId select s).ToList();
-            //foreach(Scan s in scans)
-            //{
-            //    foreach(var r in s.results)
-            //    {
-            //        r = ((ResultBaseDTO)r);
-            //    }
-            //}
+            var scans = (from s in db.scans.Include("results.details") where s.policy.subscriberId == subscriberId && s.policy.moduleId == moduleId select s).ToList();
 
             IEnumerable<ScanDTOEnriched> list = from m in scans select (ScanDTOEnriched)m;
 

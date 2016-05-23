@@ -12,6 +12,8 @@ namespace CyAwareWebApi.Models.Results
         public int policyId { get; set; }
         // Navigation properties 
         public virtual Policy policy { get; set; }
+        public virtual HashSet<ResultDetail> details { get; set; }
+
 
     }
 
@@ -21,6 +23,7 @@ namespace CyAwareWebApi.Models.Results
         public string resultType { get; set; }
         // foreign keys
         public int policyId { get; set; }
+        public virtual HashSet<ResultDetail> details { get; set; }
 
 
         public static explicit operator ResultBaseDTO(ResultBase v)
@@ -56,6 +59,7 @@ namespace CyAwareWebApi.Models.Results
             dto.Id = v.Id;
             dto.policyId = v.policyId;
             dto.resultType = v.resultType;
+            dto.details = v.details;
 
             return dto;
         }

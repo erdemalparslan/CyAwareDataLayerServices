@@ -303,6 +303,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JSONConverter\JsonCreationConverter.cs" />
     <Compile Include="Controllers\JSONConverter\JsonEntitiesConverter.cs" />
+    <Compile Include="Controllers\JSONConverter\JSONResultDetailConverter.cs" />
     <Compile Include="Controllers\JSONConverter\JSONResultsConverter.cs" />
     <Compile Include="Controllers\ModulesController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
@@ -344,7 +345,6 @@
     <Compile Include="Models\ResultDetail.cs" />
     <Compile Include="Models\Results\ResultBase.cs" />
     <Compile Include="Models\Results\RModule1.cs" />
-    <Compile Include="Models\Results\RModule1TrustedTemplate.cs" />
     <Compile Include="Models\Results\RModule2.cs" />
     <Compile Include="Models\Results\RModule3.cs" />
     <Compile Include="Models\Results\RModule4.cs" />
