@@ -120,14 +120,14 @@ namespace CyAwareWebApi.Controllers
             id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy1Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,8080", entity = ipAddress1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "80,22,8080,21,445,23", entity = ipAddress2, policyId = id });
-            db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress2, policyId = id });
+            //db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress2, policyId = id });
 
             id = createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Service and Systems Availability checker module").FirstOrDefault(), policy2Entities, actions);
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "8080,80,21,445,23,443", entity = ipAddress4, policyId = id });
-            db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress4, policyId = id });
-            db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipRange1, policyId = id });
+            //db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipAddress4, policyId = id });
+            //db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipRange1, policyId = id });
             db.extras.Add(new EntityExtraForPolicy() { key = "tcp", value = "443,21,80,8080,445,23", entity = ipRange2, policyId = id });
-            db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipRange2, policyId = id });
+            //db.extras.Add(new EntityExtraForPolicy() { key = "udp", value = "161,53", entity = ipRange2, policyId = id });
 
             createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Twitter activity checker module").FirstOrDefault(), policy3Entities, actions);
             createPolicyTest(db.subscribers.Where(s => s.name == "aycell").FirstOrDefault(), db.modules.Where(m => m.moduleName == "Instagram activity checker module").FirstOrDefault(), policy4Entities, actions);
@@ -204,7 +204,7 @@ namespace CyAwareWebApi.Controllers
             ipAddress1 = new EIpAddress { entityType = "EIpAddress", ip = "74.208.199.156", subscriber = subscriber , Id=-1, mainEntityId = null };
             ipAddress2 = new EIpAddress { entityType = "EIpAddress", ip = "52.25.28.149", subscriber = subscriber, Id=-2, mainEntityId = null };
             ipAddress3 = new EIpAddress { entityType = "EIpAddress", ip = "52.10.180.11", subscriber = subscriber , Id = -3, mainEntityId = null };
-            ipAddress4 = new EIpAddress { entityType = "EIpAddress", ip = "66.6.44.5", subscriber = subscriber, Id = -4, mainEntityId = null };
+            ipAddress4 = new EIpAddress { entityType = "EIpAddress", ip = "46.101.150.106", subscriber = subscriber, Id = -4, mainEntityId = null };
             ipRange1 = new EIpRange { entityType = "EIpRange", ip = "10.12.120.0", range = 31, subscriber = subscriber , Id = -8, mainEntityId = null };
             ipRange2 = new EIpRange { entityType = "EIpRange", ip = "23.15.0.0", range = 31, subscriber = subscriber , Id = -9, mainEntityId = null };
 

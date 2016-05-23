@@ -10,4 +10,9 @@ namespace CyAwareWebApi.Models.Entities
     {
         public string hostname { get; set; }
     }
+
+    public class EHostnameDTOEnriched : EntityBaseDTOEnriched
+    {
+        public string hostname { get; set; }
+    }
 }

@@ -32,11 +32,34 @@ namespace CyAwareWebApi.Models
         public DateTime scanDate { get; set; }
 
         public int policyId { get; set; }
+
+        public static explicit operator ScanDTO(Scan v)
+        {
+            ScanDTO dto = new ScanDTO();
+            dto.id = v.id;
+            dto.isDeleted = v.isDeleted;
+            dto.scanDate = v.scanDate;
+            dto.scanRefId = v.scanRefId;
+            dto.scanSuccessCode = v.scanSuccessCode;
+            return dto;
+        }
     }
 
     public class ScanDTOEnriched : ScanDTO
     {
-        public virtual PolicyDTO policy { get; set; }
+        //public virtual PolicyDTO policy { get; set; }
         public virtual IEnumerable<ResultBaseDTO> results { get; set; }
+
+        public static explicit operator ScanDTOEnriched(Scan v)
+        {
+            ScanDTOEnriched dto = new ScanDTOEnriched();
+            dto.id = v.id;
+            dto.isDeleted = v.isDeleted;
+            dto.scanDate = v.scanDate;
+            dto.scanRefId = v.scanRefId;
+            dto.scanSuccessCode = v.scanSuccessCode;
+            dto.results = from r in v.results select (ResultBaseDTO)r;
+            return dto;
+        }
     }
 }

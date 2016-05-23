@@ -30,6 +30,7 @@ namespace CyAwareWebApi.Models
         //navigation properties
         public virtual Subscriber subscriber { get; set; }
         public virtual HashSet<EntityBase> entities { get; set; }
+        public virtual HashSet<EntityExtraForPolicy> extraInfo { get; set; }
         public virtual Module module { get; set; }
         public virtual HashSet<Action> actions { get; set; }
         public virtual HashSet<Scan> scans { get; set; }
@@ -60,30 +61,33 @@ namespace CyAwareWebApi.Models
     public class PolicyDTOEnriched : PolicyDTO
     {
         public SubscriberDTO subscriber { get; set; }
-        public IEnumerable<EntityBaseDTO> entities { get; set; }
+        public IEnumerable<EntityBaseDTOEnriched> entities { get; set; }
         public IEnumerable<ActionDTO> actions { get; set; }
+        public IEnumerable<EntityExtraForPolicyDTO> extraInfo { get; set; }
 
-        public static explicit operator PolicyDTOEnriched(Policy v)
+
+        public static explicit operator PolicyDTOEnriched(Policy p)
         {
-            PolicyDTOEnriched e = new PolicyDTOEnriched();
-            e.Id = v.Id;
-            e.setDate = v.setDate;
-            e.isActive = v.isActive;
-            e.activationDate = v.activationDate;
-            e.isDeleted = v.isDeleted;
-            e.s_isMonthly = v.s_isMonthly;
-            e.s_isWeekly = v.s_isWeekly;
-            e.s_isDaily = v.s_isDaily;
-            e.s_isHourly = v.s_isHourly;
-            e.s_isPerMinute = v.s_isPerMinute;
-            e.s_period = v.s_period;
-            e.s_enableStartTime24Format = v.s_enableStartTime24Format;
-            e.s_enableEndTime24Format = v.s_enableEndTime24Format;
-            e.subscriberId = v.subscriberId;
-            e.moduleId = v.moduleId;
-            e.entities = from n in v.entities select (EntityBaseDTO)n;
+            CyAwareContext db = new CyAwareContext();
+            PolicyDTOEnriched pe = new PolicyDTOEnriched();
+            pe.Id = p.Id;
+            pe.setDate = p.setDate;
+            pe.isActive = p.isActive;
+            pe.activationDate = p.activationDate;
+            pe.isDeleted = p.isDeleted;
+            pe.s_isMonthly = p.s_isMonthly;
+            pe.s_isWeekly = p.s_isWeekly;
+            pe.s_isDaily = p.s_isDaily;
+            pe.s_isHourly = p.s_isHourly;
+            pe.s_isPerMinute = p.s_isPerMinute;
+            pe.s_period = p.s_period;
+            pe.s_enableStartTime24Format = p.s_enableStartTime24Format;
+            pe.s_enableEndTime24Format = p.s_enableEndTime24Format;
+            pe.subscriberId = p.subscriberId;
+            pe.moduleId = p.moduleId;
+            pe.entities = from n in p.entities select (EntityBaseDTOEnriched)EntityBaseDTOEnriched.EntityBaseDTOEnrichedAll(n,p);
             //e.actions = from a in v.actions select (ActionDTO)a;
-            return e;
+            return pe;
         }
     }
 }

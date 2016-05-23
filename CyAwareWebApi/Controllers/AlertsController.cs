@@ -14,8 +14,11 @@ using CyAwareWebApi.Models.Entities;
 using CyAwareWebApi.Models.Results;
 using System.Web.Http.Tracing;
 using System.Web.Http.OData;
+using System.Web.Http.OData.Extensions;
+
 using System.Web.Http.OData.Query;
 using CyAwareWebApi.Utils;
+using System.Collections;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -71,10 +74,12 @@ namespace CyAwareWebApi.Controllers
             return alerts;
         }
 
+
+
         // GET: front/alerts/1/subscriberId/1/moduleId/1      
         [Route("front/alerts/{lastAlert}/subscriberId/{subscriberId}/moduleId/{moduleId}")]
         [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
-        public IQueryable<AlertDTO> GetAlertsOdata(int lastAlert, int subscriberId, int moduleId, ODataQueryOptions<AlertDTO> options)
+        public PageResult<AlertDTO> GetAlertsOdata(int lastAlert, int subscriberId, int moduleId, ODataQueryOptions<AlertDTO> options)
         {
             IQueryable<AlertDTO> alerts = from a in db.Alerts
                                           where (a.Id > lastAlert && a.scan.policy.subscriberId == subscriberId && a.scan.policy.moduleId == moduleId)
@@ -91,9 +96,12 @@ namespace CyAwareWebApi.Controllers
                                               resultbaseid = a.resultbaseid,
                                               moduleId = a.scan.policy.moduleId
                                           };
-            return alerts;
+            return new PageResult<AlertDTO>(
+                    alerts as IEnumerable<AlertDTO>,
+                    Request.ODataProperties().NextLink,
+                    Request.ODataProperties().TotalCount);
         }
-
+    
         // GET: front/alerts/1/subscriberId    
         [Route("front/alerts/{lastAlert}/subscriberId/{subscriberId}")]
         [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]

@@ -14,4 +14,9 @@ namespace CyAwareWebApi.Models.Entities
     {
         public string domainName { get; set; }
     }
+
+    public class EDomainDTOEnriched : EntityBaseDTOEnriched
+    {
+        public string domainName { get; set; }
+    }
 }

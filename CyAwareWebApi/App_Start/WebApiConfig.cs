@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 using CyAwareWebApi.Models.Results;
 using CyAwareWebApi.Controllers.JSONConverter;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
+using System.Web.Http.OData.Builder;
+using System.Web.Http.OData.Extensions;
 using System.Web.Http.Tracing;
 
 namespace CyAwareWebApi

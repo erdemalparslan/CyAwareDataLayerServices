@@ -14,6 +14,10 @@ namespace CyAwareWebApi.Models.Entities
     public class EUrlDTO : EntityBaseDTO
     {
         public string url { get; set; }
+    }
 
+    public class EUrlDTOEnriched : EntityBaseDTOEnriched
+    {
+        public string url { get; set; }
     }
 }

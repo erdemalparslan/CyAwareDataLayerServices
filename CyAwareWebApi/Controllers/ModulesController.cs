@@ -55,15 +55,15 @@ namespace CyAwareWebApi.Controllers
             try
             {
                 //SAMPLE Token verification for backend
-                IEnumerable<string> values;
-                if (!request.Headers.TryGetValues("backendToken", out values) || values.First() != ApplicationConstants.DEFAULT_BACKEND_TOKEN)
-                {
-                    Configuration.Services.GetTraceWriter().Error(Request, "GET: back/modules/{id}", "None or bad token!");
-                    return StatusCode(HttpStatusCode.Unauthorized);
-                }
+                //IEnumerable<string> values;
+                //if (!request.Headers.TryGetValues("backendToken", out values) || values.First() != ApplicationConstants.DEFAULT_BACKEND_TOKEN)
+                //{
+                //    Configuration.Services.GetTraceWriter().Error(Request, "GET: back/modules/{id}", "None or bad token!");
+                //    return StatusCode(HttpStatusCode.Unauthorized);
+                //}
 
 
-                var requestedModules = (from m in db.modules.Include("policies.entities.subentities")
+                var requestedModules = (from m in db.modules.Include("policies.entities.extraInfo")
                                         where m.id == id
                                         select m).ToList();
 

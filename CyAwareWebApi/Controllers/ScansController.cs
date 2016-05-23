@@ -10,6 +10,8 @@ using CyAwareWebApi.Models;
 using System.Data.SqlClient;
 using System.Web.Http.Tracing;
 using System.Web.Http.OData;
+using System.Collections.Generic;
+using CyAwareWebApi.Models.Results;
 
 namespace CyAwareWebApi.Controllers
 {
@@ -47,25 +49,29 @@ namespace CyAwareWebApi.Controllers
         [EnableQuery(PageSize = ApplicationConstants.DEFAULT_PAGING_SIZE)]
         public dynamic GetFrontScan_Subscriber_Module(int subscriberId, int moduleId)
         {
-            var scans = db.scans.Where(s => (s.policy.subscriberId == subscriberId) && (s.policy.moduleId == moduleId))
-                                               .Select(s => new
-                                               {
-                                                   s.id,
-                                                   s.scanRefId,
-                                                   s.scanDate,
-                                                   s.scanSuccessCode,
-                                                   s.results
-                                               }).ToList();
 
-            if (scans != null)
+            var scans = (from s in db.scans.Include("results") where s.policy.subscriberId == subscriberId && s.policy.moduleId == moduleId select s).ToList();
+            //foreach(Scan s in scans)
+            //{
+            //    foreach(var r in s.results)
+            //    {
+            //        r = ((ResultBaseDTO)r);
+            //    }
+            //}
+
+            IEnumerable<ScanDTOEnriched> list = from m in scans select (ScanDTOEnriched)m;
+
+
+            if (list != null && list.Count() > 0)
             {
-                return scans;
+                return list;
             }
             else
             {
                 Configuration.Services.GetTraceWriter().Error(Request, "GET: front/Scans/subscriber/1/module/1", "No any scan found!");
                 return StatusCode(HttpStatusCode.NotFound);
             }
+
         }
 
         // GET: front/Scans/subscriber/1/policy/1

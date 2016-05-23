@@ -17,12 +17,22 @@ namespace CyAwareWebApi.Models.Entities
 
     public class EntityExtraForPolicyDTO
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string key { get; set; }
         public string value { get; set; }
 
-        public int entityId { get; set; }
-        public int? policyId { get; set; }
+        //public int entityId { get; set; }
+        //public int? policyId { get; set; }
+
+        public static explicit operator EntityExtraForPolicyDTO(EntityExtraForPolicy v)
+        {
+            EntityExtraForPolicyDTO dto = new EntityExtraForPolicyDTO();
+            //dto.entityId = v.entityId;
+            //dto.policyId = v.policyId;
+            dto.key = v.key;
+            dto.value = v.value;
+            return dto;
+        }
     }
 
 

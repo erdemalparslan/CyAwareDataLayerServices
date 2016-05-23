@@ -1,5 +1,6 @@
-﻿using CyAwareWebApi.Exceptions;
-
+﻿using System;
+using CyAwareWebApi.Exceptions;
+using System.Collections.Generic;
 
 namespace CyAwareWebApi.Models.Results
 {
@@ -9,9 +10,9 @@ namespace CyAwareWebApi.Models.Results
         public string resultType { get; set; }
         // foreign keys
         public int policyId { get; set; }
-
         // Navigation properties 
         public virtual Policy policy { get; set; }
+
     }
 
     public class ResultBaseDTO
@@ -25,65 +26,36 @@ namespace CyAwareWebApi.Models.Results
         public static explicit operator ResultBaseDTO(ResultBase v)
         {
             ResultBaseDTO dto = null;
+            if (v.resultType == "RModule1")
+                dto = new RModule1DTO { ipAddress = ((RModule1)v).ipAddress, tcpPortNumbers = ((RModule1)v).tcpPortNumbers, udpPortNumbers = ((RModule1)v).udpPortNumbers };
+            //else if (v.resultType == "RModule2")
+            //    dto = new RModule2DTO {  };
+            //else if (v.resultType == "RModule3")
+            //    dto = new RModule3DTO { };
+            //else if (v.resultType == "RModule4")
+            //    dto = new RModule4DTO { };
+            //else if (v.resultType == "RModule5")
+            //    dto = new RModule5DTO { };
+            //else if (v.resultType == "RModule6")
+            //    dto = new RModule6DTO { };
+            else if (v.resultType == "RModule7")
+            {
+                dto = new RModule7DTO { domain = ((RModule7)v).domain, ip = ((RModule7)v).ip, port = ((RModule7)v).port, information = ((RModule7)v).information };
+                //    foreach(var ddto in ((RModule7)v).details)
+                //        dto.details.Add(new RModule7DTO.Detail { finding = ((RModule7.Detail)ddto).finding , identifier = ((RModule7.Detail)ddto).finding , severity = ((RModule7.Detail)ddto).severity, type = ((RModule7.Detail)ddto).type});
+                //
+            }
+            //else if (v.resultType == "RModule8")
+            //    dto = new RModule8DTO { };
+            //else if (v.resultType == "RModule9")
+            //    dto = new RModule9DTO { };
+            //else if (v.resultType == "RModule10")
+            //    dto = new RModule10DTO { };
+            else throw new UnknownResultException("Unknown Entity type: " + v.resultType);
 
             dto.Id = v.Id;
             dto.policyId = v.policyId;
             dto.resultType = v.resultType;
-
-            if (v.resultType == "RModule1")
-                dto = new RModule1DTO { ipAddress = ((RModule1)v).ipAddress, tcpPortNumbers = ((RModule1)v).tcpPortNumbers, udpPortNumbers = ((RModule1)v).udpPortNumbers  };
-            //else if (v.entityType == "EDomain")
-            //    dto = new EDomainDTO { domainName = ((EDomain)v).domainName };
-            //else if (v.entityType == "EHostname")
-            //    dto = new EHostnameDTO { hostname = ((EHostname)v).hostname };
-            //else if (v.entityType == "EIpRange")
-            //    dto = new EIpRangeDTO { ip = ((EIpRange)v).ip, range = ((EIpRange)v).range };
-            //else if (v.entityType == "EUrl")
-            //    dto = new EUrlDTO { url = ((EUrl)v).url };
-            //else if (v.entityType == "EInstagramProfile")
-            //    dto = new EInstagramProfileDTO
-            //    {
-            //        bio = ((EInstagramProfile)v).bio
-            //                                    ,
-            //        dailyMaxCAPITALLETTERRatio = ((EInstagramProfile)v).dailyMaxCAPITALLETTERRatio
-            //                                    ,
-            //        dailyMaxFalloweeChangeRatio = ((EInstagramProfile)v).dailyMaxFalloweeChangeRatio
-            //                                    ,
-            //        dailyMaxFollowerChangeRatio = ((EInstagramProfile)v).dailyMaxFollowerChangeRatio
-            //                                    ,
-            //        dailyMaxPosts = ((EInstagramProfile)v).dailyMaxPosts
-            //                                    ,
-            //        idStr = ((EInstagramProfile)v).idStr
-            //                                    ,
-            //        isHacked = ((EInstagramProfile)v).isHacked
-            //                                    ,
-            //        profilePictureMD5 = ((EInstagramProfile)v).profilePictureMD5
-            //                                    ,
-            //        screenName = ((EInstagramProfile)v).screenName
-            //                                    ,
-            //        searchStringForUnusualContent = ((EInstagramProfile)v).searchStringForUnusualContent
-            //    };
-            //else if (v.entityType == "ETwitterProfile")
-            //    dto = new ETwitterProfileDTO
-            //    {
-            //        dailyMaxCAPITALLETTERRatio = ((ETwitterProfile)v).dailyMaxCAPITALLETTERRatio
-            //        ,
-            //        dailyMaxFalloweeChangeRatio = ((ETwitterProfile)v).dailyMaxFalloweeChangeRatio
-            //        ,
-            //        dailyMaxFollowerChangeRatio = ((ETwitterProfile)v).dailyMaxFollowerChangeRatio
-            //        ,
-            //        idStr = ((ETwitterProfile)v).idStr
-            //        ,
-            //        isHacked = ((ETwitterProfile)v).isHacked
-            //        ,
-            //        screenName = ((ETwitterProfile)v).screenName
-            //        ,
-            //        searchStringForUnusualContent = ((ETwitterProfile)v).searchStringForUnusualContent
-            //        ,
-            //        dailyMaxTweets = ((ETwitterProfile)v).dailyMaxTweets
-            //    };
-            else throw new UnknownResultException("Unknown Entity type: " + v.resultType);
-
 
             return dto;
         }

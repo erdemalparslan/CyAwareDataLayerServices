@@ -1,6 +1,9 @@
 ﻿
 using System.Collections.Generic;
 using CyAwareWebApi.Exceptions;
+using System.Linq;
+using System;
+
 namespace CyAwareWebApi.Models.Entities
 {
     public class EntityBase
@@ -101,7 +104,75 @@ namespace CyAwareWebApi.Models.Entities
         public SubscriberDTO subscriber { get; set; }
         public IEnumerable<EntityBaseDTO> subentities { get; set; }
         public EntityBaseDTO mainEntity { get; set; }
-        public IEnumerable<EntityExtraForPolicyDTO> extraInfo { get; set; }
         public IEnumerable<PolicyDTO> policies { get; set; }
+        public IEnumerable<EntityExtraForPolicyDTO> extraInfo { get; set; }
+
+        public static object EntityBaseDTOEnrichedAll(EntityBase v, Policy pol)
+        {
+            EntityBaseDTOEnriched dto = null;
+
+            if (v.entityType == "EIpAddress")
+                dto = new EIpAddressDTOEnriched { ip = ((EIpAddress)v).ip };
+            else if (v.entityType == "EDomain")
+                dto = new EDomainDTOEnriched { domainName = ((EDomain)v).domainName };
+            else if (v.entityType == "EHostname")
+                dto = new EHostnameDTOEnriched { hostname = ((EHostname)v).hostname };
+            else if (v.entityType == "EIpRange")
+                dto = new EIpRangeDTOEnriched { ip = ((EIpRange)v).ip, range = ((EIpRange)v).range };
+            else if (v.entityType == "EUrl")
+                dto = new EUrlDTOEnriched { url = ((EUrl)v).url };
+            else if (v.entityType == "EInstagramProfile")
+                dto = new EInstagramProfileDTOEnriched
+                {
+                    bio = ((EInstagramProfile)v).bio
+                                                ,
+                    dailyMaxCAPITALLETTERRatio = ((EInstagramProfile)v).dailyMaxCAPITALLETTERRatio
+                                                ,
+                    dailyMaxFalloweeChangeRatio = ((EInstagramProfile)v).dailyMaxFalloweeChangeRatio
+                                                ,
+                    dailyMaxFollowerChangeRatio = ((EInstagramProfile)v).dailyMaxFollowerChangeRatio
+                                                ,
+                    dailyMaxPosts = ((EInstagramProfile)v).dailyMaxPosts
+                                                ,
+                    idStr = ((EInstagramProfile)v).idStr
+                                                ,
+                    isHacked = ((EInstagramProfile)v).isHacked
+                                                ,
+                    profilePictureMD5 = ((EInstagramProfile)v).profilePictureMD5
+                                                ,
+                    screenName = ((EInstagramProfile)v).screenName
+                                                ,
+                    searchStringForUnusualContent = ((EInstagramProfile)v).searchStringForUnusualContent
+                };
+            else if (v.entityType == "ETwitterProfile")
+                dto = new ETwitterProfileDTOEnriched
+                {
+                    dailyMaxCAPITALLETTERRatio = ((ETwitterProfile)v).dailyMaxCAPITALLETTERRatio
+                    ,
+                    dailyMaxFalloweeChangeRatio = ((ETwitterProfile)v).dailyMaxFalloweeChangeRatio
+                    ,
+                    dailyMaxFollowerChangeRatio = ((ETwitterProfile)v).dailyMaxFollowerChangeRatio
+                    ,
+                    idStr = ((ETwitterProfile)v).idStr
+                    ,
+                    isHacked = ((ETwitterProfile)v).isHacked
+                    ,
+                    screenName = ((ETwitterProfile)v).screenName
+                    ,
+                    searchStringForUnusualContent = ((ETwitterProfile)v).searchStringForUnusualContent
+                    ,
+                    dailyMaxTweets = ((ETwitterProfile)v).dailyMaxTweets
+                };
+            else throw new UnknownEntityException("Unknown Entity type: " + v.entityType);
+
+            dto.extraInfo = from n in v.extraInfo where n.policy == pol select (EntityExtraForPolicyDTO)n;
+            dto.entityType = v.entityType;
+            dto.Id = v.Id;
+            dto.mainEntityId = v.mainEntityId;
+            dto.subscriberId = v.subscriberId;
+            dto.isDeleted = v.isDeleted;
+            return dto;
+        }
+
     }
 }
