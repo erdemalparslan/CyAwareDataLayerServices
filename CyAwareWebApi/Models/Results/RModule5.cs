@@ -9,4 +9,9 @@ namespace CyAwareWebApi.Models.Results
         public string domain { get; set; }
         public string expireDate { get; set; }
     }
+    public class RModule5DTO : ResultBaseDTO
+    {
+        public string domain { get; set; }
+        public string expireDate { get; set; }
+    }
 }

@@ -1,5 +1,5 @@
 ﻿/* 
-This result is about SSL certificate details module
+This result is about  SSL certificate details module
 */
 
 using System;

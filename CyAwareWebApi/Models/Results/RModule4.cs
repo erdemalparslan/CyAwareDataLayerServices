@@ -9,4 +9,9 @@ namespace CyAwareWebApi.Models.Results
         public string hostname { get; set; }
         public string ip { get; set; }
     }
+    public class RModule4DTO : ResultBaseDTO
+    {
+        public string hostname { get; set; }
+        public string ip { get; set; }
+    }
 }

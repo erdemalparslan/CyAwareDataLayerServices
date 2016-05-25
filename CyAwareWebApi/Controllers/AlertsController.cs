@@ -221,6 +221,7 @@ namespace CyAwareWebApi.Controllers
         public void runFilters(Scan scan)
         {
             int moduleId = db.scans.Find(scan.id).policy.moduleId;
+            if (moduleId == 0) return;
 
             try
             {

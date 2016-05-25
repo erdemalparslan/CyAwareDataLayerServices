@@ -9,5 +9,17 @@ namespace CyAwareWebApi.Models.Results
         public string domain { get; set; }
         public string ip { get; set; }
         public string expireDate { get; set; }
+        public string fingerprint { get; set; }
+        public string subject { get; set; }
+        public string issuer { get; set; }
+    }
+    public class RModule6DTO : ResultBaseDTO
+    {
+        public string domain { get; set; }
+        public string ip { get; set; }
+        public string expireDate { get; set; }
+        public string fingerprint { get; set; }
+        public string subject { get; set; }
+        public string issuer { get; set; }
     }
 }

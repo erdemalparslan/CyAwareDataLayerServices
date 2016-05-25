@@ -41,6 +41,7 @@ namespace CyAwareWebApi.Models
             dto.scanDate = v.scanDate;
             dto.scanRefId = v.scanRefId;
             dto.scanSuccessCode = v.scanSuccessCode;
+            dto.policyId = v.policyId;
             return dto;
         }
     }
@@ -58,6 +59,7 @@ namespace CyAwareWebApi.Models
             dto.scanDate = v.scanDate;
             dto.scanRefId = v.scanRefId;
             dto.scanSuccessCode = v.scanSuccessCode;
+            dto.policyId = v.policyId;
             dto.results = from r in v.results select (ResultBaseDTO)r;
             return dto;
         }
