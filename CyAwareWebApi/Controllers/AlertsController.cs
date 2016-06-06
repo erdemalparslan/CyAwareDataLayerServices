@@ -347,7 +347,6 @@ namespace CyAwareWebApi.Controllers
             }
         }
 
-
         private void checkModule2(Scan actualScan)
         {
             var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
@@ -586,22 +585,203 @@ namespace CyAwareWebApi.Controllers
 
         private void checkModule4(Scan actualScan)
         {
+            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
+            List<Alert> newAlerts = new List<Alert>();
 
+            foreach (RModule4 result in actualScan.results)
+            {
+                try
+                {
+                    foreach (RModule4 previousResult in previousScan.results)
+                    {
+                        if (previousResult.hostname == result.hostname)
+                        {
+                            A4checkForChangedDomainName(newAlerts, result, previousResult, actualScan);
+                            db.Alerts.AddRange(newAlerts);
+                            foreach (Alert alert in newAlerts)
+                                checkForActions(alert);
+                            db.SaveChangesAsync();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    throw e;
+                }
+            }
+        }
+
+        private void A4checkForChangedDomainName(List<Alert> newAlerts, RModule4 actual, RModule4 expected, Scan actualScan)
+        {
+            if (!actual.ip.Equals(expected.ip))
+            {
+                alert = new Alert(actualScan.id, 3, "DNS Record Change;expected:" + expected.ip + ";found:" + actual.ip);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = 0;
+                newAlerts.Add(alert);
+            }
         }
 
         private void checkModule5(Scan actualScan)
         {
+            List<Alert> newAlerts = new List<Alert>();
 
+            foreach (RModule5 result in actualScan.results)
+            {
+                var policyOfResult = (from p in db.policies where (p.Id == result.policyId) select p).First();
+                foreach(EDomain domain in policyOfResult.entities)
+                {
+                    if(domain.domainName == result.domain)
+                    {
+                        try
+                        {
+                            A5checkForExpiredDomain(newAlerts, result, domain, actualScan);
+                        }
+                        catch (Exception e)
+                        {
+
+                            throw e;
+                        }
+                    }
+                }     
+            }
+            db.Alerts.AddRange(newAlerts);
+            foreach (Alert alert in newAlerts)
+                checkForActions(alert);
+            db.SaveChangesAsync();
+        }
+
+        private void A5checkForExpiredDomain(List<Alert> newAlerts, RModule5 actual,EDomain scannedEntity, Scan actualScan)
+        {
+            if (short.Parse(actual.expireDate) <= short.Parse(Configurator.Instance.getValue("DNSExpireTresholdDays")))
+            {
+                alert = new Alert(actualScan.id, 3, "Expire date approaching;" + actual.expireDate);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = scannedEntity.Id;
+                newAlerts.Add(alert);
+            }
         }
 
         private void checkModule6(Scan actualScan)
         {
+            var previousScan = db.scans.Include(s => s.results).Where(s => s.policyId == actualScan.policyId && s.scanSuccessCode == 1 && s.id != actualScan.id).OrderByDescending(s => s.scanDate).FirstOrDefault();
+            List<Alert> newAlerts = new List<Alert>();
 
+            foreach (RModule6 result in actualScan.results)
+            {
+                var policyOfResult = (from p in db.policies where (p.Id == result.policyId) select p).First();
+                foreach (EDomain domain in policyOfResult.entities)
+                {
+                    if (domain.domainName == result.domain)
+                    {
+                        try
+                        {
+                            A6checkForExpiredSSL(newAlerts, result, domain, actualScan);
+                            foreach(RModule6 previousResult in previousScan.results)
+                            {
+                                if(previousResult.domain == result.domain)
+                                {
+                                    A6checkForChangedSSL(newAlerts, result, previousResult, domain, actualScan);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+
+                            throw e;
+                        }
+                    }
+                }
+            }
+            db.Alerts.AddRange(newAlerts);
+            foreach (Alert alert in newAlerts)
+                checkForActions(alert);
+            db.SaveChangesAsync();
+        }
+
+        private void A6checkForChangedSSL(List<Alert> newAlerts, RModule6 actual, RModule6 previousResult, EDomain domain, Scan actualScan)
+        {
+            if (!actual.fingerprint.Equals(previousResult.fingerprint))
+            {
+                alert = new Alert(actualScan.id, 3, "SSL Certificate Change in Fingerprint;previous fingerprint:" + previousResult.fingerprint + ";found:" + actual.fingerprint);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = 0;
+                newAlerts.Add(alert);
+            }
+            if (!actual.subject.Equals(previousResult.subject))
+            {
+                alert = new Alert(actualScan.id, 3, "SSL Certificate Change in Subject;previous fingerprint:" + previousResult.subject + ";found:" + actual.subject);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = 0;
+                newAlerts.Add(alert);
+            }
+            if (!actual.issuer.Equals(previousResult.issuer))
+            {
+                alert = new Alert(actualScan.id, 3, "SSL Certificate Change in Issuer;previous fingerprint:" + previousResult.issuer + ";found:" + actual.issuer);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = 0;
+                newAlerts.Add(alert);
+            }
+        }
+
+        private void A6checkForExpiredSSL(List<Alert> newAlerts, RModule6 actual, EDomain scannedEntity, Scan actualScan)
+        {
+            if (short.Parse(actual.expireDate) <= short.Parse(Configurator.Instance.getValue("DNSExpireTresholdDays")))
+            {
+                alert = new Alert(actualScan.id, 3, "SSL Expire date approaching;" + actual.expireDate);
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = scannedEntity.Id;
+                newAlerts.Add(alert);
+            }
         }
 
         private void checkModule7(Scan actualScan)
         {
+            List<Alert> newAlerts = new List<Alert>();
 
+            foreach (RModule7 result in actualScan.results)
+            {
+                var policyOfResult = (from p in db.policies where (p.Id == result.policyId) select p).First();
+                foreach (EDomain domain in policyOfResult.entities)
+                {
+                    if (domain.domainName == result.domain)
+                    {
+                        try
+                        {
+                            A7checkForSSLDetails(newAlerts, result, domain, actualScan);
+                        }
+                        catch (Exception e)
+                        {
+
+                            throw e;
+                        }
+                    }
+                }
+            }
+            db.Alerts.AddRange(newAlerts);
+            foreach (Alert alert in newAlerts)
+                checkForActions(alert);
+            db.SaveChangesAsync();
+        }
+
+        private void A7checkForSSLDetails(List<Alert> newAlerts, RModule7 actual, EDomain scannedEntity, Scan actualScan)
+        {
+            foreach(RModule7.RModule7Detail detail in actual.details)
+            {
+                if(detail.severity.ToUpper() == "NOT OK")
+                {
+                    if (detail.finding.ToLower().Contains("ugly"))
+                        alert = new Alert(actualScan.id, 3, "Finding;" + detail.finding);
+                    else if (detail.finding.ToLower().Contains("bad"))
+                        alert = new Alert(actualScan.id, 2, "Finding;" + detail.finding);
+                    else if (detail.finding.ToLower().Contains("not too bad"))
+                        alert = new Alert(actualScan.id, 1, "Finding;" + detail.finding);
+                }
+                alert.resultbaseid = actual.Id;
+                alert.incidententityid = scannedEntity.Id;
+                newAlerts.Add(alert);
+            }
         }
 
         private void checkModule8(Scan actualScan)

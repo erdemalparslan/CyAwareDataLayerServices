@@ -38,15 +38,16 @@ namespace CyAwareWebApi.Controllers
                                   activationDate = p.activationDate,
                                   subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name},
                                   actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
-                                  entities = (from e in p.entities select new EntityBaseDTOEnriched{ Id = e.Id, entityType = e.entityType }),
-                                  s_isMonthly = p.s_isMonthly,
-                                  s_isWeekly = p.s_isWeekly,
-                                  s_isDaily = p.s_isDaily,
-                                  s_isHourly = p.s_isHourly,
-                                  s_isPerMinute = p.s_isPerMinute,
-                                  s_period = p.s_period,
-                                  s_enableStartTime24Format = p.s_enableStartTime24Format,
-                                  s_enableEndTime24Format = p.s_enableEndTime24Format
+                                  entities = (from e in p.entities select new EntityBaseDTOEnriched{ Id = e.Id, entityType = e.entityType })
+                                  //,
+                                  //s_isMonthly = p.s_isMonthly,
+                                  //s_isWeekly = p.s_isWeekly,
+                                  //s_isDaily = p.s_isDaily,
+                                  //s_isHourly = p.s_isHourly,
+                                  //s_isPerMinute = p.s_isPerMinute,
+                                  //s_period = p.s_period,
+                                  //s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                  //s_enableEndTime24Format = p.s_enableEndTime24Format
                               });
 
 
@@ -85,15 +86,16 @@ namespace CyAwareWebApi.Controllers
                                                               activationDate = p.activationDate,
                                                               subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name },
                                                               actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
-                                                              entities = (from e in p.entities select new EntityBaseDTOEnriched { Id = e.Id, entityType = e.entityType }),
-                                                              s_isMonthly = p.s_isMonthly,
-                                                              s_isWeekly = p.s_isWeekly,
-                                                              s_isDaily = p.s_isDaily,
-                                                              s_isHourly = p.s_isHourly,
-                                                              s_isPerMinute = p.s_isPerMinute,
-                                                              s_period = p.s_period,
-                                                              s_enableStartTime24Format = p.s_enableStartTime24Format,
-                                                              s_enableEndTime24Format = p.s_enableEndTime24Format
+                                                              entities = (from e in p.entities select new EntityBaseDTOEnriched { Id = e.Id, entityType = e.entityType })
+                                                              //,
+                                                              //s_isMonthly = p.s_isMonthly,
+                                                              //s_isWeekly = p.s_isWeekly,
+                                                              //s_isDaily = p.s_isDaily,
+                                                              //s_isHourly = p.s_isHourly,
+                                                              //s_isPerMinute = p.s_isPerMinute,
+                                                              //s_period = p.s_period,
+                                                              //s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                                              //s_enableEndTime24Format = p.s_enableEndTime24Format
                                                           }).FirstOrDefault();
                 if (policy != null)
                 {
@@ -129,15 +131,16 @@ namespace CyAwareWebApi.Controllers
                                                 activationDate = p.activationDate,
                                                 subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name },
                                                 actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
-                                                entities = (from e in p.entities select new EntityBaseDTOEnriched { Id = e.Id, entityType = e.entityType }),
-                                                s_isMonthly = p.s_isMonthly,
-                                                s_isWeekly = p.s_isWeekly,
-                                                s_isDaily = p.s_isDaily,
-                                                s_isHourly = p.s_isHourly,
-                                                s_isPerMinute = p.s_isPerMinute,
-                                                s_period = p.s_period,
-                                                s_enableStartTime24Format = p.s_enableStartTime24Format,
-                                                s_enableEndTime24Format = p.s_enableEndTime24Format
+                                                entities = (from e in p.entities select new EntityBaseDTOEnriched { Id = e.Id, entityType = e.entityType })
+                                                //,
+                                                //s_isMonthly = p.s_isMonthly,
+                                                //s_isWeekly = p.s_isWeekly,
+                                                //s_isDaily = p.s_isDaily,
+                                                //s_isHourly = p.s_isHourly,
+                                                //s_isPerMinute = p.s_isPerMinute,
+                                                //s_period = p.s_period,
+                                                //s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                                //s_enableEndTime24Format = p.s_enableEndTime24Format
                                             }).FirstOrDefault();
                 if (policy != null)
                 {
@@ -174,15 +177,16 @@ namespace CyAwareWebApi.Controllers
                                                 activationDate = p.activationDate,
                                                 subscriber = new SubscriberDTO { id = p.subscriber.id, name = p.subscriber.name },
                                                 actions = (from a in p.actions select new ActionDTO { id = a.id, actionType = a.actionType, destination = a.destination }),
-                                                entities = (from e in p.entities select new EntityBaseDTOEnriched { Id = e.Id, entityType = e.entityType }),
-                                                s_isMonthly = p.s_isMonthly,
-                                                s_isWeekly = p.s_isWeekly,
-                                                s_isDaily = p.s_isDaily,
-                                                s_isHourly = p.s_isHourly,
-                                                s_isPerMinute = p.s_isPerMinute,
-                                                s_period = p.s_period,
-                                                s_enableStartTime24Format = p.s_enableStartTime24Format,
-                                                s_enableEndTime24Format = p.s_enableEndTime24Format
+                                                entities = (from e in p.entities select new EntityBaseDTOEnriched { Id = e.Id, entityType = e.entityType })
+                                                //,
+                                                //s_isMonthly = p.s_isMonthly,
+                                                //s_isWeekly = p.s_isWeekly,
+                                                //s_isDaily = p.s_isDaily,
+                                                //s_isHourly = p.s_isHourly,
+                                                //s_isPerMinute = p.s_isPerMinute,
+                                                //s_period = p.s_period,
+                                                //s_enableStartTime24Format = p.s_enableStartTime24Format,
+                                                //s_enableEndTime24Format = p.s_enableEndTime24Format
                                             });
 
                 if (policies.Any())
